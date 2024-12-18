@@ -22,12 +22,11 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/pprof v0.0.0-20210407192527-94a9f03dee38 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
-	github.com/lucas-clemente/quic-go v0.31.0 // indirect
-	github.com/marten-seemann/qpack v0.3.0 // indirect
-	github.com/marten-seemann/qtls-go1-18 v0.1.3 // indirect
-	github.com/marten-seemann/qtls-go1-19 v0.1.1 // indirect
 	github.com/nyaruka/phonenumbers v1.4.3 // indirect
 	github.com/onsi/ginkgo/v2 v2.9.5 // indirect
+	github.com/quic-go/qpack v0.4.0 // indirect
+	github.com/quic-go/qtls-go1-20 v0.3.3 // indirect
+	github.com/quic-go/quic-go v0.38.2 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
@@ -46,14 +45,16 @@ require (
 	//github.com/quic-go/quic-go v0.38.2
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/hertz-contrib/http2 v0.1.8
-	github.com/masx200/go_ws_sh/network/quic-go v0.0.0
-	github.com/masx200/go_ws_sh/server/quic-go v0.0.0
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97
+	github.com/masx200/go_ws_sh/network/quic-go v0.0.0-20241218060412-c6bdd29ba7d2
+	//github.com/masx200/go_ws_sh/network/quic-go
+	//github.com/masx200/go_ws_sh/server/quic-go
+	github.com/masx200/go_ws_sh/server/quic-go v0.0.0-20241218060412-c6bdd29ba7d2
 	golang.org/x/net v0.32.0 // indirect
 )
 
 replace github.com/lucas-clemente/quic-go v0.31.0 => github.com/quic-go/quic-go v0.38.2
 
-replace github.com/masx200/go_ws_sh/network/quic-go v0.1.0 => github.com/masx200/go_ws_sh/network/quic-go v0.0.0
+// replace github.com/masx200/go_ws_sh/network/quic-go v0.1.0 => github.com/masx200/go_ws_sh/network/quic-go v0.0.0
 
-replace github.com/masx200/go_ws_sh/server/quic-go v0.1.0 => github.com/masx200/go_ws_sh/server/quic-go v0.0.0
+// replace github.com/masx200/go_ws_sh/server/quic-go v0.1.0 => github.com/masx200/go_ws_sh/server/quic-go v0.0.0
