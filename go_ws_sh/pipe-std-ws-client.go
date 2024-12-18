@@ -136,7 +136,27 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			return
 		}
 		if mt == websocket.TextMessage {
-			log.Printf("ignored recv text: %s", message)
+			var data TextMessage
+			//parse json data
+
+			err = json.Unmarshal(message, &data)
+			if err != nil {
+				log.Println("read:", err)
+				//return
+				log.Printf("ignored recv text: %s", message)
+				return
+			}
+
+			if data.Type == "rejected" {
+				log.Println("rejected:", data.Body)
+				os.Exit(0)
+				return
+				//break
+			} else if data.Type == "resolved" {
+				log.Println("resolved:", data.Body)
+			} else {
+				log.Printf("ignored unknown recv text:%v", data)
+			}
 		} else {
 			decoded, undecoded, err := codec.NativeFromBinary(message)
 			if len(undecoded) > 0 {
