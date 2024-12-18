@@ -3,7 +3,6 @@ package go_ws_sh
 import (
 	"io"
 	"log"
-
 	"os/exec"
 
 	"github.com/hertz-contrib/websocket"
@@ -132,7 +131,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("decode:", err)
 
 			} else {
-				log.Printf("recv binary: %s", decoded)
+				// log.Printf("recv binary: %s", decoded)
 				var md = decoded.(map[string]interface{})
 				if md["type"] == "stdin" {
 					var body = md["body"].([]byte)

@@ -43,6 +43,7 @@ require (
 require (
 	//github.com/quic-go/quic-go v0.38.2
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/gorilla/websocket v1.5.3
 	github.com/hertz-contrib/http2 v0.1.8
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97
 	//github.com/masx200/go_ws_sh/go_ws_sh v0.0.0-20241218064724-94eaca431908
