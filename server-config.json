@@ -19,8 +19,8 @@
         {
             "port": "28443",
             "tls": true,
-            "cert": "laptop-d6rvjikn.manx-sun.ts.net.crt",
-            "key": "laptop-d6rvjikn.manx-sun.ts.net.key"
+            "cert": "localhost.crt",
+            "key": "localhost.key"
         }
     ]
 }
