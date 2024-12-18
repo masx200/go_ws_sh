@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"go_ws_sh/go_ws_sh"
+	"github.com/masx200/go_ws_sh/go_ws_sh"
 )
 
 func main() {

@@ -13,10 +13,11 @@ import (
 	"github.com/hertz-contrib/http2"
 	"github.com/hertz-contrib/http2/config"
 	factoryh2 "github.com/hertz-contrib/http2/factory"
-	quic "github.com/hertz-contrib/http3/network/quic-go"
-	http3 "github.com/hertz-contrib/http3/server/quic-go"
-	factoryh3 "github.com/hertz-contrib/http3/server/quic-go/factory"
 	"github.com/hertz-contrib/logger/accesslog"
+
+	quic "github.com/masx200/go_ws_sh/network/quic-go"
+	http3 "github.com/masx200/go_ws_sh/server/quic-go"
+	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
 )
 
 func createTaskServer(serverconfig Server, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {

@@ -1,4 +1,4 @@
-module go_ws_sh
+module github.com/masx200/go_ws_sh
 
 go 1.23.2
 
@@ -17,7 +17,7 @@ require (
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/cloudwego/netpoll v0.6.5 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
-	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
+	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/pprof v0.0.0-20210407192527-94a9f03dee38 // indirect
@@ -27,7 +27,7 @@ require (
 	github.com/marten-seemann/qtls-go1-18 v0.1.3 // indirect
 	github.com/marten-seemann/qtls-go1-19 v0.1.1 // indirect
 	github.com/nyaruka/phonenumbers v1.4.3 // indirect
-	github.com/onsi/ginkgo/v2 v2.2.0 // indirect
+	github.com/onsi/ginkgo/v2 v2.9.5 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
@@ -43,10 +43,17 @@ require (
 )
 
 require (
+	//github.com/quic-go/quic-go v0.38.2
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/hertz-contrib/http2 v0.1.8
-	github.com/hertz-contrib/http3/network/quic-go v0.1.0
-	github.com/hertz-contrib/http3/server/quic-go v0.1.0
+	github.com/masx200/go_ws_sh/network/quic-go v0.0.0
+	github.com/masx200/go_ws_sh/server/quic-go v0.0.0
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97
 	golang.org/x/net v0.32.0 // indirect
 )
+
+replace github.com/lucas-clemente/quic-go v0.31.0 => github.com/quic-go/quic-go v0.38.2
+
+replace github.com/masx200/go_ws_sh/network/quic-go v0.1.0 => github.com/masx200/go_ws_sh/network/quic-go v0.0.0
+
+replace github.com/masx200/go_ws_sh/server/quic-go v0.1.0 => github.com/masx200/go_ws_sh/server/quic-go v0.0.0
