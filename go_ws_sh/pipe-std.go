@@ -2,6 +2,7 @@ package go_ws_sh
 
 import (
 	"io"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -12,20 +13,20 @@ func pipe_std() {
 	// 设置标准输入、输出和错误流
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// 启动命令
 	if err := cmd.Start(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// 处理标准输出和错误流
@@ -41,6 +42,6 @@ func pipe_std() {
 
 	// 等待命令执行完毕
 	if err := cmd.Wait(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }

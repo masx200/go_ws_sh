@@ -10,6 +10,7 @@ import (
 )
 
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) {
+
 	defer conn.Close()
 	var in_queue = NewQueue()
 	var err_queue = NewQueue()
@@ -18,23 +19,46 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer err_queue.Close()
 	defer in_queue.Close()
 	cmd := exec.Command(session.Cmd)
+
+	var Clear = func() {
+		//recover panic
+		if r := recover(); r != nil {
+			log.Printf("Recovered from panic: %v", r)
+		}
+
+		conn.Close()
+		out_queue.Close()
+		err_queue.Close()
+		in_queue.Close()
+		if cmd.Process != nil {
+			cmd.Process.Kill()
+		}
+	}
 	cmd.Args = session.Args
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		Clear()
+		return
 	}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		Clear()
+		return
 	}
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		Clear()
+		return
 	}
 
 	if err := cmd.Start(); err != nil {
-		panic(err)
+		log.Println(err)
+		Clear()
+		return
 	}
 	defer cmd.Process.Kill()
 
@@ -48,7 +72,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		io.Copy(stdin, in_queue)
 
 		if err := cmd.Wait(); err != nil {
-			panic(err)
+			log.Println(err)
+			Clear()
+			return
 		}
 
 		conn.Close()
