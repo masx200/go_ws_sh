@@ -1,6 +1,7 @@
 package go_ws_sh
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -28,7 +29,8 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string) error
 	return nil
 }
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
-
+	var w, cancel = context.WithCancel(context.Background())
+	defer cancel()
 	defer conn.Close()
 	var in_queue = NewQueue()
 	var err_queue = NewQueue()
@@ -123,6 +125,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			return
 		}
 		log.Println("process " + session.Cmd + " exit success")
+		cancel()
 		Clear()
 		conn.Close()
 
@@ -130,6 +133,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 
 		for {
+
 			data := out_queue.Dequeue()
 			if data == nil {
 				break
@@ -179,43 +183,49 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}()
 
 	for {
-		mt, message, err := conn.ReadMessage()
-		if err, ok := err.(*websocket.CloseError); ok {
 
-			log.Println("close:", err)
+		select {
+		case <-w.Done():
+			return nil
+		default:
 
-			cmd.Process.Kill()
-			break
-		}
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		if mt == websocket.TextMessage {
-			log.Printf("ignored recv text: %s", message)
-		} else {
-			decoded, undecoded, err := codec.NativeFromBinary(message)
-			if len(undecoded) > 0 {
+			mt, message, err := conn.ReadMessage()
+			if err, ok := err.(*websocket.CloseError); ok {
 
-				log.Println("undecoded:", undecoded)
+				log.Println("close:", err)
 
+				cmd.Process.Kill()
+				break
 			}
 			if err != nil {
-				log.Println("decode:", err)
-
+				log.Println("read:", err)
+				break
+			}
+			if mt == websocket.TextMessage {
+				log.Printf("ignored recv text: %s", message)
 			} else {
-				// log.Printf("recv binary: %s", decoded)
-				var md = decoded.(map[string]interface{})
-				if md["type"] == "stdin" {
-					var body = md["body"].([]byte)
-					in_queue.Enqueue(body)
+				decoded, undecoded, err := codec.NativeFromBinary(message)
+				if len(undecoded) > 0 {
+
+					log.Println("undecoded:", undecoded)
+
+				}
+				if err != nil {
+					log.Println("decode:", err)
+
 				} else {
-					log.Println("ignored unknown type:", md["type"])
+					// log.Printf("recv binary: %s", decoded)
+					var md = decoded.(map[string]interface{})
+					if md["type"] == "stdin" {
+						var body = md["body"].([]byte)
+						in_queue.Enqueue(body)
+					} else {
+						log.Println("ignored unknown type:", md["type"])
+					}
 				}
 			}
-
 		}
 
 	}
-	return nil
+	// return nil
 }
