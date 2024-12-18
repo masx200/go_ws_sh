@@ -17,3 +17,7 @@ go run main.go -config server-config-tls.json -mode server
 ```
 go run main.go -config client-config-tls.json -mode client
 ```
+
+## 配置文件查看文件
+
+`server-config-tls.json`和`client-config-tls.json`和`server-config.json`和`client-config.json`

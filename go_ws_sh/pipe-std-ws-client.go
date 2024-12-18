@@ -15,17 +15,21 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type ConfigClient struct {
-	Credentials Credentials `json:"credentials"`
+type ClientSession struct {
+	Path string `json:"path"`
+}
 
-	Servers ClientConfig `json:"servers"`
+type ConfigClient struct {
+	Credentials Credentials   `json:"credentials"`
+	Sessions    ClientSession `json:"sessions"`
+	Servers     ClientConfig  `json:"servers"`
 }
 type ClientConfig struct {
 	Port     string `json:"port"`
 	Protocol string `json:"protocol"`
 	Ca       string `json:"ca"`
-	Path     string `json:"path"`
-	Host     string `json:"host"`
+
+	Host string `json:"host"`
 }
 
 func Client_start(config string) {
@@ -65,7 +69,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	if !ok {
 		log.Fatal("unknown protocol:", configdata.Servers.Protocol)
 	}
-	url := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Servers.Path // 替换为你的WebSocket服务器地址
+	url := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Sessions.Path // 替换为你的WebSocket服务器地址
 
 	// 创建一个新的WebSocket客户端连接
 	x := websocket.DefaultDialer

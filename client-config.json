@@ -3,11 +3,13 @@
         "username": "admin",
         "password": "pass"
     },
+    "sessions": {
+        "path": "pwsh"
+    },
     "servers": {
         "port": "28080",
         "protocol": "http",
         "ca": null,
-        "path": "pwsh",
         "host": "localhost"
     }
 }
