@@ -1,6 +1,8 @@
 package go_ws_sh
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -59,10 +61,18 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		"http":  "ws",
 		"https": "wss",
 	}
-	url := protocol_map[configdata.Servers.Protocol] + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Servers.Path // 替换为你的WebSocket服务器地址
+	x1, ok := protocol_map[configdata.Servers.Protocol]
+	if !ok {
+		log.Fatal("unknown protocol:", configdata.Servers.Protocol)
+	}
+	url := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Servers.Path // 替换为你的WebSocket服务器地址
 
 	// 创建一个新的WebSocket客户端连接
 	x := websocket.DefaultDialer
+	if configdata.Servers.Ca != "" {
+		configureWebSocketTLSCA(x, configdata)
+	}
+
 	x.EnableCompression = true
 	header := http.Header{}
 	username := configdata.Credentials.Username
@@ -226,4 +236,18 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// if err := cmd.Wait(); err != nil {
 	// 	log.Fatal(err)
 	// }
+}
+
+func configureWebSocketTLSCA(x *websocket.Dialer, configdata ConfigClient) {
+	x.TLSClientConfig = &tls.Config{
+		RootCAs: x509.NewCertPool(),
+	}
+	caCert, err := os.ReadFile(configdata.Servers.Ca)
+	if err != nil {
+		log.Fatal(err)
+	}
+	ok := x.TLSClientConfig.RootCAs.AppendCertsFromPEM(caCert)
+	if !ok {
+		log.Fatal("Failed to append CA certificate")
+	}
 }

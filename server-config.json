@@ -14,7 +14,8 @@
     ],
     "servers": [
         {
-            "port": "28080"
+            "port": "28080",
+            "protocol": "http"
         }
     ]
 }
