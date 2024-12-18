@@ -13,3 +13,7 @@ Usage of main.exe:
 ```
 go run main.go -config server-config-tls.json -mode server
 ```
+
+```
+go run main.go -config client-config-tls.json -mode client
+```
