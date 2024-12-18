@@ -129,6 +129,7 @@ type Session struct {
 }
 
 type Server struct {
+	Alpn string `json:"alpn"`
 	Port string `json:"port"`
 	Tls  bool   `json:"tls"`
 	Cert string `json:"cert"`

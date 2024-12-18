@@ -69,7 +69,10 @@ type versioner interface {
 }
 
 func (c *conn) GetVersion() uint32 {
-	cc := c.EarlyConnection.(versioner)
+	cc, ok := c.EarlyConnection.(versioner)
+	if !ok {
+		return 0
+	}
 	return uint32(cc.GetVersion())
 }
 
