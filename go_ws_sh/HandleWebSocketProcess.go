@@ -40,9 +40,11 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	var Clear = func() {
 		//recover panic
-		if r := recover(); r != nil {
-			log.Printf("Recovered from panic: %v", r)
-		}
+		// defer func() {
+		// 	if r := recover(); r != nil {
+		// 		log.Printf("Recovered from panic: %v", r)
+		// 	}
+		// }()
 		out_queue.Close()
 		err_queue.Close()
 		in_queue.Close()
