@@ -43,6 +43,9 @@ func Client_start(config string) {
 
 	pipe_std_ws_client(configdata /* httpServeMux, handler */)
 }
+
+// pipe_std_ws_client 创建一个WebSocket客户端，根据配置数据连接到服务器。
+// 它处理与WebSocket服务器的通信，包括身份验证、消息编码和解码，以及与标准输入/输出的交互。
 func pipe_std_ws_client(configdata ConfigClient) {
 	defer os.Exit(0)
 	codec, err := create_msg_codec()
@@ -64,20 +67,23 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	header := http.Header{}
 	username := configdata.Credentials.Username
 	password := configdata.Credentials.Password
+	fmt.Println("username:", username, "password:", password)
 	authStr := username + ":" + password
 	authBytes := []byte(authStr)
 	encodedAuth := base64.StdEncoding.EncodeToString(authBytes)
 
 	// 将编码后的字符串设置到Authorization字段
 	authHeader := "Basic " + encodedAuth
+	// fmt.Println("Authorization:", authHeader)
 	header.Set("Authorization", authHeader)
-	conn, response, err := x.Dial(url, nil)
-	if err != nil {
-		log.Fatal("Dial error:", err)
-	}
+	conn, response, err := x.Dial(url, header)
+	log.Println("Response Status:", response.Status)
 	fmt.Println("Response Headers:")
 	for k, v := range response.Header {
 		fmt.Println(k, ":", strings.Join(v, ","))
+	}
+	if err != nil {
+		log.Fatal("Dial error:", err)
 	}
 
 	defer conn.Close()

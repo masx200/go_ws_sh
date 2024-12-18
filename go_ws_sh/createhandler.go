@@ -29,7 +29,10 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 		credentialsmap[credential.Username+":"+credential.Password] = true
 	}
 	return func(w context.Context, r *app.RequestContext) {
-
+		fmt.Println("Request Headers:")
+		r.Request.Header.VisitAll(func(key, value []byte) {
+			fmt.Println(string(key), ":", string(value))
+		})
 		//check crediential
 		auth := r.Request.Header.Get("Authorization")
 		if auth == "" {
@@ -49,22 +52,22 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 		var rawcredential []byte
 		if rawcredential2, err := base64.StdEncoding.DecodeString(credential); err != nil {
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
+
 			r.AbortWithMsg(err.Error(), consts.StatusUnauthorized)
 			return
 		} else {
 			rawcredential = rawcredential2
 		}
-
+		fmt.Printf("credential: %v\n", string(rawcredential))
 		if _, ok := credentialsmap[string(rawcredential)]; !ok {
 			log.Println("Invalid credential", credential)
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-			r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
+			r.SetStatusCode(consts.StatusUnauthorized)
+			r.WriteString("Invalid credential")
+			// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
 			return
 		}
-		fmt.Println("Request Headers:")
-		r.Request.Header.VisitAll(func(key, value []byte) {
-			fmt.Println(string(key), ":", string(value))
-		})
+
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
 		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
 		//if !tokenListContainsValue(r.Request.Header, "Connection", "upgrade") {
