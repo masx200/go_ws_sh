@@ -1,6 +1,8 @@
 package go_ws_sh
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"os/exec"
@@ -9,7 +11,23 @@ import (
 	"github.com/linkedin/goavro/v2"
 )
 
-func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) {
+func SendTextMessage(conn *websocket.Conn, typestring string, body string) error {
+
+	var data TextMessage
+	data.Type = typestring
+	data.Body = body
+	databuf, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	err = conn.WriteMessage(websocket.TextMessage, databuf)
+	if err != nil {
+		return fmt.Errorf("failed to send message: %w", err)
+	}
+	return nil
+}
+func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
 
 	defer conn.Close()
 	var in_queue = NewQueue()
@@ -39,28 +57,52 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		log.Println(err)
+
+		err := SendTextMessage(conn, "rejected", err.Error())
+		if err != nil {
+			return err
+		}
+
 		Clear()
-		return
+		return err
 	}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Println(err)
+		err := SendTextMessage(conn, "rejected", err.Error())
+		if err != nil {
+			return err
+		}
 		Clear()
-		return
+		return err
 	}
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		log.Println(err)
+		err := SendTextMessage(conn, "rejected", err.Error())
+		if err != nil {
+			return err
+		}
 		Clear()
-		return
+		return err
 	}
 
 	if err := cmd.Start(); err != nil {
 		log.Println(err)
+		err := SendTextMessage(conn, "rejected", err.Error())
+		if err != nil {
+			return err
+		}
 		Clear()
-		return
+		return err
 	}
 	defer cmd.Process.Kill()
+	x := "process " + session.Cmd + " started success"
+	log.Println(x)
+	err = SendTextMessage(conn, "resolved", x)
+	if err != nil {
+		return err
+	}
 
 	go func() {
 		io.Copy(out_queue, stdout)
@@ -171,4 +213,5 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		}
 
 	}
+	return nil
 }

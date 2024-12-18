@@ -5,11 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
 	// "net/http"
 	"os"
 	"strings"
-
 	// "unicode/utf8"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -85,7 +83,8 @@ func createhandleWebSocket(session Session) func(w context.Context, r *app.Reque
 			EnableCompression: true,
 		}
 		err = upgrader.Upgrade(r, func(conn *websocket.Conn) {
-			HandleWebSocketProcess(session, codec, conn)
+			err := HandleWebSocketProcess(session, codec, conn)
+			log.Println(err)
 		})
 		// 升级HTTP连接到WebSocket协议
 		// conn, err := upgrader.Upgrade(w, r, nil)
