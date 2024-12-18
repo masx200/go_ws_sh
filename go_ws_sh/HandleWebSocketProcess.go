@@ -126,7 +126,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		}
 		log.Println("process " + session.Cmd + " exit success")
 		// cancel()
-		conn.WriteMessage(websocket.CloseMessage, []byte{})
+		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+			log.Println(err)
+		}
+
 		// conn.WriteControl()
 		Clear()
 		conn.Close()
