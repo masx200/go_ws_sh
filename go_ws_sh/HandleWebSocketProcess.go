@@ -120,8 +120,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			Clear()
 			return
 		}
+		log.Println("process " + session.Cmd + " exit success")
 
 		conn.Close()
+		Clear()
 	}()
 	go func() {
 
