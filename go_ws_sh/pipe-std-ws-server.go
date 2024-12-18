@@ -7,7 +7,7 @@ import (
 	"log"
 	// "net/http"
 	"os"
-	"strings"
+	// "strings"
 	// "unicode/utf8"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -27,7 +27,7 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)
 	}
-	handler := createhandler( /* config */ /* httpServeMux */ func(w context.Context, r *app.RequestContext) {
+	handler := createhandler(config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
@@ -164,36 +164,4 @@ func Server_start(config string) {
 	// var httpServeMux = http.NewServeMux()
 
 	pipe_std_ws_server(configdata /* httpServeMux, handler */)
-}
-func createhandler( /* config Config, */ next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
-	return func(w context.Context, r *app.RequestContext) {
-		fmt.Println("Request Headers:")
-		r.Request.Header.VisitAll(func(key, value []byte) {
-			fmt.Println(string(key), ":", string(value))
-		})
-		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
-		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
-		//if !tokenListContainsValue(r.Request.Header, "Connection", "upgrade") {
-		if !strings.Contains(Connection, "upgrade") {
-			log.Println("Not a upgrade request")
-			r.NotFound() //http.NotFound(w, r)
-			return
-		}
-		if !strings.Contains(Upgrade, "websocket") {
-			log.Println("Not a websocket request")
-			// if !tokenListContainsValue(r.Header, "Upgrade", "websocket") {
-			r.NotFound() //http.NotFound(w, r)
-			return
-		}
-
-		if !r.IsGet() /* != http.MethodGet */ {
-			log.Println("Not a get request")
-			r.NotFound()
-			//http.NotFound(w, r)
-			return
-		}
-		//httpServeMux.ServeHTTP(w, r)
-		next(w, r)
-	}
-
 }
