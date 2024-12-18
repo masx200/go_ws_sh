@@ -32,25 +32,35 @@ type conn struct {
 // Context implements network.StreamConn.
 // Subtle: this method shadows the method (EarlyConnection).Context of conn.EarlyConnection.
 func (c *conn) Context() context.Context {
-	panic("unimplemented")
+
+	return c.EarlyConnection.Context()
 }
 
 // HandshakeComplete implements network.StreamConn.
 // Subtle: this method shadows the method (EarlyConnection).HandshakeComplete of conn.EarlyConnection.
 func (c *conn) HandshakeComplete() context.Context {
-	panic("unimplemented")
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		select {
+		case <-c.EarlyConnection.HandshakeComplete():
+			cancel()
+		case <-ctx.Done():
+		}
+	}()
+	return ctx
 }
 
 // LocalAddr implements network.StreamConn.
 // Subtle: this method shadows the method (EarlyConnection).LocalAddr of conn.EarlyConnection.
 func (c *conn) LocalAddr() net.Addr {
-	panic("unimplemented")
+
+	return c.EarlyConnection.LocalAddr()
 }
 
 // RemoteAddr implements network.StreamConn.
 // Subtle: this method shadows the method (EarlyConnection).RemoteAddr of conn.EarlyConnection.
 func (c *conn) RemoteAddr() net.Addr {
-	panic("unimplemented")
+	return c.EarlyConnection.RemoteAddr()
 }
 
 type versioner interface {
