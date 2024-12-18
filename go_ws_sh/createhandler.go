@@ -38,13 +38,16 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 		if auth == "" {
 			log.Println("No Authorization header")
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-			r.AbortWithMsg("No Authorization header", consts.StatusUnauthorized)
+			r.SetStatusCode(consts.StatusUnauthorized)
+			// r.AbortWithMsg("No Authorization header", consts.StatusUnauthorized)
+			r.WriteString("No Authorization header")
 			return
 		}
 		if !strings.HasPrefix(auth, "Basic ") {
 			log.Println("No Basic auth")
+			r.SetStatusCode(consts.StatusUnauthorized)
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-			r.AbortWithMsg("No Basic auth", consts.StatusUnauthorized)
+			r.WriteString("No Basic auth")
 			return
 		}
 
@@ -52,8 +55,8 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 		var rawcredential []byte
 		if rawcredential2, err := base64.StdEncoding.DecodeString(credential); err != nil {
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-
-			r.AbortWithMsg(err.Error(), consts.StatusUnauthorized)
+			r.SetStatusCode(consts.StatusUnauthorized)
+			r.WriteString(err.Error())
 			return
 		} else {
 			rawcredential = rawcredential2
