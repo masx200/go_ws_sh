@@ -44,6 +44,7 @@ func Client_start(config string) {
 	pipe_std_ws_client(configdata /* httpServeMux, handler */)
 }
 func pipe_std_ws_client(configdata ConfigClient) {
+	defer os.Exit(0)
 	codec, err := create_msg_codec()
 	if err != nil {
 		log.Println(err)
