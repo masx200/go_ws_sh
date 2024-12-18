@@ -3,23 +3,20 @@ module github.com/masx200/go_ws_sh
 go 1.23.2
 
 require (
-	github.com/cloudwego/hertz v0.9.4
-	github.com/gammazero/deque v1.0.0
-	github.com/hertz-contrib/websocket v0.2.0
-	github.com/linkedin/goavro/v2 v2.13.0
-)
-
-require (
 	github.com/bytedance/gopkg v0.1.1 // indirect
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
+	github.com/cloudwego/hertz v0.9.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/cloudwego/netpoll v0.6.5 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
+	github.com/gammazero/deque v1.0.0 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/pprof v0.0.0-20241210010833-40e02aabc2ad // indirect
+	github.com/hertz-contrib/websocket v0.2.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
+	github.com/linkedin/goavro/v2 v2.13.0 // indirect
 	github.com/nyaruka/phonenumbers v1.4.3 // indirect
 	github.com/onsi/ginkgo/v2 v2.22.0 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
@@ -28,7 +25,7 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	go.uber.org/mock v0.4.0 // indirect
+	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/arch v0.12.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
@@ -43,12 +40,13 @@ require (
 require (
 	//github.com/quic-go/quic-go v0.38.2
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/hertz-contrib/http2 v0.1.8
-	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97
-	github.com/masx200/go_ws_sh/network/quic-go v0.0.0-20241218060412-c6bdd29ba7d2
+	github.com/hertz-contrib/http2 v0.1.8 // indirect
+	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97 // indirect
+	github.com/masx200/go_ws_sh/go_ws_sh v0.0.0-20241218064724-94eaca431908
+	github.com/masx200/go_ws_sh/network/quic-go v0.0.0-20241218062338-411b92d8a07b // indirect
 	//github.com/masx200/go_ws_sh/network/quic-go
 	//github.com/masx200/go_ws_sh/server/quic-go
-	github.com/masx200/go_ws_sh/server/quic-go v0.0.0-20241218060412-c6bdd29ba7d2
+	github.com/masx200/go_ws_sh/server/quic-go v0.0.0-20241218064724-94eaca431908 // indirect
 	golang.org/x/net v0.32.0 // indirect
 )
 
