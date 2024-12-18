@@ -78,7 +78,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 	// hertzapp.GET("/:name", func(c context.Context, ctx *app.RequestContext) {
 
 	// })
-	if serverconfig.Protocol=="https" {
+	if serverconfig.Protocol == "https" {
 		return func() (interface{}, error) {
 			cert, err := tls.LoadX509KeyPair(serverconfig.Cert, serverconfig.Key)
 			if err != nil {
@@ -102,8 +102,8 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 				NextProtos: []string{http2.NextProtoTLS},
 			}
 			// cfg.NextProtos = append(cfg.NextProtos, "h2")
-			hertzapp := server.Default( /* server.WithAltTransport(netpoll.NewTransporter) */ server.WithALPN(true), server.WithTLS(cfg), server.WithHostPorts(":"+serverconfig.Port), server.WithTransport(quic.NewTransporter),
-				/* server.WithAltTransport(standard.NewTransporter) */)
+			hertzapp := server.Default( /* server.WithAltTransport(netpoll.NewTransporter) */ server.WithALPN(true), server.WithTLS(cfg), server.WithHostPorts(":"+serverconfig.Port), server.WithTransport(quic.NewTransporter)
+			/* server.WithAltTransport(standard.NewTransporter) */)
 
 			// hertzapp.AddProtocol("h2", factoryh2.NewServerFactory(config.WithDisableKeepAlive(false)))
 			// config.WithReadTimeout(time.Minute),
