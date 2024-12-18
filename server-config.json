@@ -15,12 +15,6 @@
     "servers": [
         {
             "port": "28080"
-        },
-        {
-            "port": "28443",
-            "protocol": "https",
-            "cert": "localhost.crt",
-            "key": "localhost.key"
         }
     ]
 }
