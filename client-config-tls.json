@@ -1,0 +1,13 @@
+{
+    "creditials": {
+        "username": "admin",
+        "password": "pass"
+    },
+    "servers": {
+        "port": "28443",
+        "protocol": "https",
+        "ca": "localhost.crt",
+        "path": "pwsh",
+        "host": "localhost"
+    }
+}

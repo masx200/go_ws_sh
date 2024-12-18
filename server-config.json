@@ -18,7 +18,7 @@
         },
         {
             "port": "28443",
-            "tls": true,
+            "protocol": "https",
             "cert": "localhost.crt",
             "key": "localhost.key"
         }

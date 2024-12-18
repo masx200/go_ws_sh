@@ -29,5 +29,9 @@ func main() {
 	fmt.Printf("Config : %s\n", config)
 	if mode == "server" {
 		go_ws_sh.Server_start(config)
+	} else {
+		if mode == "client" {
+			go_ws_sh.Client_start(config)
+		}
 	}
 }

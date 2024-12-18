@@ -21,13 +21,13 @@ import (
 // 每个函数应该没有参数并且返回一个接口和一个错误。
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
-func pipe_std_ws_server(config Config /* httpServeMux *http.ServeMux, handler func(w context.Context, r *app.RequestContext) */) {
+func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, handler func(w context.Context, r *app.RequestContext) */) {
 
 	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)
 	}
-	handler := createhandler(config /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handler := createhandler( /* config */ /* httpServeMux */ func(w context.Context, r *app.RequestContext) {
 		var name = r.Param(":name")
 		if handler, ok := handlermap[name]; ok {
 			handler(w, r)
@@ -128,18 +128,18 @@ type Session struct {
 	Args []string `json:"args"`
 }
 
-type Server struct {
-	Alpn string `json:"alpn"`
-	Port string `json:"port"`
-	Tls  bool   `json:"tls"`
-	Cert string `json:"cert"`
-	Key  string `json:"key"`
+type ServerConfig struct {
+	Alpn     string `json:"alpn"`
+	Port     string `json:"port"`
+	Protocol string `json:"protocol"`
+	Cert     string `json:"cert"`
+	Key      string `json:"key"`
 }
 
-type Config struct {
-	Credentials []Credentials `json:"credentials"`
-	Sessions    []Session     `json:"sessions"`
-	Servers     []Server      `json:"servers"`
+type ConfigServer struct {
+	Credentials []Credentials  `json:"credentials"`
+	Sessions    []Session      `json:"sessions"`
+	Servers     []ServerConfig `json:"servers"`
 }
 
 func Server_start(config string) {
@@ -150,7 +150,7 @@ func Server_start(config string) {
 	defer configFile.Close()
 
 	jsonDecoder := json.NewDecoder(configFile)
-	var configdata Config
+	var configdata ConfigServer
 	err = jsonDecoder.Decode(&configdata)
 	if err != nil {
 		log.Fatal(err)
@@ -159,7 +159,7 @@ func Server_start(config string) {
 
 	pipe_std_ws_server(configdata /* httpServeMux, handler */)
 }
-func createhandler(config Config, next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
+func createhandler( /* config Config, */ next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
 
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))

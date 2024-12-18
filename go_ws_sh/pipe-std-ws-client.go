@@ -6,6 +6,22 @@ import (
 	"os/exec"
 )
 
+type ConfigClient struct {
+	Credentials Credentials `json:"credentials"`
+
+	Servers ClientConfig `json:"servers"`
+}
+type ClientConfig struct {
+	Port     string `json:"port"`
+	Protocol string `json:"protocol"`
+	Ca       string `json:"ca"`
+	Path     string `json:"path"`
+	Host     string `json:"host"`
+}
+
+func Client_start(config string) {
+
+}
 func pipe_std_ws_client() {
 	cmd := exec.Command("pwsh")
 

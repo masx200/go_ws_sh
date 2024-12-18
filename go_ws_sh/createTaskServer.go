@@ -14,12 +14,13 @@ import (
 	"github.com/hertz-contrib/http2/config"
 	factoryh2 "github.com/hertz-contrib/http2/factory"
 	"github.com/hertz-contrib/logger/accesslog"
+
 	quic "github.com/masx200/go_ws_sh/network/quic-go"
 	http3 "github.com/masx200/go_ws_sh/server/quic-go"
 	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
 )
 
-func createTaskServer(serverconfig Server, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
+func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
 	if serverconfig.Alpn == "h2" {
 
 		return func() (interface{}, error) {
@@ -77,7 +78,7 @@ func createTaskServer(serverconfig Server, handler func(w context.Context, r *ap
 	// hertzapp.GET("/:name", func(c context.Context, ctx *app.RequestContext) {
 
 	// })
-	if serverconfig.Tls {
+	if serverconfig.Protocol=="https" {
 		return func() (interface{}, error) {
 			cert, err := tls.LoadX509KeyPair(serverconfig.Cert, serverconfig.Key)
 			if err != nil {
