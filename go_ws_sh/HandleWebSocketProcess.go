@@ -1,7 +1,7 @@
 package go_ws_sh
 
 import (
-	"context"
+	// "context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -29,8 +29,8 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string) error
 	return nil
 }
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
-	var w, cancel = context.WithCancel(context.Background())
-	defer cancel()
+	// var w, cancel = context.WithCancel(context.Background())
+	// defer cancel()
 	defer conn.Close()
 	var in_queue = NewQueue()
 	var err_queue = NewQueue()
@@ -125,7 +125,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			return
 		}
 		log.Println("process " + session.Cmd + " exit success")
-		cancel()
+		// cancel()
 		Clear()
 		conn.Close()
 
@@ -184,48 +184,49 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	for {
 
-		select {
-		case <-w.Done():
-			return nil
-		default:
+		// select {
+		// case <-w.Done():
+		// 	log.Println("exit done conn close")
+		// 	return nil
+		// default:
 
-			mt, message, err := conn.ReadMessage()
-			if err, ok := err.(*websocket.CloseError); ok {
+		mt, message, err := conn.ReadMessage()
+		if err, ok := err.(*websocket.CloseError); ok {
 
-				log.Println("close:", err)
+			log.Println("close:", err)
 
-				cmd.Process.Kill()
-				break
+			cmd.Process.Kill()
+			break
+		}
+		if err != nil {
+			log.Println("read:", err)
+			break
+		}
+		if mt == websocket.TextMessage {
+			log.Printf("ignored recv text: %s", message)
+		} else {
+			decoded, undecoded, err := codec.NativeFromBinary(message)
+			if len(undecoded) > 0 {
+
+				log.Println("undecoded:", undecoded)
+
 			}
 			if err != nil {
-				log.Println("read:", err)
-				break
-			}
-			if mt == websocket.TextMessage {
-				log.Printf("ignored recv text: %s", message)
+				log.Println("decode:", err)
+
 			} else {
-				decoded, undecoded, err := codec.NativeFromBinary(message)
-				if len(undecoded) > 0 {
-
-					log.Println("undecoded:", undecoded)
-
-				}
-				if err != nil {
-					log.Println("decode:", err)
-
+				// log.Printf("recv binary: %s", decoded)
+				var md = decoded.(map[string]interface{})
+				if md["type"] == "stdin" {
+					var body = md["body"].([]byte)
+					in_queue.Enqueue(body)
 				} else {
-					// log.Printf("recv binary: %s", decoded)
-					var md = decoded.(map[string]interface{})
-					if md["type"] == "stdin" {
-						var body = md["body"].([]byte)
-						in_queue.Enqueue(body)
-					} else {
-						log.Println("ignored unknown type:", md["type"])
-					}
+					log.Println("ignored unknown type:", md["type"])
 				}
+				// }
 			}
 		}
 
 	}
-	// return nil
+	return nil
 }
