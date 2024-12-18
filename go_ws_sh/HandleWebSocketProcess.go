@@ -43,11 +43,11 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		if r := recover(); r != nil {
 			log.Printf("Recovered from panic: %v", r)
 		}
-
-		conn.Close()
 		out_queue.Close()
 		err_queue.Close()
 		in_queue.Close()
+		conn.Close()
+
 		if cmd.Process != nil {
 			cmd.Process.Kill()
 		}
@@ -121,9 +121,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			return
 		}
 		log.Println("process " + session.Cmd + " exit success")
-
-		conn.Close()
 		Clear()
+		conn.Close()
+
 	}()
 	go func() {
 
