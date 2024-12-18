@@ -84,7 +84,10 @@ func createhandleWebSocket(session Session) func(w context.Context, r *app.Reque
 		}
 		err = upgrader.Upgrade(r, func(conn *websocket.Conn) {
 			err := HandleWebSocketProcess(session, codec, conn)
-			log.Println(err)
+			if err != nil {
+				log.Println(err)
+			}
+
 		})
 		// 升级HTTP连接到WebSocket协议
 		// conn, err := upgrader.Upgrade(w, r, nil)
