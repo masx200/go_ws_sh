@@ -5,11 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
 	// "net/http"
 	"os"
 	"strings"
-
 	// "unicode/utf8"
 
 	"github.com/cloudwego/hertz/pkg/app"
