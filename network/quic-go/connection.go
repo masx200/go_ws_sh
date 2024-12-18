@@ -63,8 +63,9 @@ func (c *conn) RemoteAddr() net.Addr {
 	return c.EarlyConnection.RemoteAddr()
 }
 
+type quicgoVersionNumber = uint32
 type versioner interface {
-	GetVersion() quicgo.VersionNumber
+	GetVersion() quicgoVersionNumber
 }
 
 func (c *conn) GetVersion() uint32 {
