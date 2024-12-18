@@ -71,6 +71,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 		io.Copy(stdin, in_queue)
 
+	}()
+	go func() {
 		if err := cmd.Wait(); err != nil {
 			log.Println(err)
 			Clear()
@@ -79,7 +81,6 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 		conn.Close()
 	}()
-
 	go func() {
 
 		for {
