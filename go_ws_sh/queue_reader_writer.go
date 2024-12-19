@@ -162,6 +162,10 @@ func (q *BlockingChannelDeque) TakeFirst() ([]byte, bool) {
 }
 
 // TakeLast implements BlockingDeque.
+// TakeLast removes and returns the last element from the queue.
+// If the queue is closed or empty, it returns nil and false.
+// This method blocks until the queue has elements or is closed.
+// It is thread-safe.
 func (q *BlockingChannelDeque) TakeLast() ([]byte, bool) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -183,6 +187,10 @@ func (q *BlockingChannelDeque) TakeLast() ([]byte, bool) {
 }
 
 // Close implements io.Closer.
+// Close 关闭阻塞通道队列，并清理所有资源。
+//
+// 该方法首先获取互斥锁以确保线程安全，然后标记队列为已关闭状态，并唤醒所有等待的协程。
+// 最后，清除队列中的所有数据。此方法不接受任何参数，也不返回任何错误。
 func (q *BlockingChannelDeque) Close() error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -191,11 +199,15 @@ func (q *BlockingChannelDeque) Close() error {
 	q.data.Clear()
 	return nil
 }
+
+// Empty 判断阻塞通道队列是否为空。
+// 该方法通过检查内部数据结构的长度来确定队列是否为空。
+// 使用互斥锁确保线程安全，防止多个goroutine同时修改队列状态。
 func (q *BlockingChannelDeque) Empty() bool {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	return q.data.Len() == 0 && q.closed
+	return q.data.Len() == 0
 }
 func NewBlockingChannelDeque() *BlockingChannelDeque {
 	var mu sync.Mutex
