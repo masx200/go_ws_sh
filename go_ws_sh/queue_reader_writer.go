@@ -229,6 +229,16 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 	}
 }
 
+// Enqueue 将一个字节切片值添加到BlockingChannelDeque的队列中。
+// 该方法在内部使用互斥锁来确保线程安全，并在队列关闭时阻止进一步的入队操作。
+// 当入队成功时，它会通知可能在等待队列非空的消费者。
+// 参数:
+//
+//	value - 要入队的字节切片值。
+//
+// 返回值:
+//
+//	如果队列已经关闭，则返回io.EOF错误，否则返回nil。
 func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -240,6 +250,9 @@ func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 	return nil
 }
 
+// Dequeue dequeues a message from the BlockingChannelDeque.
+// This function is blocking; if there are no messages in the queue, it will wait until a message is available or the queue is closed.
+// Returns nil if the queue is closed and there are no messages available.
 func (q *BlockingChannelDeque) Dequeue() []byte {
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -257,6 +270,16 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 	}
 	return nil
 }
+
+// PushFront 将一个字节切片作为消息添加到队列的前端。
+// 此方法在添加消息前会检查队列是否已关闭，如果关闭则返回错误。
+// 参数:
+//
+//	value - 要添加到队列的消息，类型为 []byte。
+//
+// 返回值:
+//
+//	如果队列已关闭，返回 io.EOF 错误；否则返回 nil。
 func (q *BlockingChannelDeque) PushFront(value []byte) error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -292,13 +315,26 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 		return 0, io.EOF
 	}
 	if len(p) < len(value) {
-		q.PushFront(value[len(p):])
+		err = q.PushFront(value[len(p):])
+		if err != nil {
+			return 0, err
+		}
 	}
 	n = copy(p, value)
 
 	return n, nil
 }
 
+// Write 向BlockingChannelDeque写入数据。
+// 该方法在BlockingChannelDeque关闭时返回EOF错误。
+// 参数:
+//
+//	p []byte: 要写入的数据。
+//
+// 返回值:
+//
+//	n int: 成功写入的字节数。
+//	err error: 如果写入失败，返回错误。
 func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 	if q.closed {
 		return 0, io.EOF
