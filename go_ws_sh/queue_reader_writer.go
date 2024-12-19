@@ -24,11 +24,25 @@ func init() {
 	var _ BlockingChannel = NewBlockingChannelDeque()
 }
 
+// BlockingChannelDeque 是一个阻塞通道双端队列。
+// 它使用双端队列作为底层数据结构，并提供了线程安全的操作。
+// 该结构用于在生产者和消费者之间高效地传递数据，同时保持数据的顺序。
 type BlockingChannelDeque struct {
-	data   *deque.Deque[[]byte]
+	// data 是一个双端队列，存储着字节切片。它是BlockingChannelDeque的核心组件，
+	// 负责实际数据的存储和操作。
+	data *deque.Deque[[]byte]
+
+	// closed 表示BlockingChannelDeque是否已关闭。当closed为true时，表示不能再向
+	// BlockingChannelDeque中添加数据，但仍然可以移除已有的数据直到队列为空。
 	closed bool
-	mu     *sync.Mutex
-	cond   *sync.Cond
+
+	// mu 是一个互斥锁，用于保护BlockingChannelDeque的成员变量，确保在同一时刻
+	// 只有一个线程可以修改BlockingChannelDeque的状态。
+	mu *sync.Mutex
+
+	// cond 是一个条件变量，与互斥锁mu一起使用。当BlockingChannelDeque为空或满时，
+	// 线程可以等待cond以获取信号继续操作，从而实现阻塞和唤醒机制。
+	cond *sync.Cond
 }
 
 // Done implements BlockingChannel.
