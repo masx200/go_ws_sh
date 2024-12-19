@@ -29,3 +29,7 @@ go run main.go -config client-config.json -mode client
 ## 配置文件查看文件
 
 [`server-config-tls.json`](server-config-tls.json)和[`client-config-tls.json`](client-config-tls.json)和[`server-config.json`](server-config.json)和[`client-config.json`](client-config.json)
+
+## 参考资料
+
+https://learn.microsoft.com/zh-cn/windows/console/console-virtual-terminal-sequences
