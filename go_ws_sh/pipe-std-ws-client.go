@@ -60,7 +60,6 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// }
 	// defer func() { _ = term.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
-	defer os.Exit(0)
 	codec, err := create_msg_codec()
 	if err != nil {
 		log.Println(err)
@@ -98,19 +97,25 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// fmt.Println("Authorization:", authHeader)
 	header.Set("Authorization", authHeader)
 	conn, response, err := x.Dial(url, header)
+	defer func() { os.Exit(0) }()
 	defer func() {
 
 		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
 			log.Println(err)
 		}
 	}()
-	log.Println("Response Status:", response.Status)
-	fmt.Println("Response Headers:")
-	for k, v := range response.Header {
-		fmt.Println(k, ":", strings.Join(v, ","))
+	if response != nil {
+		log.Println("Response Status:", response.Status)
+		fmt.Println("Response Headers:")
+		for k, v := range response.Header {
+			fmt.Println(k, ":", strings.Join(v, ","))
+		}
 	}
+
 	if err != nil {
-		log.Fatal("Dial error:", err)
+		log.Println("Dial error:", err)
+
+		return
 	}
 
 	defer conn.Close()
