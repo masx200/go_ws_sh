@@ -209,11 +209,23 @@ func (q *BlockingChannelDeque) Empty() bool {
 
 	return q.data.Len() == 0
 }
+
+// NewBlockingChannelDeque 创建并返回一个新的BlockingChannelDeque实例。
+// 该函数使用了互斥锁（mu）和条件变量（cond）来同步对双端队列（deque）的访问，
+// 以实现线程安全。通过初始化一个关闭标志（closed）来标记队列是否已关闭，
+// 确保在多线程环境下对队列的操作是安全和有序的。
 func NewBlockingChannelDeque() *BlockingChannelDeque {
+	// 初始化互斥锁，用于保护对队列的访问。
 	var mu sync.Mutex
+	// 创建一个新的条件变量，用于线程间的通信，确保对队列的操作是线程安全的。
 	x := sync.NewCond(&mu)
-	return &BlockingChannelDeque{data: &deque.Deque[[]byte]{},
-		closed: false, cond: x, mu: &mu,
+	// 返回一个新的BlockingChannelDeque实例，其中包含一个空的双端队列、一个未关闭的状态、
+	// 一个条件变量和一个互斥锁的引用。
+	return &BlockingChannelDeque{
+		data:   &deque.Deque[[]byte]{},
+		closed: false,
+		cond:   x,
+		mu:     &mu,
 	}
 }
 
