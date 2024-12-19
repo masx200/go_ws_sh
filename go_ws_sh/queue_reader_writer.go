@@ -138,14 +138,27 @@ func (q *BlockingChannelDeque) Size() int {
 }
 
 // TakeFirst implements BlockingDeque.
+// TakeFirst 从BlockingChannelDeque中取出并返回第一个元素。
+// 该方法首先锁定互斥锁以确保线程安全，然后尝试从队列尾部取出元素。
+// 如果队列为空，即没有元素可取，则返回nil和false。
+// 如果成功取出元素，则返回该元素和true。
+// 注意：该方法假设调用者已经处理了潜在的nil指针问题。
 func (q *BlockingChannelDeque) TakeFirst() ([]byte, bool) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
-	x := q.Dequeue()
-	if x == nil {
+
+	if q.closed {
 		return nil, false
 	}
-	return x, true
+	for q.data.Len() == 0 && !q.closed {
+		q.cond.Wait() // Wait until there is data or the queue is closed
+	}
+	if q.data.Len() > 0 {
+		value := q.data.Front()
+		q.data.Remove(0)
+		return value, true
+	}
+	return nil, false
 }
 
 // TakeLast implements BlockingDeque.
