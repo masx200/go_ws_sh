@@ -11,6 +11,11 @@ require (
 )
 
 require (
+	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/nsf/termbox-go v1.1.1 // indirect
+)
+
+require (
 	github.com/bytedance/gopkg v0.1.1 // indirect
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect

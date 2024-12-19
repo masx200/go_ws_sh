@@ -131,10 +131,19 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	go func() {
 		io.Copy(os.Stderr, err_queue)
 	}()
+	// 使用termbox接管stdin了
+	// go func() {
+	// 	io.Copy(in_queue, os.Stdin)
+	// }()
+	closable, startable, err := TermboxPipe(in_queue, in_queue)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer closable.Close()
 	go func() {
-		io.Copy(in_queue, os.Stdin)
+		startable()
 	}()
-
 	go func() {
 
 		for {
