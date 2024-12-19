@@ -45,12 +45,12 @@ type BlockingChannelDeque struct {
 	cond *sync.Cond
 }
 
-// Done implements BlockingChannel.
-// Done is a method of BlockingChannelDeque used to wait for the deque to close.
+// Wait implements BlockingChannel.
+// Wait is a method of BlockingChannelDeque used to wait for the deque to close.
 // This method is primarily used to block the caller until the BlockingChannelDeque is closed.
 // It should be noted that this method will not return immediately if the deque has not been closed,
 // but will wait until the deque is closed.
-func (q *BlockingChannelDeque) Done() {
+func (q *BlockingChannelDeque) Wait() {
 	// Acquire the lock to ensure thread safety during the operation.
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -363,19 +363,23 @@ type BlockingDeque interface {
 	// Closed 检查队列是否已经关闭
 	Closed() bool
 }
+
+// BlockingChannel 定义了一个阻塞通道接口，用于在队列满或空时阻塞操作
 type BlockingChannel interface {
 	// 在队尾插入元素，如果队列已满，则阻塞等待
 	Enqueue(item []byte) error
 	// 在队首插入元素，如果队列已满，则阻塞等待
-	// PushFront(item []byte) error
+	PushFront(item []byte) error
 	// 从队尾移除元素，如果队列为空，则阻塞等待
-	// TakeLast() ([]byte, bool)
+	TakeLast() ([]byte, bool)
 	// 从队首移除元素，如果队列为空，则阻塞等待
 	Dequeue() []byte
 	// 检查队列是否为空
 	IsEmpty() bool
 	// 获取队列的大小
 	Size() int
+	// 检查队列是否已关闭
 	Closed() bool
-	Done()
+	// 完成队列的操作，通常用于通知其他协程可以停止等待
+	Wait()
 }
