@@ -149,7 +149,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			if data == nil {
 				break
 			}
-
+			log.Printf("stdout recv Binary length: %v", len(data))
 			encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
 				"type": "stdout",
 				"body": data,
@@ -174,7 +174,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			if data == nil {
 				break
 			}
-
+			log.Printf("stderr recv Binary length: %v", len(data))
 			encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
 				"type": "stderr",
 				"body": data,
@@ -214,8 +214,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			break
 		}
 		if mt == websocket.TextMessage {
+			log.Printf("websocket recv text length: %v", len(message))
 			log.Printf("ignored recv text: %s", message)
 		} else {
+			log.Printf("websocket recv Binary length: %v", len(message))
 			decoded, undecoded, err := codec.NativeFromBinary(message)
 			if len(undecoded) > 0 {
 
