@@ -135,12 +135,24 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// go func() {
 	// 	io.Copy(in_queue, os.Stdin)
 	// }()
-	closable, startable, err := TermboxPipe(in_queue, in_queue)
+	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) { return in_queue.Write(p) }, func() error {
+
+		err := conn.WriteMessage(websocket.CloseMessage, []byte{})
+		if err != nil {
+			log.Println(err)
+		}
+		conn.Close()
+		out_queue.Close()
+		err_queue.Close()
+		in_queue.Close()
+		os.Exit(0)
+		return nil
+	})
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	defer closable.Close()
+	defer func() { go closable() }()
 	go func() {
 		startable()
 	}()
