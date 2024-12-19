@@ -157,7 +157,7 @@ func (q *BlockingChannelDeque) PushBack(item []byte) error {
 	}
 
 	// 将项添加到队列末尾。
-	q.data.PushBack(item)
+	q.data.PushBack(slices.Clone(item))
 
 	// 触发条件变量以通知可能在等待的协程。
 	q.cond.Signal()
@@ -285,7 +285,7 @@ func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 	if q.closed {
 		return io.EOF
 	}
-	q.data.PushBack(value)
+	q.data.PushBack(slices.Clone(value))
 	q.cond.Signal()
 	return nil
 }
@@ -326,7 +326,7 @@ func (q *BlockingChannelDeque) PushFront(value []byte) error {
 	if q.closed {
 		return io.EOF
 	}
-	q.data.PushFront(value)
+	q.data.PushFront(slices.Clone(value))
 	q.cond.Signal()
 	return nil
 }
