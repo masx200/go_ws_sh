@@ -46,17 +46,26 @@ type BlockingChannelDeque struct {
 }
 
 // Done implements BlockingChannel.
+// Done is a method of BlockingChannelDeque used to wait for the deque to close.
+// This method is primarily used to block the caller until the BlockingChannelDeque is closed.
+// It should be noted that this method will not return immediately if the deque has not been closed,
+// but will wait until the deque is closed.
 func (q *BlockingChannelDeque) Done() {
-
+	// Acquire the lock to ensure thread safety during the operation.
 	q.mu.Lock()
 	defer q.mu.Unlock()
+
+	// If the deque has already been closed, return the method directly.
 	if q.closed {
 		return
 	}
+
+	// Wait in a loop until the deque is closed.
+	// The use of conditional variables here allows the current goroutine to wait until notified,
+	// thus avoiding unnecessary busy waiting and improving program efficiency.
 	for !q.closed {
 		q.cond.Wait()
 	}
-
 }
 
 // Closed implements BlockingDeque.
