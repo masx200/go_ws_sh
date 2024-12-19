@@ -25,7 +25,7 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 			case termbox.EventKey:
 				switch ev.Key {
 				case termbox.KeySpace:
-					fmt.Println("Space key pressed")
+					// fmt.Println("Space key pressed")
 					writable([]byte{' '})
 				// case termbox.KeyArrowUp:
 				// 	fmt.Println("Up arrow key pressed")
@@ -36,7 +36,7 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				// case termbox.KeyArrowRight:
 				// 	fmt.Println("Right arrow key pressed")
 				case termbox.KeyEnter:
-					fmt.Println("Enter key pressed")
+					// fmt.Println("Enter key pressed")
 					writable([]byte{'\n'})
 				// case termbox.KeyBackspace:
 				// 	fmt.Println("Backspace key pressed")
@@ -62,7 +62,7 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					return // 退出程序
 				default:
 					if ev.Ch != 0 {
-						fmt.Printf("Character '%c' (code: %d) was pressed\n", ev.Ch, ev.Ch)
+						// fmt.Printf("Character '%c' (code: %d) was pressed\n", ev.Ch, ev.Ch)
 
 						writable([]byte{byte(ev.Ch)})
 					} else if ev.Key < 256 {
