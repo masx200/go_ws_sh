@@ -24,6 +24,17 @@ func init() {
 	var _ BlockingChannel = NewBlockingChannelDeque()
 }
 
+// type IterableQueue interface {
+// 	Iterator() IteratorQueue
+// }
+// type IteratorQueue interface {
+// 	Next() ([]byte, bool)
+// }
+// type IteratorQueueImplementation struct {
+// 	q *BlockingChannelDeque
+// 	p int
+// }
+
 // BlockingChannelDeque 是一个阻塞通道双端队列。
 // 它使用双端队列作为底层数据结构，并提供了线程安全的操作。
 // 该结构用于在生产者和消费者之间高效地传递数据，同时保持数据的顺序。
