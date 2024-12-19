@@ -81,9 +81,14 @@ func (q *BlockingChannelDeque) Closed() bool {
 }
 
 // IsEmpty implements BlockingDeque.
+// IsEmpty 检查阻塞通道双端队列是否为空。
+// 该方法通过检查内部数据结构的长度来确定队列是否为空。
+// 使用互斥锁确保在检查长度时队列不会被修改。
 func (q *BlockingChannelDeque) IsEmpty() bool {
+	// 加锁以确保线程安全
 	q.mu.Lock()
 	defer q.mu.Unlock()
+	// 返回队列是否为空的布尔值
 	return q.data.Len() == 0
 }
 
