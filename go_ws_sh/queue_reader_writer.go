@@ -350,12 +350,23 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	if q.closed {
 		return 0, io.EOF
 	}
+
+	//先尝试从队列中取出数据
+	//PeekFirst()
+	// first, ok := q.PeekFirst()
+
+	// if !ok {
+	// 	return 0, io.EOF
+	// }
+	// if len(first) < len(p) {
+
+	// }
 	value := q.Dequeue()
 	if value == nil {
 		return 0, io.EOF
 	}
 	if len(p) < len(value) {
-		err = q.PushFront(value[len(p):])
+		err = q.PushFront(slices.Clone(value[len(p):]))
 		if err != nil {
 			return 0, err
 		}
