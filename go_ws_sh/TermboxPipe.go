@@ -36,7 +36,6 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					writable([]byte{0x1B, '[', 'B'})
 				case termbox.KeyArrowLeft:
 					writable([]byte{0x1B, '[', 'D'})
-				// 	fmt.Println("Right arrow key pressed")
 				case termbox.KeyArrowRight:
 					writable([]byte{0x1B, '[', 'C'})
 
