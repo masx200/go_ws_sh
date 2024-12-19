@@ -99,10 +99,10 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	conn, response, err := x.Dial(url, header)
 	defer func() { os.Exit(0) }()
 	defer func() {
-
-		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
-			log.Println(err)
-		}
+		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
+		// if err := defer conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+		// 	log.Println(err)
+		// }
 	}()
 	if response != nil {
 		log.Println("Response Status:", response.Status)
@@ -137,15 +137,16 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// }()
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) { return in_queue.Write(p) }, func() error {
 
-		err := conn.WriteMessage(websocket.CloseMessage, []byte{})
-		if err != nil {
-			log.Println(err)
-		}
+		/* 	err :=  */
+		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
+		// if err != nil {
+		// 	log.Println(err)
+		// }
 		conn.Close()
 		out_queue.Close()
 		err_queue.Close()
 		in_queue.Close()
-		os.Exit(0)
+		defer os.Exit(0)
 		return nil
 	})
 	if err != nil {

@@ -30,10 +30,10 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string) error
 }
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
 	defer func() {
-
-		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
-			log.Println(err)
-		}
+		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
+		// if err := defer conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+		// 	log.Println(err)
+		// }
 	}()
 	// var w, cancel = context.WithCancel(context.Background())
 	// defer cancel()
@@ -131,10 +131,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			return
 		}
 		log.Println("process " + session.Cmd + " exit success")
+
+		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 		// cancel()
-		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
-			log.Println(err)
-		}
+		// if err := defer conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+		// 	log.Println(err)
+		// }
 
 		// conn.WriteControl()
 		Clear()

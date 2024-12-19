@@ -38,7 +38,8 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				case termbox.KeyEnter:
 					// fmt.Println("Enter key pressed")
 					writable([]byte{'\n'})
-				// case termbox.KeyBackspace:
+				case termbox.KeyBackspace:
+					writable([]byte{'\b'})
 				// 	fmt.Println("Backspace key pressed")
 				// case termbox.KeyDelete:
 				// 	fmt.Println("Delete key pressed")
