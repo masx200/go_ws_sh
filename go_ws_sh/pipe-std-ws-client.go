@@ -28,8 +28,8 @@ type ClientConfig struct {
 	Port     string `json:"port"`
 	Protocol string `json:"protocol"`
 	Ca       string `json:"ca"`
-
-	Host string `json:"host"`
+	Insecure bool   `json:"insecure"`
+	Host     string `json:"host"`
 }
 
 func Client_start(config string) {
@@ -73,7 +73,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	// 创建一个新的WebSocket客户端连接
 	x := websocket.DefaultDialer
-	if configdata.Servers.Ca != "" {
+	if configdata.Servers.Ca != "" || configdata.Servers.Insecure {
 		configureWebSocketTLSCA(x, configdata)
 	}
 
@@ -242,10 +242,14 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// }
 }
 
+// configureWebSocketTLSCA 配置 WebSocket 的 TLS 客户端证书认证。
+// 该函数接收一个 websocket.Dialer 实例 x 和一个 ConfigClient 类型的配置数据 configdata。
+// 它的主要作用是为 WebSocket 连接配置 TLS 客户端，以确保连接的安全性。
 func configureWebSocketTLSCA(x *websocket.Dialer, configdata ConfigClient) {
 	x.TLSClientConfig = &tls.Config{
 		RootCAs: x509.NewCertPool(),
 	}
+	x.TLSClientConfig.InsecureSkipVerify = configdata.Servers.Insecure
 	caCert, err := os.ReadFile(configdata.Servers.Ca)
 	if err != nil {
 		log.Fatal(err)
