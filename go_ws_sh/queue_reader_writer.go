@@ -8,11 +8,19 @@ import (
 	"github.com/gammazero/deque"
 )
 
+// init函数用于初始化BlockingChannelDeque，确保其符合多个接口的要求。
+// 这里的目的是验证BlockingChannelDeque实现了io.Closer、io.Reader、io.Writer、BlockingDeque和BlockingChannel等接口。
+// 通过这种方式，可以在程序启动时对BlockingChannelDeque的接口实现进行检查，确保其行为符合预期。
 func init() {
+	// 将NewBlockingChannelDeque的返回值赋值给io.Closer接口变量，验证其是否实现了Close方法。
 	var _ io.Closer = NewBlockingChannelDeque()
+	// 将NewBlockingChannelDeque的返回值赋值给io.Reader接口变量，验证其是否实现了Read方法。
 	var _ io.Reader = NewBlockingChannelDeque()
+	// 将NewBlockingChannelDeque的返回值赋值给io.Writer接口变量，验证其是否实现了Write方法。
 	var _ io.Writer = NewBlockingChannelDeque()
+	// 将NewBlockingChannelDeque的返回值赋值给BlockingDeque接口变量，验证其是否实现了特定的BlockingDeque方法。
 	var _ BlockingDeque = NewBlockingChannelDeque()
+	// 将NewBlockingChannelDeque的返回值赋值给BlockingChannel接口变量，验证其是否实现了特定的BlockingChannel方法。
 	var _ BlockingChannel = NewBlockingChannelDeque()
 }
 
