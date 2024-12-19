@@ -127,8 +127,13 @@ func (q *BlockingChannelDeque) PushBack(item []byte) error {
 }
 
 // Size implements BlockingDeque.
+// Size 返回BlockingChannelDeque中的元素数量。
+// 该方法通过锁定互斥锁来确保线程安全，在解锁后返回元素数量。
+// 注意：使用互斥锁是因为BlockingChannelDeque可能在多个线程间共享，
+// 锁定可以防止在计算大小时对deque进行修改，从而确保数据一致性。
 func (q *BlockingChannelDeque) Size() int {
-
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	return q.data.Len()
 }
 
