@@ -230,7 +230,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			log.Printf("ignored recv text: %s", message)
 		} else {
 			log.Printf("websocket recv Binary length: %v", len(message))
-			decoded, undecoded, err := codec.NativeFromBinary(message)
+
+			var result BinaryMessage
+			undecoded, err := DecodeStructAvroBinary(codec, message, &result)
 			if len(undecoded) > 0 {
 
 				log.Println("undecoded:", undecoded)
@@ -241,12 +243,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 			} else {
 				// log.Printf("recv binary: %s", decoded)
-				var md = decoded.(map[string]interface{})
-				if md["type"] == "stdin" {
-					var body = md["body"].([]byte)
+				var md = result
+				if md.Type == "stdin" {
+					var body = md.Body
 					in_queue.Enqueue(body)
 				} else {
-					log.Println("ignored unknown type:", md["type"])
+					log.Println("ignored unknown type:", md.Type)
 				}
 				// }
 			}

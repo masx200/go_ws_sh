@@ -46,19 +46,19 @@ func create_msg_codec() (*goavro.Codec, error) {
 // 返回值:
 //
 //	如果解析过程中发生错误，则返回错误。
-func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result *any) error {
+func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result any) ([]byte, error) {
 	decoded, undecoded, err := codec.NativeFromBinary(message)
 	if len(undecoded) > 0 {
 		log.Println("undecoded:", undecoded)
 	}
 	if err != nil {
 		log.Println("decode:", err)
-		return err
+		return undecoded, err
 	}
 
 	input := decoded
 	err = mapstructure.Decode(input, &result)
-	return err
+	return undecoded, err
 }
 
 // EncodeStructAvroBinary 将任意结构体编码为Avro二进制格式。
