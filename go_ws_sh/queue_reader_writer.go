@@ -9,49 +9,135 @@ import (
 )
 
 func init() {
-	var _ io.Closer = NewQueue()
-	var _ io.Reader = NewQueue()
-	var _ io.Writer = NewQueue()
+	var _ io.Closer = NewBlockingChannelDeque()
+	var _ io.Reader = NewBlockingChannelDeque()
+	var _ io.Writer = NewBlockingChannelDeque()
+	var _ BlockingDeque = NewBlockingChannelDeque()
+	var _ BlockingChannel = NewBlockingChannelDeque()
 }
 
-type Queue struct {
+type BlockingChannelDeque struct {
 	data   *deque.Deque[[]byte]
 	closed bool
 	mu     *sync.Mutex
 	cond   *sync.Cond
 }
 
+// Done implements BlockingChannel.
+func (q *BlockingChannelDeque) Done() {
+
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	if q.closed {
+		return
+	}
+	for !q.closed {
+		q.cond.Wait()
+	}
+
+}
+
+// Closed implements BlockingDeque.
+func (q *BlockingChannelDeque) Closed() bool {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	return q.closed
+}
+
+// IsEmpty implements BlockingDeque.
+func (q *BlockingChannelDeque) IsEmpty() bool {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	return q.data.Len() == 0
+}
+
+// PushFront implements BlockingDeque.
+
+// PushBack implements BlockingDeque.
+func (q *BlockingChannelDeque) PushBack(item []byte) error {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	if q.closed {
+		return io.EOF
+	}
+	q.data.PushBack(item)
+	q.cond.Signal()
+	return nil
+}
+
+// Size implements BlockingDeque.
+func (q *BlockingChannelDeque) Size() int {
+
+	return q.data.Len()
+}
+
+// TakeFirst implements BlockingDeque.
+func (q *BlockingChannelDeque) TakeFirst() ([]byte, bool) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	x := q.Dequeue()
+	if x == nil {
+		return nil, false
+	}
+	return x, true
+}
+
+// TakeLast implements BlockingDeque.
+func (q *BlockingChannelDeque) TakeLast() ([]byte, bool) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	if q.closed {
+		return nil, false
+	}
+	for q.data.Len() == 0 && !q.closed {
+		q.cond.Wait() // Wait until there is data or the queue is closed
+	}
+	if q.data.Len() == 0 {
+		return nil, false
+	}
+	x := q.data.Back()
+	q.data.Remove(q.data.Len() - 1)
+	if x == nil {
+		return nil, false
+	}
+	return x, true
+}
+
 // Close implements io.Closer.
-func (q *Queue) Close() error {
+func (q *BlockingChannelDeque) Close() error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	q.closed = true
 	q.cond.Broadcast()
-	q.data = &deque.Deque[[]byte]{}
+	q.data.Clear()
 	return nil
 }
-func (q *Queue) Empty() bool {
+func (q *BlockingChannelDeque) Empty() bool {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
 	return q.data.Len() == 0 && q.closed
 }
-func NewQueue() *Queue {
+func NewBlockingChannelDeque() *BlockingChannelDeque {
 	var mu sync.Mutex
 	x := sync.NewCond(&mu)
-	return &Queue{data: &deque.Deque[[]byte]{},
+	return &BlockingChannelDeque{data: &deque.Deque[[]byte]{},
 		closed: false, cond: x, mu: &mu,
 	}
 }
 
-func (q *Queue) Enqueue(value []byte) {
+func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
+	if q.closed {
+		return io.EOF
+	}
 	q.data.PushBack(value)
 	q.cond.Signal()
+	return nil
 }
 
-func (q *Queue) Dequeue() []byte {
+func (q *BlockingChannelDeque) Dequeue() []byte {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
@@ -68,11 +154,15 @@ func (q *Queue) Dequeue() []byte {
 	}
 	return nil
 }
-func (q *Queue) EnqueueFront(value []byte) {
+func (q *BlockingChannelDeque) PushFront(value []byte) error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
+	if q.closed {
+		return io.EOF
+	}
 	q.data.PushFront(value)
 	q.cond.Signal()
+	return nil
 }
 
 // Read 从队列中读取数据到提供的字节切片p。
@@ -90,7 +180,7 @@ func (q *Queue) EnqueueFront(value []byte) {
 //
 //	n: 实际读取的字节数。
 //	err: 错误信息，如果队列已关闭或没有数据可读，则返回 io.EOF。
-func (q *Queue) Read(p []byte) (n int, err error) {
+func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	if q.closed {
 		return 0, io.EOF
 	}
@@ -99,14 +189,52 @@ func (q *Queue) Read(p []byte) (n int, err error) {
 		return 0, io.EOF
 	}
 	if len(p) < len(value) {
-		q.EnqueueFront(value[len(p):])
+		q.PushFront(value[len(p):])
 	}
 	n = copy(p, value)
 
 	return n, nil
 }
 
-func (q *Queue) Write(p []byte) (n int, err error) {
-	q.Enqueue(slices.Clone(p))
+func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
+	if q.closed {
+		return 0, io.EOF
+	}
+	err = q.Enqueue(slices.Clone(p))
+	if err != nil {
+		return 0, err
+	}
 	return len(p), nil
+}
+
+type BlockingDeque interface {
+	// 在队尾插入元素，如果队列已满，则阻塞等待
+	PushBack(item []byte) error
+	// 在队首插入元素，如果队列已满，则阻塞等待
+	PushFront(item []byte) error
+	// 从队尾移除元素，如果队列为空，则阻塞等待
+	TakeLast() ([]byte, bool)
+	// 从队首移除元素，如果队列为空，则阻塞等待
+	TakeFirst() ([]byte, bool)
+	// 检查队列是否为空
+	IsEmpty() bool
+	// 获取队列的大小
+	Size() int
+	Closed() bool
+}
+type BlockingChannel interface {
+	// 在队尾插入元素，如果队列已满，则阻塞等待
+	Enqueue(item []byte) error
+	// 在队首插入元素，如果队列已满，则阻塞等待
+	// PushFront(item []byte) error
+	// 从队尾移除元素，如果队列为空，则阻塞等待
+	// TakeLast() ([]byte, bool)
+	// 从队首移除元素，如果队列为空，则阻塞等待
+	Dequeue() []byte
+	// 检查队列是否为空
+	IsEmpty() bool
+	// 获取队列的大小
+	Size() int
+	Closed() bool
+	Done()
 }

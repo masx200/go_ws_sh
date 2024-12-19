@@ -101,9 +101,9 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	}
 
 	defer conn.Close()
-	var in_queue = NewQueue()
-	var err_queue = NewQueue()
-	var out_queue = NewQueue()
+	var in_queue = NewBlockingChannelDeque()
+	var err_queue = NewBlockingChannelDeque()
+	var out_queue = NewBlockingChannelDeque()
 	defer out_queue.Close()
 	defer err_queue.Close()
 	defer in_queue.Close()
