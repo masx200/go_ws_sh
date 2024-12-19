@@ -62,7 +62,7 @@ func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result any) ([]
 }
 
 // EncodeStructAvroBinary 将任意结构体编码为Avro二进制格式。
-// 该函数首先将输入的结构体转换为map[any]interface{}类型，
+// 该函数首先将输入的结构体转换为map[string]interface{}类型，
 // 然后使用提供的Avro编解码器（codec）将其编码为Avro二进制格式。
 //
 // 参数:
@@ -73,7 +73,7 @@ func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result any) ([]
 //   - []byte: 编码后的Avro二进制数据。
 //   - error: 如果编码过程中发生错误，返回该错误。
 func EncodeStructAvroBinary(codec *goavro.Codec, message any) ([]byte, error) {
-	var m map[any]interface{}
+	var m map[string]interface{}
 	err := mapstructure.Decode(message, &m)
 	if err != nil {
 		log.Println("decode:", err)
