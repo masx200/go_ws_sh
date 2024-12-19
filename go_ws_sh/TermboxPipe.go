@@ -24,10 +24,20 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 			switch ev := termbox.PollEvent(); ev.Type {
 			case termbox.EventKey:
 				switch ev.Key {
+				case termbox.KeyTab:
+					writable([]byte{'\t'})
+				// https://learn.microsoft.com/zh-cn/windows/console/console-virtual-terminal-sequences
 				case termbox.KeySpace:
 					// fmt.Println("Space key pressed")
 					writable([]byte{' '})
-				// case termbox.KeyArrowUp:
+				case termbox.KeyArrowUp:
+					writable([]byte{0x1B, '[', 'A'})
+				case termbox.KeyArrowDown:
+					writable([]byte{0x1B, '[', 'B'})
+				case termbox.KeyArrowLeft:
+					writable([]byte{0x1B, '[', 'C'})
+				case termbox.KeyArrowRight:
+					writable([]byte{0x1B, '[', 'D'})
 				// 	fmt.Println("Up arrow key pressed")
 				// case termbox.KeyArrowDown:
 				// 	fmt.Println("Down arrow key pressed")
