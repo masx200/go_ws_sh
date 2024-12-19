@@ -52,6 +52,7 @@ require (
 	//github.com/masx200/go_ws_sh/server/quic-go
 	//github.com/masx200/go_ws_sh/server/quic-go v0.0.0-20241218064724-94eaca431908 // indirect
 	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/term v0.27.0
 )
 
 //replace github.com/lucas-clemente/quic-go v0.31.0 => github.com/quic-go/quic-go v0.38.2

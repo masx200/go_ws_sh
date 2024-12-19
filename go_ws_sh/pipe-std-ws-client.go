@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
+	// "golang.org/x/term"
 )
 
 type ClientSession struct {
@@ -53,6 +54,11 @@ func Client_start(config string) {
 // pipe_std_ws_client 创建一个WebSocket客户端，根据配置数据连接到服务器。
 // 它处理与WebSocket服务器的通信，包括身份验证、消息编码和解码，以及与标准输入/输出的交互。
 func pipe_std_ws_client(configdata ConfigClient) {
+	// oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer func() { _ = term.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
 	defer os.Exit(0)
 	codec, err := create_msg_codec()
