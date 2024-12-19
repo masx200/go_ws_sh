@@ -189,7 +189,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 			log.Println("close:", err)
 
-			os.Exit(0)
+			defer os.Exit(0)
 			break
 		}
 		if err != nil {
@@ -210,7 +210,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 			if data.Type == "rejected" {
 				log.Println("rejected:", data.Body)
-				os.Exit(0)
+				defer os.Exit(0)
 				return
 				//break
 			} else if data.Type == "resolved" {
