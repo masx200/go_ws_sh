@@ -54,7 +54,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer close(binarychannel)
 	//加一把锁在writemessage时使用
 	var mutext sync.Mutex
-	defer mutext.Unlock()
+	// defer mutext.Unlock()
 	// var mubinary sync.Mutex
 	defer func() {
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
