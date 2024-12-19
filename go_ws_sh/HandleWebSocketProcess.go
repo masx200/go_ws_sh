@@ -29,6 +29,12 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string) error
 	return nil
 }
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
+	defer func() {
+
+		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+			log.Println(err)
+		}
+	}()
 	// var w, cancel = context.WithCancel(context.Background())
 	// defer cancel()
 	defer conn.Close()

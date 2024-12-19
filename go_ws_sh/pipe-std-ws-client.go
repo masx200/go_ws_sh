@@ -53,6 +53,7 @@ func Client_start(config string) {
 // pipe_std_ws_client 创建一个WebSocket客户端，根据配置数据连接到服务器。
 // 它处理与WebSocket服务器的通信，包括身份验证、消息编码和解码，以及与标准输入/输出的交互。
 func pipe_std_ws_client(configdata ConfigClient) {
+
 	defer os.Exit(0)
 	codec, err := create_msg_codec()
 	if err != nil {
@@ -91,6 +92,12 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// fmt.Println("Authorization:", authHeader)
 	header.Set("Authorization", authHeader)
 	conn, response, err := x.Dial(url, header)
+	defer func() {
+
+		if err := conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+			log.Println(err)
+		}
+	}()
 	log.Println("Response Status:", response.Status)
 	fmt.Println("Response Headers:")
 	for k, v := range response.Header {

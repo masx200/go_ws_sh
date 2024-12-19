@@ -10,7 +10,7 @@
         "port": "28443",
         "protocol": "https",
         "ca": "localhost.crt",
-        "insecure": true,
+        "insecure": false,
         "host": "localhost"
     }
 }
