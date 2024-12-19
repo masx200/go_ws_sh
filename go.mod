@@ -7,7 +7,6 @@ require (
 	github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
 	github.com/linkedin/goavro/v2 v2.13.0
-	github.com/mitchellh/mapstructure v1.5.0
 	github.com/quic-go/quic-go v0.48.2
 )
 
@@ -22,6 +21,7 @@ require (
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/pprof v0.0.0-20241210010833-40e02aabc2ad // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/nyaruka/phonenumbers v1.4.3 // indirect
 	github.com/onsi/ginkgo/v2 v2.22.0 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
