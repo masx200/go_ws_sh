@@ -45,6 +45,46 @@ type BlockingChannelDeque struct {
 	cond *sync.Cond
 }
 
+// PeekFirst implements BlockingDeque.
+func (q *BlockingChannelDeque) PeekFirst() ([]byte, bool) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	if q.closed {
+		return nil, false
+	}
+	for q.data.Len() == 0 && !q.closed {
+		q.cond.Wait() // Wait until there is data or the queue is closed
+	}
+	if q.data.Len() > 0 {
+		value := q.data.Front()
+		// q.data.Remove(0)
+		return value, true
+	}
+	return nil, false
+}
+
+// PeekLast implements BlockingDeque.
+func (q *BlockingChannelDeque) PeekLast() ([]byte, bool) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	if q.closed {
+		return nil, false
+	}
+	for q.data.Len() == 0 && !q.closed {
+		q.cond.Wait() // Wait until there is data or the queue is closed
+	}
+	if q.data.Len() == 0 {
+		return nil, false
+	}
+	x := q.data.Back()
+	// q.data.Remove(q.data.Len() - 1)
+	if x == nil {
+		return nil, false
+	}
+	return x, true
+}
+
 // Wait implements BlockingChannel.
 // Wait is a method of BlockingChannelDeque used to wait for the deque to close.
 // This method is primarily used to block the caller until the BlockingChannelDeque is closed.
@@ -348,6 +388,9 @@ func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 
 // BlockingDeque 是一个阻塞双端队列的接口，提供了在队列两端进行插入和移除操作的能力
 type BlockingDeque interface {
+	PeekLast() ([]byte, bool)
+	// TakeFirst 从队首移除元素，如果队列为空，则阻塞等待直到队列中有元素可用
+	PeekFirst() ([]byte, bool)
 	// PushBack 在队尾插入元素，如果队列已满，则阻塞等待直到队列有空余位置
 	PushBack(item []byte) error
 	// PushFront 在队首插入元素，如果队列已满，则阻塞等待直到队列有空余位置
@@ -366,12 +409,14 @@ type BlockingDeque interface {
 
 // BlockingChannel 定义了一个阻塞通道接口，用于在队列满或空时阻塞操作
 type BlockingChannel interface {
+	PushBack(item []byte) error
 	// 在队尾插入元素，如果队列已满，则阻塞等待
 	Enqueue(item []byte) error
 	// 在队首插入元素，如果队列已满，则阻塞等待
 	PushFront(item []byte) error
 	// 从队尾移除元素，如果队列为空，则阻塞等待
 	TakeLast() ([]byte, bool)
+	TakeFirst() ([]byte, bool)
 	// 从队首移除元素，如果队列为空，则阻塞等待
 	Dequeue() []byte
 	// 检查队列是否为空
