@@ -67,7 +67,7 @@ func (q *BlockingChannelDeque) Done() {
 		q.cond.Wait()
 	}
 
-	return
+	//return
 }
 
 // Closed implements BlockingDeque.
@@ -95,14 +95,34 @@ func (q *BlockingChannelDeque) IsEmpty() bool {
 // PushFront implements BlockingDeque.
 
 // PushBack implements BlockingDeque.
+// PushBack 将一个字节切片添加到BlockingChannelDeque的末尾。
+// 该方法在内部使用锁来确保线程安全，并在队列关闭时防止添加新元素。
+// 当队列已满或需要通知等待的协程时，它还会触发条件变量。
+//
+// 参数:
+//
+//	item []byte - 要添加到队列末尾的字节切片。
+//
+// 返回值:
+//
+//	error - 如果队列已关闭，则返回io.EOF；否则返回nil。
 func (q *BlockingChannelDeque) PushBack(item []byte) error {
+	// 上锁以确保线程安全。
 	q.mu.Lock()
 	defer q.mu.Unlock()
+
+	// 检查队列是否已关闭，如果是，则返回EOF错误。
 	if q.closed {
 		return io.EOF
 	}
+
+	// 将项添加到队列末尾。
 	q.data.PushBack(item)
+
+	// 触发条件变量以通知可能在等待的协程。
 	q.cond.Signal()
+
+	// 成功添加项后返回nil。
 	return nil
 }
 
