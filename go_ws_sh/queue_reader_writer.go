@@ -66,9 +66,14 @@ func (q *BlockingChannelDeque) Done() {
 	for !q.closed {
 		q.cond.Wait()
 	}
+
+	return
 }
 
 // Closed implements BlockingDeque.
+// Closed 判断通道是否已关闭。
+// 该方法通过检查BlockingChannelDeque实例的closed属性来确定通道的关闭状态。
+// 使用互斥锁确保线程安全，防止多个协程同时修改或读取closed状态。
 func (q *BlockingChannelDeque) Closed() bool {
 	q.mu.Lock()
 	defer q.mu.Unlock()
