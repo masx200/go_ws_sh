@@ -346,19 +346,21 @@ func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
+// BlockingDeque 是一个阻塞双端队列的接口，提供了在队列两端进行插入和移除操作的能力
 type BlockingDeque interface {
-	// 在队尾插入元素，如果队列已满，则阻塞等待
+	// PushBack 在队尾插入元素，如果队列已满，则阻塞等待直到队列有空余位置
 	PushBack(item []byte) error
-	// 在队首插入元素，如果队列已满，则阻塞等待
+	// PushFront 在队首插入元素，如果队列已满，则阻塞等待直到队列有空余位置
 	PushFront(item []byte) error
-	// 从队尾移除元素，如果队列为空，则阻塞等待
+	// TakeLast 从队尾移除元素，如果队列为空，则阻塞等待直到队列中有元素可用
 	TakeLast() ([]byte, bool)
-	// 从队首移除元素，如果队列为空，则阻塞等待
+	// TakeFirst 从队首移除元素，如果队列为空，则阻塞等待直到队列中有元素可用
 	TakeFirst() ([]byte, bool)
-	// 检查队列是否为空
+	// IsEmpty 检查队列是否为空
 	IsEmpty() bool
-	// 获取队列的大小
+	// Size 获取队列的大小
 	Size() int
+	// Closed 检查队列是否已经关闭
 	Closed() bool
 }
 type BlockingChannel interface {
