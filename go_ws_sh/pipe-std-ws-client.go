@@ -137,11 +137,12 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			if data == nil {
 				break
 			}
+			var message = BinaryMessage{
+				Type: "stdin",
+				Body: data,
+			}
 
-			encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
-				"type": "stdin",
-				"body": data,
-			})
+			encoded, err := EncodeStructAvroBinary(codec, &message)
 			if err != nil {
 				log.Println("encode:", err)
 				continue

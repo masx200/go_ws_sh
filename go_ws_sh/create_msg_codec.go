@@ -72,7 +72,7 @@ func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result *any) er
 // 返回值:
 //   - []byte: 编码后的Avro二进制数据。
 //   - error: 如果编码过程中发生错误，返回该错误。
-func EncodeStructAvroBinary(codec *goavro.Codec, message *any) ([]byte, error) {
+func EncodeStructAvroBinary(codec *goavro.Codec, message any) ([]byte, error) {
 	var m map[any]interface{}
 	err := mapstructure.Decode(message, &m)
 	if err != nil {

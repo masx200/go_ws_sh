@@ -150,10 +150,16 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				break
 			}
 			log.Printf("stdout recv Binary length: %v", len(data))
-			encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
-				"type": "stdout",
-				"body": data,
-			})
+			var message = BinaryMessage{
+				Type: "stdout",
+				Body: data,
+			}
+
+			encoded, err := EncodeStructAvroBinary(codec, &message)
+			// encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
+			// 	"type": "stdout",
+			// 	"body": data,
+			// })
 			if err != nil {
 				log.Println("encode:", err)
 				continue
@@ -175,10 +181,16 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				break
 			}
 			log.Printf("stderr recv Binary length: %v", len(data))
-			encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
-				"type": "stderr",
-				"body": data,
-			})
+			var message = BinaryMessage{
+				Type: "stderr",
+				Body: data,
+			}
+
+			encoded, err := EncodeStructAvroBinary(codec, &message)
+			// encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
+			// 	"type": "stderr",
+			// 	"body": data,
+			// })
 			if err != nil {
 				log.Println("encode:", err)
 				continue
