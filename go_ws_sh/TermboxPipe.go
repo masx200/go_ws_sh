@@ -35,30 +35,28 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				case termbox.KeyArrowDown:
 					writable([]byte{0x1B, '[', 'B'})
 				case termbox.KeyArrowLeft:
-					writable([]byte{0x1B, '[', 'C'})
-				case termbox.KeyArrowRight:
 					writable([]byte{0x1B, '[', 'D'})
-				// 	fmt.Println("Up arrow key pressed")
-				// case termbox.KeyArrowDown:
-				// 	fmt.Println("Down arrow key pressed")
-				// case termbox.KeyArrowLeft:
-				// 	fmt.Println("Left arrow key pressed")
-				// case termbox.KeyArrowRight:
 				// 	fmt.Println("Right arrow key pressed")
+				case termbox.KeyArrowRight:
+					writable([]byte{0x1B, '[', 'C'})
+
 				case termbox.KeyEnter:
 					// fmt.Println("Enter key pressed")
 					writable([]byte{'\n'})
 				case termbox.KeyBackspace:
 					writable([]byte{'\b'})
 				// 	fmt.Println("Backspace key pressed")
-				// case termbox.KeyDelete:
+				case termbox.KeyDelete:
+					writable([]byte{0x7F})
 				// 	fmt.Println("Delete key pressed")
-				// case termbox.KeyHome:
+				case termbox.KeyHome:
+					writable([]byte{0x1B, '[', 'H'})
 				// 	fmt.Println("Home key pressed")
-				// case termbox.KeyEnd:
+				case termbox.KeyEnd:
+					writable([]byte{0x1B, '[', 'F'})
 				// 	fmt.Println("End key pressed")
-				// case termbox.KeyEsc:
-				// 	fmt.Println("ESC key pressed")
+				case termbox.KeyEsc:
+					writable([]byte{0x1B})
 				case termbox.KeyCtrlC:
 					fmt.Println("CtrlC key pressed exit")
 					go closable()
