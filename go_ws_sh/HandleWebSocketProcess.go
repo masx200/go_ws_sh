@@ -7,12 +7,13 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"sync"
 
 	"github.com/hertz-contrib/websocket"
 	"github.com/linkedin/goavro/v2"
 )
 
-func SendTextMessage(conn *websocket.Conn, typestring string, body string) error {
+func SendTextMessage(conn *websocket.Conn, typestring string, body string, mu *sync.Mutex) error {
 
 	var data TextMessage
 	data.Type = typestring
@@ -21,14 +22,31 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string) error
 	if err != nil {
 		return err
 	}
-
+	//加一把锁在writemessage时使用,不能并发写入
+	mu.Lock()
+	defer mu.Unlock()
 	err = conn.WriteMessage(websocket.TextMessage, databuf)
 	if err != nil {
 		return fmt.Errorf("failed to send message: %w", err)
 	}
 	return nil
 }
+
+// HandleWebSocketProcess 处理WebSocket连接的整个生命周期。
+// 该函数负责与客户端建立WebSocket连接，执行命令，并通过WebSocket发送和接收数据。
+// 参数:
+//
+//	session: 包含要执行的命令和参数的会话信息。
+//	codec: 用于编解码Avro消息的编解码器。
+//	conn: 与客户端的WebSocket连接。
+//
+// 返回值:
+//
+//	如果执行过程中发生错误，则返回该错误。
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
+
+	//加一把锁在writemessage时使用
+	var mu sync.Mutex
 	defer func() {
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 		// if err := defer conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
@@ -68,7 +86,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	if err != nil {
 		log.Println(err)
 
-		err := SendTextMessage(conn, "rejected", err.Error())
+		err := SendTextMessage(conn, "rejected", err.Error(), &mu)
 		if err != nil {
 			return err
 		}
@@ -79,7 +97,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error())
+		err := SendTextMessage(conn, "rejected", err.Error(), &mu)
 		if err != nil {
 			return err
 		}
@@ -89,7 +107,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error())
+		err := SendTextMessage(conn, "rejected", err.Error(), &mu)
 		if err != nil {
 			return err
 		}
@@ -99,7 +117,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	if err := cmd.Start(); err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error())
+		err := SendTextMessage(conn, "rejected", err.Error(), &mu)
 		if err != nil {
 			return err
 		}
@@ -109,7 +127,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer cmd.Process.Kill()
 	x := "process " + session.Cmd + " started success"
 	log.Println(x)
-	err = SendTextMessage(conn, "resolved", x)
+	err = SendTextMessage(conn, "resolved", x, &mu)
 	if err != nil {
 		return err
 	}
@@ -166,7 +184,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-
+			mu.Lock()
+			defer mu.Unlock()
 			err = conn.WriteMessage(websocket.BinaryMessage, encoded)
 
 			if err != nil {
@@ -197,7 +216,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-
+			mu.Lock()
+			defer mu.Unlock()
 			err = conn.WriteMessage(websocket.BinaryMessage, encoded)
 
 			if err != nil {
