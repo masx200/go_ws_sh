@@ -1,15 +1,16 @@
 package go_ws_sh
 
 import (
+	"fmt"
 	"log"
 
 	goavro "github.com/linkedin/goavro/v2"
-	"github.com/mitchellh/mapstructure"
+	// "github.com/mitchellh/mapstructure"
 )
 
 type BinaryMessage struct {
-	Type string `mapstructure:"type"`
-	Body []byte `mapstructure:"body"`
+	Type string
+	Body []byte
 }
 
 // create_msg_codec 创建一个用于编码和解码消息的Apache Avro编解码器。
@@ -46,7 +47,7 @@ func create_msg_codec() (*goavro.Codec, error) {
 // 返回值:
 //
 //	如果解析过程中发生错误，则返回错误。
-func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result any) ([]byte, error) {
+func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result *BinaryMessage) ([]byte, error) {
 	decoded, undecoded, err := codec.NativeFromBinary(message)
 	if len(undecoded) > 0 {
 		log.Println("undecoded:", undecoded)
@@ -57,8 +58,36 @@ func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result any) ([]
 	}
 
 	input := decoded
-	err = mapstructure.Decode(input, &result)
+	err = DecodeBinaryMessage(input, result)
 	return undecoded, err
+}
+
+func DecodeBinaryMessage(input interface{}, result *BinaryMessage) error {
+	if result == nil {
+		return fmt.Errorf("result is nil")
+	}
+
+	// 断言 input 为 map[string]interface{}
+	inputMap, ok := input.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("input is not a map[string]interface{}")
+	}
+
+	// 获取 "type" 字段并赋值给 result.Type
+	typeValue, ok := inputMap["type"].(string)
+	if !ok {
+		return fmt.Errorf("type field is not a string")
+	}
+	result.Type = typeValue
+
+	// 获取 "body" 字段并赋值给 result.Body
+	bodyValue, ok := inputMap["body"].([]byte)
+	if !ok {
+		return fmt.Errorf("body field is not a []byte")
+	}
+	result.Body = bodyValue
+
+	return nil
 }
 
 // EncodeStructAvroBinary 将任意结构体编码为Avro二进制格式。
@@ -72,9 +101,9 @@ func DecodeStructAvroBinary(codec *goavro.Codec, message []byte, result any) ([]
 // 返回值:
 //   - []byte: 编码后的Avro二进制数据。
 //   - error: 如果编码过程中发生错误，返回该错误。
-func EncodeStructAvroBinary(codec *goavro.Codec, message any) ([]byte, error) {
+func EncodeStructAvroBinary(codec *goavro.Codec, message *BinaryMessage) ([]byte, error) {
 	var m map[string]interface{}
-	err := mapstructure.Decode(message, &m)
+	err := EncodeBinaryMessage(message, &m)
 	if err != nil {
 		log.Println("decode:", err)
 		return nil, err
@@ -86,4 +115,15 @@ func EncodeStructAvroBinary(codec *goavro.Codec, message any) ([]byte, error) {
 	}
 	return encoded, nil
 
+}
+
+func EncodeBinaryMessage(message *BinaryMessage, m *map[string]interface{}) error {
+	if message == nil {
+		return fmt.Errorf("message is nil")
+	}
+	*m = map[string]interface{}{
+		"type": message.Type,
+		"body": message.Body,
+	}
+	return nil
 }
