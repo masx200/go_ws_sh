@@ -234,22 +234,36 @@ func (q *BlockingChannelDeque) Size() int {
 // 如果成功取出元素，则返回该元素和true。
 // 注意：该方法假设调用者已经处理了潜在的nil指针问题。
 func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
-	//TODO: Implement the method
+	if q.closed {
+		return 0, false
+	}
+	for (q.data.Len() == 0) && !q.closed {
+		q.cond.Wait()
+	}
+	if q.closed {
+		return 0, false
+	}
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	if q.closed {
-		return nil, false
-	}
-	for q.data.Len() == 0 && !q.closed {
-		q.cond.Wait() // Wait until there is data or the queue is closed
-	}
-	if q.data.Len() > 0 {
-		value := q.data.Front()
-		q.data.Remove(0)
-		return value, true
-	}
-	return nil, false
+	x := q.data.Front()
+	q.data.Remove(0)
+	return x, true
+	// q.mu.Lock()
+	// defer q.mu.Unlock()
+
+	// if q.closed {
+	// 	return nil, false
+	// }
+	// for q.data.Len() == 0 && !q.closed {
+	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// }
+	// if q.data.Len() > 0 {
+	// 	value := q.data.Front()
+	// 	q.data.Remove(0)
+	// 	return value, true
+	// }
+	// return nil, false
 }
 
 // TakeLast implements BlockingDeque.
