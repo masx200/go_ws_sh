@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-
 	// "io"
 	"log"
 	"net/http"
@@ -137,6 +136,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// 	io.Copy(in_queue, os.Stdin)
 	// }()
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
+		log.Println("write to stdin length:", len(p))
 		in_queue <- (p)
 
 		return n, nil
@@ -169,6 +169,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			if data == nil || !ok {
 				break
 			}
+			log.Println("stdin recv Binary length: ", len(data))
 			var message = BinaryMessage{
 				Type: "stdin",
 				Body: data,
@@ -212,7 +213,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				log.Printf("ignored recv text: %s", message)
 				return
 			}
-
+			log.Println("websocket recv text length: ", len(message))
 			if data.Type == "rejected" {
 				log.Println("rejected:", data.Body)
 				defer os.Exit(0)
@@ -224,6 +225,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				log.Printf("ignored unknown recv text:%v", data)
 			}
 		} else {
+			log.Println("websocket recv binary length: ", len(message))
 			var result BinaryMessage
 			undecoded, err := DecodeStructAvroBinary(codec, message, &result)
 			if len(undecoded) > 0 {
