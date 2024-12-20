@@ -2,7 +2,8 @@ package go_ws_sh
 
 import (
 	"io"
-	"slices"
+	"math"
+	// "slices"
 	"sync"
 
 	"github.com/gammazero/deque"
@@ -370,34 +371,48 @@ func (q *BlockingChannelDeque) PushFront(value byte) error {
 //	n: 实际读取的字节数。
 //	err: 错误信息，如果队列已关闭或没有数据可读，则返回 io.EOF。
 func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
-	//TODO: Implement the method
+
 	if q.closed {
 		return 0, io.EOF
 	}
+	for (q.data.Len() == 0) && !q.closed {
+		q.cond.Wait()
+	}
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	var minsize = int(math.Min(float64(len(p)), float64(q.data.Len())))
 
-	//先尝试从队列中取出数据
-	//PeekFirst()
-	// first, ok := q.PeekFirst()
+	for i := 0; i < int(minsize); i++ {
+		p[i] = q.data.At(i)
 
-	// if !ok {
+	}
+	for i := 0; i < int(minsize); i++ {
+		q.data.Remove(0)
+	}
+	return minsize, nil
+	// //先尝试从队列中取出数据
+	// //PeekFirst()
+	// // first, ok := q.PeekFirst()
+
+	// // if !ok {
+	// // 	return 0, io.EOF
+	// // }
+	// // if len(first) < len(p) {
+
+	// // }
+	// value := q.Dequeue()
+	// if value == nil {
 	// 	return 0, io.EOF
 	// }
-	// if len(first) < len(p) {
-
+	// if len(p) < len(value) {
+	// 	err = q.PushFront((value[len(p):]))
+	// 	if err != nil {
+	// 		return 0, err
+	// 	}
 	// }
-	value := q.Dequeue()
-	if value == nil {
-		return 0, io.EOF
-	}
-	if len(p) < len(value) {
-		err = q.PushFront((value[len(p):]))
-		if err != nil {
-			return 0, err
-		}
-	}
-	n = copy(p, value)
+	// n = copy(p, value)
 
-	return n, nil
+	// return n, nil
 }
 
 // Write 向BlockingChannelDeque写入数据。
