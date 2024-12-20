@@ -311,6 +311,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				// log.Printf("recv binary: %s", decoded)
 				var md = result
 				if md.Type == "stdin" {
+					log.Println("server stdin received:", len(message))
 					var body = md.Body
 					in_queue <- body
 				} else {

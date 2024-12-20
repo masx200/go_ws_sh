@@ -1,6 +1,9 @@
 package go_ws_sh
 
-import "io"
+import (
+	"io"
+	"log"
+)
 
 func CopyChanToWriter(stdin io.WriteCloser, in_queue chan []byte) {
 	for {
@@ -9,7 +12,12 @@ func CopyChanToWriter(stdin io.WriteCloser, in_queue chan []byte) {
 			stdin.Close()
 			return
 		}
-		stdin.Write(data)
+		x, y := stdin.Write(data)
+		if y != nil {
+			log.Println("CopyChanToWriter stdin recv Binary error: ", y)
+			return
+		}
+		log.Println("CopyChanToWriter stdin recv Binary length: ", x)
 	}
 
 }
