@@ -3,11 +3,11 @@ package go_ws_sh
 import (
 	// "context"
 	"encoding/json"
-	"fmt"
+	// "fmt"
 	"io"
 	"log"
 	"os/exec"
-	"sync"
+	// "sync"
 
 	"github.com/hertz-contrib/websocket"
 	"github.com/linkedin/goavro/v2"
@@ -19,7 +19,7 @@ import (
 // body: 消息体
 // mu: 互斥锁，用于同步写操作
 // 返回错误，如果发送消息失败
-func SendTextMessage(conn *websocket.Conn, typestring string, body string, mu *sync.Mutex) error {
+func SendTextMessage(conn *websocket.Conn, typestring string, body string /*  mu *sync.Mutex */, binaryandtextchannel chan WebsocketMessage) error {
 
 	var data TextMessage
 	data.Type = typestring
@@ -28,14 +28,24 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string, mu *s
 	if err != nil {
 		return err
 	}
-	//加一把锁在writemessage时使用,不能并发写入
-	mu.Lock()
-	defer mu.Unlock()
-	err = conn.WriteMessage(websocket.TextMessage, databuf)
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
+	binaryandtextchannel <- WebsocketMessage{
+		Body: databuf,
+		Type: websocket.TextMessage,
 	}
+	//加一把锁在writemessage时使用,不能并发写入
+	// mu.Lock()
+	// defer mu.Unlock()
+	// err = conn.WriteMessage(websocket.TextMessage, databuf)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to send message: %w", err)
+	// }
+
 	return nil
+}
+
+type WebsocketMessage struct {
+	Body []byte
+	Type int
 }
 
 // HandleWebSocketProcess 处理WebSocket连接的整个生命周期。
@@ -50,10 +60,10 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string, mu *s
 //
 //	如果执行过程中发生错误，则返回该错误。
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
-	var binarychannel = make(chan []byte)
-	defer close(binarychannel)
+	var binaryandtextchannel = make(chan WebsocketMessage)
+	defer close(binaryandtextchannel)
 	//加一把锁在writemessage时使用
-	var mutext sync.Mutex
+	// var mutext sync.Mutex
 	// defer mutext.Unlock()
 	// var mubinary sync.Mutex
 	defer func() {
@@ -95,7 +105,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	if err != nil {
 		log.Println(err)
 
-		err := SendTextMessage(conn, "rejected", err.Error(), &mutext)
+		err := SendTextMessage(conn, "rejected", err.Error() /* &mutext */, binaryandtextchannel)
 		if err != nil {
 			return err
 		}
@@ -106,7 +116,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error(), &mutext)
+		err := SendTextMessage(conn, "rejected", err.Error() /*  &mutext */, binaryandtextchannel)
 		if err != nil {
 			return err
 		}
@@ -116,7 +126,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error(), &mutext)
+		err := SendTextMessage(conn, "rejected", err.Error() /*  &mutext */, binaryandtextchannel)
 		if err != nil {
 			return err
 		}
@@ -126,7 +136,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	if err := cmd.Start(); err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error(), &mutext)
+		err := SendTextMessage(conn, "rejected", err.Error() /* &mutext */, binaryandtextchannel)
 		if err != nil {
 			return err
 		}
@@ -136,7 +146,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer cmd.Process.Kill()
 	x := "process " + session.Cmd + " started success"
 	log.Println(x)
-	err = SendTextMessage(conn, "resolved", x, &mutext)
+	err = SendTextMessage(conn, "resolved", x /* &mutext */, binaryandtextchannel)
 	if err != nil {
 		return err
 	}
@@ -193,7 +203,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-			binarychannel <- encoded
+			binaryandtextchannel <- WebsocketMessage{
+				Body: encoded,
+				Type: websocket.BinaryMessage,
+			} //encoded
 			// mubinary.Lock()
 			// defer mubinary.Unlock()
 			// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
@@ -226,7 +239,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-			binarychannel <- encoded
+			binaryandtextchannel <- WebsocketMessage{
+				Body: encoded,
+				Type: websocket.BinaryMessage,
+			} //encoded
 			// mubinary.Lock()
 			// defer mubinary.Unlock()
 			// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
@@ -240,12 +256,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 
 		for {
-			//var encoded,ok <-  binarychannel
-			encoded, ok := <-binarychannel
+			//var encoded,ok <-  binaryandtextchannel
+			encoded, ok := <-binaryandtextchannel
 			if ok {
 				// mubinary.Lock()
 				// defer mubinary.Unlock()
-				err = conn.WriteMessage(websocket.BinaryMessage, encoded)
+				err = conn.WriteMessage(encoded.Type, encoded.Body)
 				if err != nil {
 					log.Println("write:", err)
 				}

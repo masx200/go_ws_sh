@@ -42,21 +42,23 @@ func init() {
 // 它使用双端队列作为底层数据结构，并提供了线程安全的操作。
 // 该结构用于在生产者和消费者之间高效地传递数据，同时保持数据的顺序。
 type BlockingChannelDeque struct {
-	// data 是一个双端队列，存储着字节切片。它是BlockingChannelDeque的核心组件，
-	// 负责实际数据的存储和操作。
-	data *deque.Deque[byte]
+	// // data 是一个双端队列，存储着字节切片。它是BlockingChannelDeque的核心组件，
+	// // 负责实际数据的存储和操作。
+	// data *deque.Deque[byte]
 
-	// closed 表示BlockingChannelDeque是否已关闭。当closed为true时，表示不能再向
-	// BlockingChannelDeque中添加数据，但仍然可以移除已有的数据直到队列为空。
-	closed bool
+	// // closed 表示BlockingChannelDeque是否已关闭。当closed为true时，表示不能再向
+	// // BlockingChannelDeque中添加数据，但仍然可以移除已有的数据直到队列为空。
+	// closed bool
 
-	// mu 是一个互斥锁，用于保护BlockingChannelDeque的成员变量，确保在同一时刻
-	// 只有一个线程可以修改BlockingChannelDeque的状态。
-	mu   *sync.Mutex
-	read *sync.Mutex
-	// cond 是一个条件变量，与互斥锁mu一起使用。当BlockingChannelDeque为空或满时，
-	// 线程可以等待cond以获取信号继续操作，从而实现阻塞和唤醒机制。
-	cond *sync.Cond
+	// // mu 是一个互斥锁，用于保护BlockingChannelDeque的成员变量，确保在同一时刻
+	// // 只有一个线程可以修改BlockingChannelDeque的状态。
+	// mu *sync.Mutex
+
+	// cm   *sync.Mutex
+	// read *sync.Mutex
+	// // cond 是一个条件变量，与互斥锁mu一起使用。当BlockingChannelDeque为空或满时，
+	// // 线程可以等待cond以获取信号继续操作，从而实现阻塞和唤醒机制。
+	// cond *sync.Cond
 }
 
 // PeekFirst implements BlockingDeque.
@@ -66,13 +68,13 @@ func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
-	q.mu.Lock()
+	q.cm.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
 		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
-	q.mu.Unlock()
+	q.cm.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -115,13 +117,13 @@ func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
-	q.mu.Lock()
+	q.cm.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
 		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
-	q.mu.Unlock()
+	q.cm.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -254,13 +256,13 @@ func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
-	q.mu.Lock()
+	q.cm.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
 		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
-	q.mu.Unlock()
+	q.cm.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -298,13 +300,13 @@ func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
-	q.mu.Lock()
+	q.cm.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
 		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
-	q.mu.Unlock()
+	q.cm.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -366,15 +368,18 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 	// 初始化互斥锁，用于保护对队列的访问。
 	var mu sync.Mutex
 	// 创建一个新的条件变量，用于线程间的通信，确保对队列的操作是线程安全的。
-	x := sync.NewCond(&mu)
+
 	// 返回一个新的BlockingChannelDeque实例，其中包含一个空的双端队列、一个未关闭的状态、
 	// 一个条件变量和一个互斥锁的引用。
+	x1 := &sync.Mutex{}
+	x := sync.NewCond(x1)
 	return &BlockingChannelDeque{
 		data:   &deque.Deque[byte]{},
 		closed: false,
 		cond:   x,
 		mu:     &mu,
 		read:   &sync.Mutex{},
+		cm:     x1,
 	}
 }
 
@@ -415,13 +420,13 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 	if q.closed {
 		return nil
 	}
-	q.mu.Lock()
+	q.cm.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
 		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
-	q.mu.Unlock()
+	q.cm.Unlock()
 	if q.closed {
 		return nil
 	}
@@ -496,13 +501,13 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	if q.closed {
 		return 0, io.EOF
 	}
-	q.mu.Lock()
+	q.cm.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
 		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
-	q.mu.Unlock()
+	q.cm.Unlock()
 	if q.closed {
 		return 0, io.EOF
 	}
