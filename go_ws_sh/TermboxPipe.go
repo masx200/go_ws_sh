@@ -83,21 +83,21 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				case termbox.KeyF4:
 					go writable([]byte{ESCCH, 'O', 'S'})
 				case termbox.KeyF5:
-					go writable(append([]byte{ESCCH}, []byte("[25~")...))
+					go writable([]byte{ESCCH, '[', '2', '5', '~'})
 				case termbox.KeyF6:
-					go writable(append([]byte{ESCCH}, []byte("[17~")...))
+					go writable([]byte{ESCCH, '[', '1', '7', '~'})
 				case termbox.KeyF7:
-					go writable(append([]byte{ESCCH}, []byte("[18~")...))
+					go writable([]byte{ESCCH, '[', '1', '8', '~'})
 				case termbox.KeyF8:
-					go writable(append([]byte{ESCCH}, []byte("[19~")...))
+					go writable([]byte{ESCCH, '[', '1', '9', '~'})
 				case termbox.KeyF9:
-					go writable(append([]byte{ESCCH}, []byte("[20~")...))
+					go writable([]byte{ESCCH, '[', '2', '0', '~'})
 				case termbox.KeyF10:
-					go writable(append([]byte{ESCCH}, []byte("[21~")...))
+					go writable([]byte{ESCCH, '[', '2', '1', '~'})
 				case termbox.KeyF11:
-					go writable(append([]byte{ESCCH}, []byte("[23~")...))
+					go writable([]byte{ESCCH, '[', '2', '3', '~'})
 				case termbox.KeyF12:
-					go writable(append([]byte{ESCCH}, []byte("[24~")...))
+					go writable([]byte{ESCCH, '[', '2', '4', '~'})
 				case termbox.KeyCtrlSpace:
 					go writable([]byte{0x00})
 
