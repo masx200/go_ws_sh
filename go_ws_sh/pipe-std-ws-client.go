@@ -89,7 +89,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	header := http.Header{}
 	username := configdata.Credentials.Username
 	password := configdata.Credentials.Password
-	fmt.Println("username:", username, "password:", password)
+	// fmt.Println("username:", username, "password:", password)
 	authStr := username + ":" + password
 	authBytes := []byte(authStr)
 	encodedAuth := base64.StdEncoding.EncodeToString(authBytes)
@@ -109,9 +109,11 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	if response != nil {
 		log.Println("Response Status:", response.Status)
 		fmt.Println("Response Headers:")
+		fmt.Println("{")
 		for k, v := range response.Header {
 			fmt.Println(k, ":", strings.Join(v, ","))
 		}
+		fmt.Println("}")
 	}
 
 	if err != nil {
@@ -139,7 +141,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// }()
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
 
-		log.Println("write to stdin length:", len(p))
+		// log.Println("write to stdin length:", len(p))
 		go func() {
 
 			// in_queue <- (p)
@@ -221,7 +223,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				log.Printf("ignored recv text: %s", message)
 				return
 			}
-			log.Println("websocket recv text length: ", len(message))
+			// log.Println("websocket recv text length: ", len(message))
 			if data.Type == "rejected" {
 				log.Println("rejected:", data.Body)
 				defer os.Exit(0)
@@ -233,7 +235,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				log.Printf("ignored unknown recv text:%v", data)
 			}
 		} else {
-			log.Println("websocket recv binary length: ", len(message))
+			// log.Println("websocket recv binary length: ", len(message))
 			var result BinaryMessage
 			undecoded, err := DecodeStructAvroBinary(codec, message, &result)
 			if len(undecoded) > 0 {
@@ -306,7 +308,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 }
 
 func sendMessageToWebsocketStdin(data []byte, conn *websocket.Conn, codec *goavro.Codec) {
-	log.Println("stdin recv Binary length: ", len(data))
+	// log.Println("stdin recv Binary length: ", len(data))
 	var message = BinaryMessage{
 		Type: "stdin",
 		Body: data,

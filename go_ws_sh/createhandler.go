@@ -29,10 +29,13 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 		credentialsmap[credential.Username+":"+credential.Password] = true
 	}
 	return func(w context.Context, r *app.RequestContext) {
+		fmt.Println("Request Method:", string(r.Method()))
 		fmt.Println("Request Headers:")
+		fmt.Println("{")
 		r.Request.Header.VisitAll(func(key, value []byte) {
 			fmt.Println(string(key), ":", string(value))
 		})
+		fmt.Println("}")
 		//check crediential
 		auth := r.Request.Header.Get("Authorization")
 		if auth == "" {
@@ -61,7 +64,7 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 		} else {
 			rawcredential = rawcredential2
 		}
-		fmt.Printf("credential: %v\n", string(rawcredential))
+		// fmt.Printf("credential: %v\n", string(rawcredential))
 		if _, ok := credentialsmap[string(rawcredential)]; !ok {
 			log.Println("Invalid credential", credential)
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")

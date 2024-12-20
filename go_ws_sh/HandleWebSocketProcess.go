@@ -166,7 +166,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}
 	defer cmd.Process.Kill()
 	x := "process " + session.Cmd + " started success"
-	log.Println(x)
+	log.Println("resolved:" + x)
 	err = SendTextMessage(conn, "resolved", x /* &mutext */, binaryandtextchannel)
 	if err != nil {
 		return err
@@ -212,7 +212,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					return
 				}
 			}
-			log.Printf("stdout recv Binary length: %v", len(data))
+			// log.Printf("stdout recv Binary length: %v", len(data))
 			var message = BinaryMessage{
 				Type: "stdout",
 				Body: data,
@@ -254,7 +254,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					return
 				}
 			}
-			log.Printf("stderr recv Binary length: %v", len(data))
+			// log.Printf("stderr recv Binary length: %v", len(data))
 			var message = BinaryMessage{
 				Type: "stderr",
 				Body: data,
@@ -307,10 +307,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			break
 		}
 		if mt == websocket.TextMessage {
-			log.Printf("websocket recv text length: %v", len(message))
+			// log.Printf("websocket recv text length: %v", len(message))
 			log.Printf("ignored recv text: %s", message)
 		} else {
-			log.Printf("websocket recv Binary length: %v", len(message))
+			// log.Printf("websocket recv Binary length: %v", len(message))
 
 			var result BinaryMessage
 			undecoded, err := DecodeStructAvroBinary(codec, message, &result)
@@ -326,9 +326,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				// log.Printf("recv binary: %s", decoded)
 				var md = result
 				if md.Type == "stdin" {
-					log.Println("server stdin received:", len(message))
+					// log.Println("server stdin received:", len(message))
 					var body = md.Body
-					log.Println("body:", body)
+					// log.Println("body:", body)
 					go func() {
 						//in_queue <- body
 						stdin.Write(body)
