@@ -41,7 +41,7 @@ func init() {
 type BlockingChannelDeque struct {
 	// data 是一个双端队列，存储着字节切片。它是BlockingChannelDeque的核心组件，
 	// 负责实际数据的存储和操作。
-	data *deque.Deque[[]byte]
+	data *deque.Deque[byte]
 
 	// closed 表示BlockingChannelDeque是否已关闭。当closed为true时，表示不能再向
 	// BlockingChannelDeque中添加数据，但仍然可以移除已有的数据直到队列为空。
@@ -57,7 +57,8 @@ type BlockingChannelDeque struct {
 }
 
 // PeekFirst implements BlockingDeque.
-func (q *BlockingChannelDeque) PeekFirst() ([]byte, bool) {
+func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
+	//TODO: Implement the method
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
@@ -76,7 +77,8 @@ func (q *BlockingChannelDeque) PeekFirst() ([]byte, bool) {
 }
 
 // PeekLast implements BlockingDeque.
-func (q *BlockingChannelDeque) PeekLast() ([]byte, bool) {
+func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
+	//TODO: Implement the method
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	if q.closed {
@@ -157,7 +159,7 @@ func (q *BlockingChannelDeque) IsEmpty() bool {
 // 返回值:
 //
 //	error - 如果队列已关闭，则返回io.EOF；否则返回nil。
-func (q *BlockingChannelDeque) PushBack(item []byte) error {
+func (q *BlockingChannelDeque) PushBack(item byte) error {
 	// 上锁以确保线程安全。
 	q.mu.Lock()
 	defer q.mu.Unlock()
@@ -168,7 +170,7 @@ func (q *BlockingChannelDeque) PushBack(item []byte) error {
 	}
 
 	// 将项添加到队列末尾。
-	q.data.PushBack(slices.Clone(item))
+	q.data.PushBack((item))
 
 	// 触发条件变量以通知可能在等待的协程。
 	q.cond.Signal()
@@ -194,7 +196,8 @@ func (q *BlockingChannelDeque) Size() int {
 // 如果队列为空，即没有元素可取，则返回nil和false。
 // 如果成功取出元素，则返回该元素和true。
 // 注意：该方法假设调用者已经处理了潜在的nil指针问题。
-func (q *BlockingChannelDeque) TakeFirst() ([]byte, bool) {
+func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
+	//TODO: Implement the method
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
@@ -217,7 +220,8 @@ func (q *BlockingChannelDeque) TakeFirst() ([]byte, bool) {
 // If the queue is closed or empty, it returns nil and false.
 // This method blocks until the queue has elements or is closed.
 // It is thread-safe.
-func (q *BlockingChannelDeque) TakeLast() ([]byte, bool) {
+func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
+	//TODO: Implement the method
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	if q.closed {
@@ -273,7 +277,7 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 	// 返回一个新的BlockingChannelDeque实例，其中包含一个空的双端队列、一个未关闭的状态、
 	// 一个条件变量和一个互斥锁的引用。
 	return &BlockingChannelDeque{
-		data:   &deque.Deque[[]byte]{},
+		data:   &deque.Deque[byte]{},
 		closed: false,
 		cond:   x,
 		mu:     &mu,
@@ -296,7 +300,14 @@ func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 	if q.closed {
 		return io.EOF
 	}
-	q.data.PushBack(slices.Clone(value))
+	if len(value) == 0 {
+		return nil
+	}
+	q.data.Grow(len(value))
+	for _, b := range value {
+		q.data.PushBack((b))
+	}
+	// q.data.PushBack((value))
 	q.cond.Signal()
 	return nil
 }
@@ -331,13 +342,13 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 // 返回值:
 //
 //	如果队列已关闭，返回 io.EOF 错误；否则返回 nil。
-func (q *BlockingChannelDeque) PushFront(value []byte) error {
+func (q *BlockingChannelDeque) PushFront(value byte) error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	if q.closed {
 		return io.EOF
 	}
-	q.data.PushFront(slices.Clone(value))
+	q.data.PushFront((value))
 	q.cond.Signal()
 	return nil
 }
@@ -377,7 +388,7 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 		return 0, io.EOF
 	}
 	if len(p) < len(value) {
-		err = q.PushFront(slices.Clone(value[len(p):]))
+		err = q.PushFront((value[len(p):]))
 		if err != nil {
 			return 0, err
 		}
@@ -401,7 +412,7 @@ func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 	if q.closed {
 		return 0, io.EOF
 	}
-	err = q.Enqueue(slices.Clone(p))
+	err = q.Enqueue((p))
 	if err != nil {
 		return 0, err
 	}
@@ -410,17 +421,17 @@ func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 
 // BlockingDeque 是一个阻塞双端队列的接口，提供了在队列两端进行插入和移除操作的能力
 type BlockingDeque interface {
-	PeekLast() ([]byte, bool)
+	PeekLast() (byte, bool)
 	// TakeFirst 从队首移除元素，如果队列为空，则阻塞等待直到队列中有元素可用
-	PeekFirst() ([]byte, bool)
+	PeekFirst() (byte, bool)
 	// PushBack 在队尾插入元素，如果队列已满，则阻塞等待直到队列有空余位置
-	PushBack(item []byte) error
+	PushBack(item byte) error
 	// PushFront 在队首插入元素，如果队列已满，则阻塞等待直到队列有空余位置
-	PushFront(item []byte) error
+	PushFront(item byte) error
 	// TakeLast 从队尾移除元素，如果队列为空，则阻塞等待直到队列中有元素可用
-	TakeLast() ([]byte, bool)
+	TakeLast() (byte, bool)
 	// TakeFirst 从队首移除元素，如果队列为空，则阻塞等待直到队列中有元素可用
-	TakeFirst() ([]byte, bool)
+	TakeFirst() (byte, bool)
 	// IsEmpty 检查队列是否为空
 	IsEmpty() bool
 	// Size 获取队列的大小
@@ -431,14 +442,14 @@ type BlockingDeque interface {
 
 // BlockingChannel 定义了一个阻塞通道接口，用于在队列满或空时阻塞操作
 type BlockingChannel interface {
-	PushBack(item []byte) error
+	PushBack(item byte) error
 	// 在队尾插入元素，如果队列已满，则阻塞等待
 	Enqueue(item []byte) error
 	// 在队首插入元素，如果队列已满，则阻塞等待
-	PushFront(item []byte) error
+	PushFront(item byte) error
 	// 从队尾移除元素，如果队列为空，则阻塞等待
-	TakeLast() ([]byte, bool)
-	TakeFirst() ([]byte, bool)
+	TakeLast() (byte, bool)
+	TakeFirst() (byte, bool)
 	// 从队首移除元素，如果队列为空，则阻塞等待
 	Dequeue() []byte
 	// 检查队列是否为空
