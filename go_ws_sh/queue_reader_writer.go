@@ -317,22 +317,40 @@ func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 // This function is blocking; if there are no messages in the queue, it will wait until a message is available or the queue is closed.
 // Returns nil if the queue is closed and there are no messages available.
 func (q *BlockingChannelDeque) Dequeue() []byte {
-	//TODO: Implement the method
-	q.mu.Lock()
-	defer q.mu.Unlock()
-
 	if q.closed {
 		return nil
 	}
-	for q.data.Len() == 0 && !q.closed {
-		q.cond.Wait() // Wait until there is data or the queue is closed
+	for (q.data.Len() == 0) && !q.closed {
+		q.cond.Wait()
 	}
-	if q.data.Len() > 0 {
-		value := q.data.Front()
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	var p = make([]byte, q.data.Len())
+	var minsize = q.data.Len()
+
+	for i := 0; i < int(minsize); i++ {
+		p[i] = q.data.At(i)
+
+	}
+	for i := 0; i < int(minsize); i++ {
 		q.data.Remove(0)
-		return value
 	}
-	return nil
+	return p
+	// q.mu.Lock()
+	// defer q.mu.Unlock()
+
+	// if q.closed {
+	// 	return nil
+	// }
+	// for q.data.Len() == 0 && !q.closed {
+	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// }
+	// if q.data.Len() > 0 {
+	// 	value := q.data.Front()
+	// 	q.data.Remove(0)
+	// 	return value
+	// }
+	// return nil
 }
 
 // PushFront 将一个字节切片作为消息添加到队列的前端。
