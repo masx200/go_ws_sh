@@ -272,24 +272,39 @@ func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
 // This method blocks until the queue has elements or is closed.
 // It is thread-safe.
 func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
-	//TODO: Implement the method
+	if q.closed {
+		return 0, false
+	}
+	for (q.data.Len() == 0) && !q.closed {
+		q.cond.Wait()
+	}
+	if q.closed {
+		return 0, false
+	}
 	q.mu.Lock()
 	defer q.mu.Unlock()
-	if q.closed {
-		return nil, false
-	}
-	for q.data.Len() == 0 && !q.closed {
-		q.cond.Wait() // Wait until there is data or the queue is closed
-	}
-	if q.data.Len() == 0 {
-		return nil, false
-	}
+
 	x := q.data.Back()
 	q.data.Remove(q.data.Len() - 1)
-	if x == nil {
-		return nil, false
-	}
 	return x, true
+
+	// q.mu.Lock()
+	// defer q.mu.Unlock()
+	// if q.closed {
+	// 	return nil, false
+	// }
+	// for q.data.Len() == 0 && !q.closed {
+	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// }
+	// if q.data.Len() == 0 {
+	// 	return nil, false
+	// }
+	// x := q.data.Back()
+	// q.data.Remove(q.data.Len() - 1)
+	// if x == nil {
+	// 	return nil, false
+	// }
+	// return x, true
 }
 
 // Close implements io.Closer.
