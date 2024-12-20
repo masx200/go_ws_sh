@@ -9,6 +9,7 @@ import (
 )
 
 func TermboxPipe(writable func(p []byte) (n int, err error), closable func() error) (onCancel func() error, startable func(), err error) {
+	const ESCCH = 0x1B
 	err = termbox.Init()
 	if err != nil {
 		log.Printf("termbox initialization failed: %v", err)
@@ -38,7 +39,8 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					writable([]byte{0x1B, '[', 'D'})
 				case termbox.KeyArrowRight:
 					writable([]byte{0x1B, '[', 'C'})
-
+				case termbox.KeyF1:
+					writable([]byte{ESCCH, 'O', 'P'})
 				case termbox.KeyEnter:
 					// fmt.Println("Enter key pressed")
 					writable([]byte{'\n'})
@@ -46,7 +48,7 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					writable([]byte{'\b'})
 				// 	fmt.Println("Backspace key pressed")
 				case termbox.KeyDelete:
-					writable([]byte{0x7F})
+					writable([]byte{0x1B, '[', '3', '~'})
 				// 	fmt.Println("Delete key pressed")
 				case termbox.KeyHome:
 					writable([]byte{0x1B, '[', 'H'})
@@ -56,6 +58,12 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				// 	fmt.Println("End key pressed")
 				case termbox.KeyEsc:
 					writable([]byte{0x1B})
+				case termbox.KeyInsert:
+					writable([]byte{0x1B, '[', '2', '~'})
+				case termbox.KeyPgup:
+					writable([]byte{0x1B, '[', '5', '~'})
+				case termbox.KeyPgdn:
+					writable([]byte{0x1B, '[', '6', '~'})
 				case termbox.KeyCtrlC:
 					fmt.Println("CtrlC key pressed exit")
 					go closable()
