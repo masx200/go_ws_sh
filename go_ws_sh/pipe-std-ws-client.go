@@ -271,18 +271,18 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				var md = result
 				if md.Type == "stderr" {
 					var body = md.Body
-					go func() {
+					// go func() {
 
-						// err_queue <- body
-						os.Stderr.Write(body)
-					}()
+					// err_queue <- body
+					os.Stderr.Write(body)
+					// }()
 
 				} else if md.Type == "stdout" {
 					var body = md.Body
-					go func() {
-						os.Stdout.Write(body)
-						// out_queue <- body
-					}()
+					// go func() {
+					os.Stdout.Write(body)
+					// out_queue <- body
+					// }()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}
