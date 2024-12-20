@@ -21,9 +21,11 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 	// // 一个条件变量和一个互斥锁的引用。
 	// x1 := &sync.Mutex{}
 	// x := sync.NewCond(x1)
+	const x = 1000000
 	return &BlockingChannelDeque{
-		ch:     make(chan byte, 1000000),
+		ch:     make(chan byte, x),
 		closed: false,
+		size:   x,
 		// data:   &deque.Deque[byte]{},
 		// closed: false,
 		// cond:   x,
@@ -64,6 +66,7 @@ func init() {
 // 它使用双端队列作为底层数据结构，并提供了线程安全的操作。
 // 该结构用于在生产者和消费者之间高效地传递数据，同时保持数据的顺序。
 type BlockingChannelDeque struct {
+	size int
 	// // data 是一个双端队列，存储着字节切片。它是BlockingChannelDeque的核心组件，
 	// // 负责实际数据的存储和操作。
 	// data *deque.Deque[byte]
@@ -457,15 +460,16 @@ func (cw *BlockingChannelDeque) Enqueue(value []byte) error {
 // This function is blocking; if there are no messages in the queue, it will wait until a message is available or the queue is closed.
 // Returns nil if the queue is closed and there are no messages available.
 func (cw *BlockingChannelDeque) Dequeue() []byte {
-
+	var x = cw.size
 	if cw.closed {
 		return nil
 	}
 	var n = 0
-	var p = make([]byte, 1000000)
+	var p = make([]byte, x)
 	var i = 0
 	for {
-		if i >= 1000000 {
+
+		if i >= x {
 			break
 		}
 		select {
