@@ -465,7 +465,7 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 		q.cond.Wait()
 	}
 	if q.closed {
-		return 0, false
+		return 0, io.EOF
 	}
 	q.mu.Lock()
 	defer q.mu.Unlock()
