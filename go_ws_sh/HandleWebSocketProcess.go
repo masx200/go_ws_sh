@@ -61,6 +61,30 @@ type WebsocketMessage struct {
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
 	var binaryandtextchannel = make(chan WebsocketMessage)
 	defer close(binaryandtextchannel)
+	defer conn.Close()
+	var in_queue = make(chan []byte)
+	var err_queue = make(chan []byte)
+	var out_queue = make(chan []byte)
+	defer close(out_queue)
+	defer close(err_queue)
+	defer close(in_queue)
+	go func() {
+		var err error
+		for {
+			//var encoded,ok <-  binaryandtextchannel
+			encoded, ok := <-binaryandtextchannel
+			if ok {
+				// mubinary.Lock()
+				// defer mubinary.Unlock()
+				err = conn.WriteMessage(encoded.Type, encoded.Body)
+				if err != nil {
+					log.Println("write:", err)
+				}
+			} else {
+				break
+			}
+		}
+	}()
 	//加一把锁在writemessage时使用
 	// var mutext sync.Mutex
 	// defer mutext.Unlock()
@@ -73,13 +97,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}()
 	// var w, cancel = context.WithCancel(context.Background())
 	// defer cancel()
-	defer conn.Close()
-	var in_queue = make(chan []byte)
-	var err_queue = make(chan []byte)
-	var out_queue = make(chan []byte)
-	defer close(out_queue)
-	defer close(err_queue)
-	defer close(in_queue)
+
 	cmd := exec.Command(session.Cmd)
 
 	var Clear = func() {
@@ -252,23 +270,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			// }
 		}
 	}()
-	go func() {
 
-		for {
-			//var encoded,ok <-  binaryandtextchannel
-			encoded, ok := <-binaryandtextchannel
-			if ok {
-				// mubinary.Lock()
-				// defer mubinary.Unlock()
-				err = conn.WriteMessage(encoded.Type, encoded.Body)
-				if err != nil {
-					log.Println("write:", err)
-				}
-			} else {
-				break
-			}
-		}
-	}()
 	for {
 
 		// select {
