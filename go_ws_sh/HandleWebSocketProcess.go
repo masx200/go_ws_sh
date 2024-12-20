@@ -4,7 +4,7 @@ import (
 	// "context"
 	"encoding/json"
 	// "fmt"
-	"io"
+	// "io"
 	"log"
 	"os/exec"
 
@@ -151,13 +151,13 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}
 
 	go func() {
-		io.Copy(out_queue, stdout)
+		CopyReaderToChan(out_queue, stdout)
 	}()
 	go func() {
-		io.Copy(err_queue, stderr)
+		CopyReaderToChan(err_queue, stderr)
 	}()
 	go func() {
-		io.Copy(stdin, in_queue)
+		CopyChanToWriter(stdin, in_queue)
 
 	}()
 	go func() {
@@ -183,8 +183,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 		for {
 
-			data := out_queue.Dequeue()
-			if data == nil {
+			data, ok := <-out_queue
+			if data == nil || !ok {
 				break
 			}
 			log.Printf("stdout recv Binary length: %v", len(data))
@@ -219,8 +219,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 
 		for {
-			data := err_queue.Dequeue()
-			if data == nil {
+			data, ok := <-err_queue
+			if data == nil || !ok {
 				break
 			}
 			log.Printf("stderr recv Binary length: %v", len(data))
@@ -310,7 +310,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				var md = result
 				if md.Type == "stdin" {
 					var body = md.Body
-					in_queue.Enqueue(body)
+					in_queue <- body
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}

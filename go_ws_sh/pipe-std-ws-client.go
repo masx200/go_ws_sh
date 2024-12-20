@@ -6,7 +6,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
+
+	// "io"
 	"log"
 	"net/http"
 	"os"
@@ -126,16 +127,20 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	defer close(err_queue)
 	defer close(in_queue)
 	go func() {
-		io.Copy(os.Stdout, out_queue)
+		CopyChanToWriter(os.Stdout, out_queue)
 	}()
 	go func() {
-		io.Copy(os.Stderr, err_queue)
+		CopyChanToWriter(os.Stderr, err_queue)
 	}()
 	// 使用termbox接管stdin了
 	// go func() {
 	// 	io.Copy(in_queue, os.Stdin)
 	// }()
-	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) { return in_queue.Write(p) }, func() error {
+	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
+		in_queue <- (p)
+
+		return n, nil
+	}, func() error {
 
 		/* 	err :=  */
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -160,8 +165,8 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	go func() {
 
 		for {
-			data := in_queue.Dequeue()
-			if data == nil {
+			data, ok := <-in_queue
+			if data == nil || !ok {
 				break
 			}
 			var message = BinaryMessage{
@@ -235,11 +240,11 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				if md.Type == "stderr" {
 					var body = md.Body
 
-					err_queue.Enqueue(body)
+					err_queue <- body
 				} else if md.Type == "stdout" {
 					var body = md.Body
 
-					out_queue.Enqueue(body)
+					out_queue <- body
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}
