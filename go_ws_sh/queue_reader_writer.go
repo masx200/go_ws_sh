@@ -389,7 +389,7 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 		q.cond.Wait()
 	}
 	if q.closed {
-		return 0, false
+		return nil
 	}
 	q.mu.Lock()
 	defer q.mu.Unlock()
