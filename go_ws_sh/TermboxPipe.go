@@ -76,6 +76,31 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					fmt.Println("CtrlZ key pressed exit")
 					go closable()
 					return // 退出程序
+				case termbox.KeyF2:
+					writable([]byte{ESCCH, 'O', 'Q'})
+				case termbox.KeyF3:
+					writable([]byte{ESCCH, 'O', 'R'})
+				case termbox.KeyF4:
+					writable([]byte{ESCCH, 'O', 'S'})
+				case termbox.KeyF5:
+					writable(append([]byte{ESCCH}, []byte("[25~")...))
+				case termbox.KeyF6:
+					writable(append([]byte{ESCCH}, []byte("[17~")...))
+				case termbox.KeyF7:
+					writable(append([]byte{ESCCH}, []byte("[18~")...))
+				case termbox.KeyF8:
+					writable(append([]byte{ESCCH}, []byte("[19~")...))
+				case termbox.KeyF9:
+					writable(append([]byte{ESCCH}, []byte("[20~")...))
+				case termbox.KeyF10:
+					writable(append([]byte{ESCCH}, []byte("[21~")...))
+				case termbox.KeyF11:
+					writable(append([]byte{ESCCH}, []byte("[23~")...))
+				case termbox.KeyF12:
+					writable(append([]byte{ESCCH}, []byte("[24~")...))
+				case termbox.KeyCtrlSpace:
+					writable([]byte{0x00})
+
 				default:
 					if ev.Ch != 0 {
 						// fmt.Printf("Character '%c' (code: %d) was pressed\n", ev.Ch, ev.Ch)
