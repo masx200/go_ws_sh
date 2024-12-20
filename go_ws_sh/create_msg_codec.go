@@ -8,11 +8,6 @@ import (
 	// "github.com/mitchellh/mapstructure"
 )
 
-type BinaryMessage struct {
-	Type string
-	Body []byte
-}
-
 // create_msg_codec 创建一个用于编码和解码消息的Apache Avro编解码器。
 // 该函数定义了一个消息的Avro模式，该模式包括一个字符串类型的"type"字段和一个字节类型的"body"字段。
 // 返回值是一个*goavro.Codec类型的编解码器实例，以及一个错误值，如果创建编解码器时出现错误，则该错误值会被设置。
