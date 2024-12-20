@@ -21,7 +21,7 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 	// // 一个条件变量和一个互斥锁的引用。
 	// x1 := &sync.Mutex{}
 	// x := sync.NewCond(x1)
-	const x = 1000000
+	const x = 32 * 1024
 	return &BlockingChannelDeque{
 		ch:     make(chan byte, x),
 		closed: false,
