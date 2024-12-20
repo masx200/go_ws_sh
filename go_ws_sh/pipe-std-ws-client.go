@@ -136,6 +136,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// 	io.Copy(in_queue, os.Stdin)
 	// }()
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
+
 		log.Println("write to stdin length:", len(p))
 		in_queue <- (p)
 

@@ -26,44 +26,44 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 			case termbox.EventKey:
 				switch ev.Key {
 				case termbox.KeyTab:
-					writable([]byte{'\t'})
+					go writable([]byte{'\t'})
 				// https://learn.microsoft.com/zh-cn/windows/console/console-virtual-terminal-sequences
 				case termbox.KeySpace:
 					// fmt.Println("Space key pressed")
-					writable([]byte{' '})
+					go writable([]byte{' '})
 				case termbox.KeyArrowUp:
-					writable([]byte{0x1B, '[', 'A'})
+					go writable([]byte{0x1B, '[', 'A'})
 				case termbox.KeyArrowDown:
-					writable([]byte{0x1B, '[', 'B'})
+					go writable([]byte{0x1B, '[', 'B'})
 				case termbox.KeyArrowLeft:
-					writable([]byte{0x1B, '[', 'D'})
+					go writable([]byte{0x1B, '[', 'D'})
 				case termbox.KeyArrowRight:
-					writable([]byte{0x1B, '[', 'C'})
+					go writable([]byte{0x1B, '[', 'C'})
 				case termbox.KeyF1:
-					writable([]byte{ESCCH, 'O', 'P'})
+					go writable([]byte{ESCCH, 'O', 'P'})
 				case termbox.KeyEnter:
 					// fmt.Println("Enter key pressed")
-					writable([]byte{'\n'})
+					go writable([]byte{'\n'})
 				case termbox.KeyBackspace:
-					writable([]byte{'\b'})
+					go writable([]byte{'\b'})
 				// 	fmt.Println("Backspace key pressed")
 				case termbox.KeyDelete:
-					writable([]byte{0x1B, '[', '3', '~'})
+					go writable([]byte{0x1B, '[', '3', '~'})
 				// 	fmt.Println("Delete key pressed")
 				case termbox.KeyHome:
-					writable([]byte{0x1B, '[', 'H'})
+					go writable([]byte{0x1B, '[', 'H'})
 				// 	fmt.Println("Home key pressed")
 				case termbox.KeyEnd:
-					writable([]byte{0x1B, '[', 'F'})
+					go writable([]byte{0x1B, '[', 'F'})
 				// 	fmt.Println("End key pressed")
 				case termbox.KeyEsc:
-					writable([]byte{0x1B})
+					go writable([]byte{0x1B})
 				case termbox.KeyInsert:
-					writable([]byte{0x1B, '[', '2', '~'})
+					go writable([]byte{0x1B, '[', '2', '~'})
 				case termbox.KeyPgup:
-					writable([]byte{0x1B, '[', '5', '~'})
+					go writable([]byte{0x1B, '[', '5', '~'})
 				case termbox.KeyPgdn:
-					writable([]byte{0x1B, '[', '6', '~'})
+					go writable([]byte{0x1B, '[', '6', '~'})
 				case termbox.KeyCtrlC:
 					fmt.Println("CtrlC key pressed exit")
 					go closable()
@@ -77,38 +77,38 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					go closable()
 					return // 退出程序
 				case termbox.KeyF2:
-					writable([]byte{ESCCH, 'O', 'Q'})
+					go writable([]byte{ESCCH, 'O', 'Q'})
 				case termbox.KeyF3:
-					writable([]byte{ESCCH, 'O', 'R'})
+					go writable([]byte{ESCCH, 'O', 'R'})
 				case termbox.KeyF4:
-					writable([]byte{ESCCH, 'O', 'S'})
+					go writable([]byte{ESCCH, 'O', 'S'})
 				case termbox.KeyF5:
-					writable(append([]byte{ESCCH}, []byte("[25~")...))
+					go writable(append([]byte{ESCCH}, []byte("[25~")...))
 				case termbox.KeyF6:
-					writable(append([]byte{ESCCH}, []byte("[17~")...))
+					go writable(append([]byte{ESCCH}, []byte("[17~")...))
 				case termbox.KeyF7:
-					writable(append([]byte{ESCCH}, []byte("[18~")...))
+					go writable(append([]byte{ESCCH}, []byte("[18~")...))
 				case termbox.KeyF8:
-					writable(append([]byte{ESCCH}, []byte("[19~")...))
+					go writable(append([]byte{ESCCH}, []byte("[19~")...))
 				case termbox.KeyF9:
-					writable(append([]byte{ESCCH}, []byte("[20~")...))
+					go writable(append([]byte{ESCCH}, []byte("[20~")...))
 				case termbox.KeyF10:
-					writable(append([]byte{ESCCH}, []byte("[21~")...))
+					go writable(append([]byte{ESCCH}, []byte("[21~")...))
 				case termbox.KeyF11:
-					writable(append([]byte{ESCCH}, []byte("[23~")...))
+					go writable(append([]byte{ESCCH}, []byte("[23~")...))
 				case termbox.KeyF12:
-					writable(append([]byte{ESCCH}, []byte("[24~")...))
+					go writable(append([]byte{ESCCH}, []byte("[24~")...))
 				case termbox.KeyCtrlSpace:
-					writable([]byte{0x00})
+					go writable([]byte{0x00})
 
 				default:
 					if ev.Ch != 0 {
 						// fmt.Printf("Character '%c' (code: %d) was pressed\n", ev.Ch, ev.Ch)
 
-						writable([]byte{byte(ev.Ch)})
+						go writable([]byte{byte(ev.Ch)})
 					} else if ev.Key < 256 {
 						fmt.Printf("key event ascii with code: %d\n", ev.Key)
-						//writable([]byte{byte(ev.Key)})
+						//go writable([]byte{byte(ev.Key)})
 					} else {
 						fmt.Printf("key event unknown with code: %d\n", ev.Key)
 
