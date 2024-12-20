@@ -30,10 +30,11 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string /*  mu
 	}
 
 	// go func() {
-		binaryandtextchannel <- WebsocketMessage{
-			Body: databuf,
-			Type: websocket.TextMessage,
-		}
+	/* 这里不能开协程会乱序不可以 */
+	binaryandtextchannel <- WebsocketMessage{
+		Body: databuf,
+		Type: websocket.TextMessage,
+	}
 	// }()
 	//加一把锁在writemessage时使用,不能并发写入
 	// mu.Lock()
