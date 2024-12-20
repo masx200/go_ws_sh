@@ -59,22 +59,31 @@ type BlockingChannelDeque struct {
 
 // PeekFirst implements BlockingDeque.
 func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
-	//TODO: Implement the method
+	if q.closed {
+		return 0, false
+	}
+	for (q.data.Len() == 0) && !q.closed {
+		q.cond.Wait()
+	}
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	if q.closed {
-		return nil, false
-	}
-	for q.data.Len() == 0 && !q.closed {
-		q.cond.Wait() // Wait until there is data or the queue is closed
-	}
-	if q.data.Len() > 0 {
-		value := q.data.Front()
-		// q.data.Remove(0)
-		return value, true
-	}
-	return nil, false
+	return q.data.Front(), true
+	// q.mu.Lock()
+	// defer q.mu.Unlock()
+
+	// if q.closed {
+	// 	return nil, false
+	// }
+	// for q.data.Len() == 0 && !q.closed {
+	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// }
+	// if q.data.Len() > 0 {
+	// 	value := q.data.Front()
+	// 	// q.data.Remove(0)
+	// 	return value, true
+	// }
+	// return nil, false
 }
 
 // PeekLast implements BlockingDeque.
