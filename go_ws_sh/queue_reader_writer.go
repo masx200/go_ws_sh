@@ -50,8 +50,8 @@ type BlockingChannelDeque struct {
 
 	// mu 是一个互斥锁，用于保护BlockingChannelDeque的成员变量，确保在同一时刻
 	// 只有一个线程可以修改BlockingChannelDeque的状态。
-	mu *sync.Mutex
-
+	mu   *sync.Mutex
+	read *sync.Mutex
 	// cond 是一个条件变量，与互斥锁mu一起使用。当BlockingChannelDeque为空或满时，
 	// 线程可以等待cond以获取信号继续操作，从而实现阻塞和唤醒机制。
 	cond *sync.Cond
@@ -59,6 +59,8 @@ type BlockingChannelDeque struct {
 
 // PeekFirst implements BlockingDeque.
 func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
+	q.read.Lock()
+	defer q.read.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -102,6 +104,8 @@ func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
 // 并使用互斥锁确保线程安全。
 // PeekLast implements BlockingDeque.
 func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
+	q.read.Lock()
+	defer q.read.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -234,6 +238,8 @@ func (q *BlockingChannelDeque) Size() int {
 // 如果成功取出元素，则返回该元素和true。
 // 注意：该方法假设调用者已经处理了潜在的nil指针问题。
 func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
+	q.read.Lock()
+	defer q.read.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -272,6 +278,8 @@ func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
 // This method blocks until the queue has elements or is closed.
 // It is thread-safe.
 func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
+	q.read.Lock()
+	defer q.read.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -347,6 +355,7 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 		closed: false,
 		cond:   x,
 		mu:     &mu,
+		read:   &sync.Mutex{},
 	}
 }
 
@@ -382,6 +391,8 @@ func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 // This function is blocking; if there are no messages in the queue, it will wait until a message is available or the queue is closed.
 // Returns nil if the queue is closed and there are no messages available.
 func (q *BlockingChannelDeque) Dequeue() []byte {
+	q.read.Lock()
+	defer q.read.Unlock()
 	if q.closed {
 		return nil
 	}
@@ -457,7 +468,8 @@ func (q *BlockingChannelDeque) PushFront(value byte) error {
 //	n: 实际读取的字节数。
 //	err: 错误信息，如果队列已关闭或没有数据可读，则返回 io.EOF。
 func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
-
+	q.read.Lock()
+	defer q.read.Unlock()
 	if q.closed {
 		return 0, io.EOF
 	}
