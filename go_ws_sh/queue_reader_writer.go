@@ -86,26 +86,47 @@ func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
 	// return nil, false
 }
 
+// PeekLast 从 BlockingChannelDeque 中获取最后一个元素而不移除它。
+//
+// 参数：
+//   - q: 指向 BlockingChannelDeque 实例的指针。
+//
+// 返回值：
+//   - byte: 队列中的最后一个字节。如果队列已关闭或为空，则返回 0。
+//   - bool: 表示操作是否成功。如果队列已关闭或为空，则返回 false。
+//
+// 该函数通过条件变量等待，直到队列中有元素或队列被关闭，
+// 并使用互斥锁确保线程安全。
 // PeekLast implements BlockingDeque.
 func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
-	//TODO: Implement the method
+	if q.closed {
+		return 0, false
+	}
+	for (q.data.Len() == 0) && !q.closed {
+		q.cond.Wait()
+	}
 	q.mu.Lock()
 	defer q.mu.Unlock()
-	if q.closed {
-		return nil, false
-	}
-	for q.data.Len() == 0 && !q.closed {
-		q.cond.Wait() // Wait until there is data or the queue is closed
-	}
-	if q.data.Len() == 0 {
-		return nil, false
-	}
-	x := q.data.Back()
-	// q.data.Remove(q.data.Len() - 1)
-	if x == nil {
-		return nil, false
-	}
-	return x, true
+
+	return q.data.Back(), true
+
+	// q.mu.Lock()
+	// defer q.mu.Unlock()
+	// if q.closed {
+	// 	return nil, false
+	// }
+	// for q.data.Len() == 0 && !q.closed {
+	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// }
+	// if q.data.Len() == 0 {
+	// 	return nil, false
+	// }
+	// x := q.data.Back()
+	// // q.data.Remove(q.data.Len() - 1)
+	// if x == nil {
+	// 	return nil, false
+	// }
+	// return x, true
 }
 
 // Wait implements BlockingChannel.
