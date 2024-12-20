@@ -432,12 +432,12 @@ func (cw *BlockingChannelDeque) Enqueue(value []byte) error {
 	}
 	var n = 0
 	for _, b := range value {
-		select {
-		case cw.ch <- b:
-			n++
-		default:
-			return nil
-		}
+		/* select {
+		case */cw.ch <- b //:
+		n++
+		// default:
+		// 	return nil
+		// }
 	}
 	return nil
 	// q.mu.Lock()
@@ -473,17 +473,18 @@ func (cw *BlockingChannelDeque) Dequeue() []byte {
 		if i >= x {
 			break
 		}
+		/* }
 		select {
-		case b, ok := <-cw.ch:
-			if !ok {
-				cw.closed = true
-				return p[0:i]
-			}
-			p[i] = b
-			n++
-		default:
-			return p[0:n]
+		case */b, ok := <-cw.ch //:
+		if !ok {
+			cw.closed = true
+			return p[0:i]
 		}
+		p[i] = b
+		n++
+		// default:
+		// 	return p[0:n]
+		// }
 	}
 	return p[0:n]
 	// return n, nil
@@ -572,17 +573,17 @@ func (cw *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 		return 0, io.EOF
 	}
 	for i := range p {
-		select {
-		case b, ok := <-cw.ch:
-			if !ok {
-				cw.closed = true
-				return i, io.EOF
-			}
-			p[i] = b
-			n++
-		default:
-			return n, nil
+		/* select {
+		case */b, ok := <-cw.ch //:
+		if !ok {
+			cw.closed = true
+			return i, io.EOF
 		}
+		p[i] = b
+		n++
+		// default:
+		// 	return n, nil
+		// }
 	}
 	return n, nil
 	// q.read.Lock()
@@ -654,12 +655,15 @@ func (cw *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 		return 0, io.ErrClosedPipe
 	}
 	for _, b := range p {
-		select {
-		case cw.ch <- b:
-			n++
-		default:
-			return n, nil
-		}
+		// select {
+		/* case */
+		cw.ch <- b
+		//:
+		n++
+
+		// default:
+		// return n, nil
+
 	}
 	return n, nil
 	// q.mu.Lock()
