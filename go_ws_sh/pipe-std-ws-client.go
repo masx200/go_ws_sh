@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-
 	// "io"
 	"log"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/linkedin/goavro/v2"
+	// "google.golang.org/grpc/authz/audit/stdout"
 	// "golang.org/x/term"
 )
 
@@ -122,17 +122,17 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	defer conn.Close()
 	// var in_queue = make(chan []byte)
-	var err_queue = make(chan []byte)
-	var out_queue = make(chan []byte)
-	defer close(out_queue)
-	defer close(err_queue)
+	// var err_queue = make(chan []byte)
+	// var out_queue = make(chan []byte)
+	// defer close(out_queue)
+	// defer close(err_queue)
 	// defer close(in_queue)
-	go func() {
-		CopyChanToWriter(os.Stdout, out_queue)
-	}()
-	go func() {
-		CopyChanToWriter(os.Stderr, err_queue)
-	}()
+	// go func() {
+	// 	CopyChanToWriter(os.Stdout, out_queue)
+	// }()
+	// go func() {
+	// 	CopyChanToWriter(os.Stderr, err_queue)
+	// }()
 	// 使用termbox接管stdin了
 	// go func() {
 	// 	io.Copy(in_queue, os.Stdin)
@@ -156,8 +156,8 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		// 	log.Println(err)
 		// }
 		conn.Close()
-		close(out_queue)
-		close(err_queue)
+		// close(out_queue)
+		// close(err_queue)
 		// close(in_queue)
 		defer os.Exit(0)
 		return nil
@@ -249,12 +249,17 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				var md = result
 				if md.Type == "stderr" {
 					var body = md.Body
-					go func() { err_queue <- body }()
+					go func() {
+
+						// err_queue <- body
+						os.Stderr.Write(body)
+					}()
 
 				} else if md.Type == "stdout" {
 					var body = md.Body
 					go func() {
-						out_queue <- body
+						os.Stdout.Write(body)
+						// out_queue <- body
 					}()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
