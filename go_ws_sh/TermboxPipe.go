@@ -98,8 +98,9 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					go writable([]byte{ESCCH, '[', '2', '3', '~'})
 				case termbox.KeyF12:
 					go writable([]byte{ESCCH, '[', '2', '4', '~'})
-				case termbox.KeyCtrlSpace:
-					go writable([]byte{0x00})
+					/* 无法理解为什么KeyCtrlSpace会导致翻车 */
+				// case termbox.KeyCtrlSpace:
+				// 	go writable([]byte{0x00})
 
 				default:
 					if ev.Ch != 0 {

@@ -102,8 +102,8 @@ func DecodeBinaryMessage(input interface{}, result *BinaryMessage) error {
 //   - []byte: 编码后的Avro二进制数据。
 //   - error: 如果编码过程中发生错误，返回该错误。
 func EncodeStructAvroBinary(codec *goavro.Codec, message *BinaryMessage) ([]byte, error) {
-	var m map[string]interface{}
-	err := EncodeBinaryMessage(message, &m)
+	var m map[string]interface{} = make(map[string]interface{})
+	err := EncodeBinaryMessage(message, m)
 	if err != nil {
 		log.Println("decode:", err)
 		return nil, err
@@ -117,13 +117,19 @@ func EncodeStructAvroBinary(codec *goavro.Codec, message *BinaryMessage) ([]byte
 
 }
 
-func EncodeBinaryMessage(message *BinaryMessage, m *map[string]interface{}) error {
+func EncodeBinaryMessage(message *BinaryMessage, m map[string]interface{}) error {
 	if message == nil {
 		return fmt.Errorf("message is nil")
 	}
-	*m = map[string]interface{}{
-		"type": message.Type,
-		"body": message.Body,
+	if nil == m {
+
+		return fmt.Errorf("map is nil")
 	}
+	// *m = map[string]interface{}{
+	// 	"type": message.Type,
+	// 	"body": message.Body,
+	// }
+	m["type"] = message.Type
+	m["body"] = message.Body
 	return nil
 }
