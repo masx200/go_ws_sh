@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os/exec"
-	// "sync"
 
 	"github.com/hertz-contrib/websocket"
 	"github.com/linkedin/goavro/v2"
@@ -75,12 +74,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	// var w, cancel = context.WithCancel(context.Background())
 	// defer cancel()
 	defer conn.Close()
-	var in_queue = NewBlockingChannelDeque()
-	var err_queue = NewBlockingChannelDeque()
-	var out_queue = NewBlockingChannelDeque()
-	defer out_queue.Close()
-	defer err_queue.Close()
-	defer in_queue.Close()
+	var in_queue = make(chan []byte)
+	var err_queue = make(chan []byte)
+	var out_queue = make(chan []byte)
+	defer close(out_queue)
+	defer close(err_queue)
+	defer close(in_queue)
 	cmd := exec.Command(session.Cmd)
 
 	var Clear = func() {
@@ -90,9 +89,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		// 		log.Printf("Recovered from panic: %v", r)
 		// 	}
 		// }()
-		out_queue.Close()
-		err_queue.Close()
-		in_queue.Close()
+		close(out_queue)
+		close(err_queue)
+		close(in_queue)
 		conn.Close()
 
 		if cmd.Process != nil {

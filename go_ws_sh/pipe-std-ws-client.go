@@ -119,12 +119,12 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	}
 
 	defer conn.Close()
-	var in_queue = NewBlockingChannelDeque()
-	var err_queue = NewBlockingChannelDeque()
-	var out_queue = NewBlockingChannelDeque()
-	defer out_queue.Close()
-	defer err_queue.Close()
-	defer in_queue.Close()
+	var in_queue = make(chan []byte)
+	var err_queue = make(chan []byte)
+	var out_queue = make(chan []byte)
+	defer close(out_queue)
+	defer close(err_queue)
+	defer close(in_queue)
 	go func() {
 		io.Copy(os.Stdout, out_queue)
 	}()
@@ -143,9 +143,9 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		// 	log.Println(err)
 		// }
 		conn.Close()
-		out_queue.Close()
-		err_queue.Close()
-		in_queue.Close()
+		close(out_queue)
+		close(err_queue)
+		close(in_queue)
 		defer os.Exit(0)
 		return nil
 	})
