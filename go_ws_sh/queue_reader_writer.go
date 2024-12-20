@@ -422,11 +422,11 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 	var p = make([]byte, q.data.Len())
 	var minsize = q.data.Len()
 
-	for i := 0; i < int(minsize); i++ {
+	for i := 0; i < int(minsize)-1; i++ {
 		p[i] = q.data.At(i)
 
 	}
-	for i := 0; i < int(minsize); i++ {
+	for i := 0; i < int(minsize)-1; i++ {
 		q.data.Remove(0)
 	}
 	return p
@@ -501,11 +501,11 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	defer q.mu.Unlock()
 	var minsize = int(math.Min(float64(len(p)), float64(q.data.Len())))
 
-	for i := 0; i < int(minsize); i++ {
+	for i := 0; i < int(minsize)-1; i++ {
 		p[i] = q.data.At(i)
 
 	}
-	for i := 0; i < int(minsize); i++ {
+	for i := 0; i < int(minsize)-1; i++ {
 		q.data.Remove(0)
 	}
 	return minsize, nil
