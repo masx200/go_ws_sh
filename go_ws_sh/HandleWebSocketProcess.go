@@ -29,12 +29,12 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string /*  mu
 		return err
 	}
 
-	go func() {
+	// go func() {
 		binaryandtextchannel <- WebsocketMessage{
 			Body: databuf,
 			Type: websocket.TextMessage,
 		}
-	}()
+	// }()
 	//加一把锁在writemessage时使用,不能并发写入
 	// mu.Lock()
 	// defer mu.Unlock()
@@ -228,12 +228,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				return
 			}
-			go func() {
-				binaryandtextchannel <- WebsocketMessage{
-					Body: encoded,
-					Type: websocket.BinaryMessage,
-				}
-			}()
+			binaryandtextchannel <- WebsocketMessage{
+				Body: encoded,
+				Type: websocket.BinaryMessage,
+			}
 			//encoded
 			// mubinary.Lock()
 			// defer mubinary.Unlock()
@@ -270,12 +268,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-			go func() {
-				binaryandtextchannel <- WebsocketMessage{
-					Body: encoded,
-					Type: websocket.BinaryMessage,
-				}
-			}() //encoded
+			binaryandtextchannel <- WebsocketMessage{
+				Body: encoded,
+				Type: websocket.BinaryMessage,
+			} //encoded
 			// mubinary.Lock()
 			// defer mubinary.Unlock()
 			// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
