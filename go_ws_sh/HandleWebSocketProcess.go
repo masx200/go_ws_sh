@@ -27,10 +27,13 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string /*  mu
 	if err != nil {
 		return err
 	}
-	binaryandtextchannel <- WebsocketMessage{
-		Body: databuf,
-		Type: websocket.TextMessage,
-	}
+
+	go func() {
+		binaryandtextchannel <- WebsocketMessage{
+			Body: databuf,
+			Type: websocket.TextMessage,
+		}
+	}()
 	//加一把锁在writemessage时使用,不能并发写入
 	// mu.Lock()
 	// defer mu.Unlock()
@@ -220,10 +223,13 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-			binaryandtextchannel <- WebsocketMessage{
-				Body: encoded,
-				Type: websocket.BinaryMessage,
-			} //encoded
+			go func() {
+				binaryandtextchannel <- WebsocketMessage{
+					Body: encoded,
+					Type: websocket.BinaryMessage,
+				}
+			}()
+			//encoded
 			// mubinary.Lock()
 			// defer mubinary.Unlock()
 			// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
@@ -256,10 +262,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				continue
 			}
-			binaryandtextchannel <- WebsocketMessage{
-				Body: encoded,
-				Type: websocket.BinaryMessage,
-			} //encoded
+			go func() {
+				binaryandtextchannel <- WebsocketMessage{
+					Body: encoded,
+					Type: websocket.BinaryMessage,
+				}
+			}() //encoded
 			// mubinary.Lock()
 			// defer mubinary.Unlock()
 			// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
@@ -313,7 +321,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				if md.Type == "stdin" {
 					log.Println("server stdin received:", len(message))
 					var body = md.Body
-					in_queue <- body
+					go func() { in_queue <- body }()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}

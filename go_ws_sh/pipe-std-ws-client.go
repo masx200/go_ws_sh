@@ -138,7 +138,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
 
 		log.Println("write to stdin length:", len(p))
-		in_queue <- (p)
+		go func() { in_queue <- (p) }()
 
 		return n, nil
 	}, func() error {
@@ -242,12 +242,13 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				var md = result
 				if md.Type == "stderr" {
 					var body = md.Body
+					go func() { err_queue <- body }()
 
-					err_queue <- body
 				} else if md.Type == "stdout" {
 					var body = md.Body
-
-					out_queue <- body
+					go func() {
+						out_queue <- body
+					}()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}
