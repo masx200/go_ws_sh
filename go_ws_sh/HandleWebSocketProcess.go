@@ -83,6 +83,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				err = conn.WriteMessage(encoded.Type, encoded.Body)
 				if err != nil {
 					log.Println("write:", err)
+					return
 				}
 			} else {
 				break

@@ -56,6 +56,8 @@ func Client_start(config string) {
 // pipe_std_ws_client 创建一个WebSocket客户端，根据配置数据连接到服务器。
 // 它处理与WebSocket服务器的通信，包括身份验证、消息编码和解码，以及与标准输入/输出的交互。
 func pipe_std_ws_client(configdata ConfigClient) {
+	var binaryandtextchannel = make(chan WebsocketMessage)
+	defer close(binaryandtextchannel)
 	// oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -123,6 +125,24 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	}
 
 	defer conn.Close()
+	go func() {
+		var err error
+		for {
+			//var encoded,ok <-  binaryandtextchannel
+			encoded, ok := <-binaryandtextchannel
+			if ok {
+				// mubinary.Lock()
+				// defer mubinary.Unlock()
+				err = conn.WriteMessage(encoded.Type, encoded.Body)
+				if err != nil {
+					log.Println("write:", err)
+					return
+				}
+			} else {
+				break
+			}
+		}
+	}()
 	// var in_queue = make(chan []byte)
 	// var err_queue = make(chan []byte)
 	// var out_queue = make(chan []byte)
@@ -145,7 +165,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		go func() {
 
 			// in_queue <- (p)
-			sendMessageToWebsocketStdin(p, conn, codec)
+			sendMessageToWebsocketStdin(p /* conn, */, codec, binaryandtextchannel)
 
 		}()
 
@@ -307,7 +327,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// }
 }
 
-func sendMessageToWebsocketStdin(data []byte, conn *websocket.Conn, codec *goavro.Codec) {
+func sendMessageToWebsocketStdin(data []byte /* conn *websocket.Conn, */, codec *goavro.Codec, binaryandtextchannel chan WebsocketMessage) error {
 	// log.Println("stdin recv Binary length: ", len(data))
 	var message = BinaryMessage{
 		Type: "stdin",
@@ -317,15 +337,19 @@ func sendMessageToWebsocketStdin(data []byte, conn *websocket.Conn, codec *goavr
 	encoded, err := EncodeStructAvroBinary(codec, &message)
 	if err != nil {
 		log.Println("encode:", err)
-		return
+		return err
 	}
-
-	err = conn.WriteMessage(websocket.BinaryMessage, encoded)
-
-	if err != nil {
-		log.Println("write:", err)
-
+	binaryandtextchannel <- WebsocketMessage{
+		Body: encoded,
+		Type: websocket.BinaryMessage,
 	}
+	return nil
+	// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
+
+	// if err != nil {
+	// 	log.Println("write:", err)
+
+	// }
 }
 
 // configureWebSocketTLSCA 配置 WebSocket 的 TLS 客户端证书认证。
