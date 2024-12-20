@@ -170,7 +170,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	if err != nil {
 		return err
 	}
-
+	// stdin.Write([]byte("ping qq.com" + "\n"))
 	go func() {
 		CopyReaderToChan(out_queue, stdout)
 	}()
@@ -321,6 +321,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				if md.Type == "stdin" {
 					log.Println("server stdin received:", len(message))
 					var body = md.Body
+					log.Println("body:", body)
 					go func() {
 						//in_queue <- body
 						stdin.Write(body)
