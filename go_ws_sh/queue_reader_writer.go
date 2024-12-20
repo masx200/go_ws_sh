@@ -21,11 +21,12 @@ func NewBlockingChannelDeque() *BlockingChannelDeque {
 	// // 一个条件变量和一个互斥锁的引用。
 	// x1 := &sync.Mutex{}
 	// x := sync.NewCond(x1)
-	const x = 32 * 1024
+	// const x = 32 * 1024
 	return &BlockingChannelDeque{
-		ch:     make(chan byte, x),
+		ch: make(chan byte),
+		// ch:     make(chan byte, 1 /* x */),
 		closed: false,
-		size:   x,
+		// size:   x,
 		// data:   &deque.Deque[byte]{},
 		// closed: false,
 		// cond:   x,
@@ -66,13 +67,13 @@ func init() {
 // 它使用双端队列作为底层数据结构，并提供了线程安全的操作。
 // 该结构用于在生产者和消费者之间高效地传递数据，同时保持数据的顺序。
 type BlockingChannelDeque struct {
-	size int
+	// size int
 	// // data 是一个双端队列，存储着字节切片。它是BlockingChannelDeque的核心组件，
 	// // 负责实际数据的存储和操作。
 	// data *deque.Deque[byte]
 	ch chan byte
-	// // closed 表示BlockingChannelDeque是否已关闭。当closed为true时，表示不能再向
-	// // BlockingChannelDeque中添加数据，但仍然可以移除已有的数据直到队列为空。
+	// // // closed 表示BlockingChannelDeque是否已关闭。当closed为true时，表示不能再向
+	// // // BlockingChannelDeque中添加数据，但仍然可以移除已有的数据直到队列为空。
 	closed bool
 
 	// // mu 是一个互斥锁，用于保护BlockingChannelDeque的成员变量，确保在同一时刻
@@ -237,37 +238,37 @@ func (q *BlockingChannelDeque) Closed() bool {
 //
 // 返回值:
 //
-//	error - 如果队列已关闭，则返回io.EOF；否则返回nil。
-func (cw *BlockingChannelDeque) PushBack(item byte) error {
-	if cw.closed {
-		return io.EOF
-	}
-	select {
-	case cw.ch <- item:
-		return nil
-	default:
-		return io.EOF
-	}
-	// return nil
-	// 上锁以确保线程安全。
-	// q.mu.Lock()
-	// defer q.mu.Unlock()
+// //	error - 如果队列已关闭，则返回io.EOF；否则返回nil。
+// func (cw *BlockingChannelDeque) PushBack(item byte) error {
+// 	if cw.closed {
+// 		return io.EOF
+// 	}
+// 	select {
+// 	case cw.ch <- item:
+// 		return nil
+// 	default:
+// 		return io.EOF
+// 	}
+// 	// return nil
+// 	// 上锁以确保线程安全。
+// 	// q.mu.Lock()
+// 	// defer q.mu.Unlock()
 
-	// // 检查队列是否已关闭，如果是，则返回EOF错误。
-	// if q.closed {
-	// 	return io.EOF
-	// }
+// 	// // 检查队列是否已关闭，如果是，则返回EOF错误。
+// 	// if q.closed {
+// 	// 	return io.EOF
+// 	// }
 
-	// // 将项添加到队列末尾。
-	// q.data.PushBack((item))
+// 	// // 将项添加到队列末尾。
+// 	// q.data.PushBack((item))
 
-	// // 触发条件变量以通知可能在等待的协程。
-	// q.cond.Signal()
+// 	// // 触发条件变量以通知可能在等待的协程。
+// 	// q.cond.Signal()
 
-	// // 成功添加项后返回nil。
-	// return nil
+// 	// // 成功添加项后返回nil。
+// 	// return nil
 
-}
+// }
 
 // Size implements BlockingDeque.
 // Size 返回BlockingChannelDeque中的元素数量。
@@ -285,58 +286,58 @@ func (cw *BlockingChannelDeque) PushBack(item byte) error {
 // 该方法首先锁定互斥锁以确保线程安全，然后尝试从队列尾部取出元素。
 // 如果队列为空，即没有元素可取，则返回nil和false。
 // 如果成功取出元素，则返回该元素和true。
-// 注意：该方法假设调用者已经处理了潜在的nil指针问题。
-func (cw *BlockingChannelDeque) TakeFirst() (byte, bool) {
-	// q.read.Lock()
-	// defer q.read.Unlock()
-	if cw.closed {
-		return 0, false
-	}
+// // 注意：该方法假设调用者已经处理了潜在的nil指针问题。
+// func (cw *BlockingChannelDeque) TakeFirst() (byte, bool) {
+// 	// q.read.Lock()
+// 	// defer q.read.Unlock()
+// 	if cw.closed {
+// 		return 0, false
+// 	}
 
-	select {
-	case b, ok := <-cw.ch:
-		if !ok {
-			cw.closed = true
-			return 0, false
-		}
-		return b, true
-		// p[i] = b
-		// n++
-	default:
-		return 0, false
-	}
-	// q.cm.Lock()
-	// for (q.data.Len() == 0) && !q.closed {
+// 	select {
+// 	case b, ok := <-cw.ch:
+// 		if !ok {
+// 			cw.closed = true
+// 			return 0, false
+// 		}
+// 		return b, true
+// 		// p[i] = b
+// 		// n++
+// 	default:
+// 		return 0, false
+// 	}
+// 	// q.cm.Lock()
+// 	// for (q.data.Len() == 0) && !q.closed {
 
-	// 	time.Sleep(1 * time.Millisecond)
-	// 	q.cond.Wait()
-	// }
-	// q.cm.Unlock()
-	// if q.closed {
-	// 	return 0, false
-	// }
-	// q.mu.Lock()
-	// defer q.mu.Unlock()
+// 	// 	time.Sleep(1 * time.Millisecond)
+// 	// 	q.cond.Wait()
+// 	// }
+// 	// q.cm.Unlock()
+// 	// if q.closed {
+// 	// 	return 0, false
+// 	// }
+// 	// q.mu.Lock()
+// 	// defer q.mu.Unlock()
 
-	// x := q.data.Front()
-	// q.data.Remove(0)
-	// return x, true
-	// q.mu.Lock()
-	// defer q.mu.Unlock()
+// 	// x := q.data.Front()
+// 	// q.data.Remove(0)
+// 	// return x, true
+// 	// q.mu.Lock()
+// 	// defer q.mu.Unlock()
 
-	// if q.closed {
-	// 	return nil, false
-	// }
-	// for q.data.Len() == 0 && !q.closed {
-	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
-	// }
-	// if q.data.Len() > 0 {
-	// 	value := q.data.Front()
-	// 	q.data.Remove(0)
-	// 	return value, true
-	// }
-	// return nil, false
-}
+// 	// if q.closed {
+// 	// 	return nil, false
+// 	// }
+// 	// for q.data.Len() == 0 && !q.closed {
+// 	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
+// 	// }
+// 	// if q.data.Len() > 0 {
+// 	// 	value := q.data.Front()
+// 	// 	q.data.Remove(0)
+// 	// 	return value, true
+// 	// }
+// 	// return nil, false
+// }
 
 // TakeLast implements BlockingDeque.
 // TakeLast removes and returns the last element from the queue.
@@ -460,7 +461,7 @@ func (cw *BlockingChannelDeque) Enqueue(value []byte) error {
 // This function is blocking; if there are no messages in the queue, it will wait until a message is available or the queue is closed.
 // Returns nil if the queue is closed and there are no messages available.
 func (cw *BlockingChannelDeque) Dequeue() []byte {
-	var x = cw.size
+	var x = 1
 	if cw.closed {
 		return nil
 	}
@@ -702,14 +703,14 @@ func (cw *BlockingChannelDeque) Write(p []byte) (n int, err error) {
 
 // BlockingChannel 定义了一个阻塞通道接口，用于在队列满或空时阻塞操作
 type BlockingChannel interface {
-	PushBack(item byte) error
+	// PushBack(item byte) error
 	// 在队尾插入元素，如果队列已满，则阻塞等待
 	Enqueue(item []byte) error
 	// 在队首插入元素，如果队列已满，则阻塞等待
 	// PushFront(item byte) error
 	// 从队尾移除元素，如果队列为空，则阻塞等待
 	// TakeLast() (byte, bool)
-	TakeFirst() (byte, bool)
+	// TakeFirst() (byte, bool)
 	// 从队首移除元素，如果队列为空，则阻塞等待
 	Dequeue() []byte
 	// 检查队列是否为空
