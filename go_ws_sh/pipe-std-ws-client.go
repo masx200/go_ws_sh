@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	// "io"
 	"log"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
+	"github.com/linkedin/goavro/v2"
 	// "golang.org/x/term"
 )
 
@@ -119,12 +121,12 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	}
 
 	defer conn.Close()
-	var in_queue = make(chan []byte)
+	// var in_queue = make(chan []byte)
 	var err_queue = make(chan []byte)
 	var out_queue = make(chan []byte)
 	defer close(out_queue)
 	defer close(err_queue)
-	defer close(in_queue)
+	// defer close(in_queue)
 	go func() {
 		CopyChanToWriter(os.Stdout, out_queue)
 	}()
@@ -138,7 +140,12 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
 
 		log.Println("write to stdin length:", len(p))
-		go func() { in_queue <- (p) }()
+		go func() {
+
+			// in_queue <- (p)
+			sendMessageToWebsocketStdin(p, conn, codec)
+
+		}()
 
 		return n, nil
 	}, func() error {
@@ -151,7 +158,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		conn.Close()
 		close(out_queue)
 		close(err_queue)
-		close(in_queue)
+		// close(in_queue)
 		defer os.Exit(0)
 		return nil
 	})
@@ -163,33 +170,33 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	go func() {
 		startable()
 	}()
-	go func() {
+	// go func() {
 
-		for {
-			data, ok := <-in_queue
-			if data == nil || !ok {
-				break
-			}
-			log.Println("stdin recv Binary length: ", len(data))
-			var message = BinaryMessage{
-				Type: "stdin",
-				Body: data,
-			}
+	// 	for {
+	// 		data, ok := <-in_queue
+	// 		if data == nil || !ok {
+	// 			break
+	// 		}
+	// 		log.Println("stdin recv Binary length: ", len(data))
+	// 		var message = BinaryMessage{
+	// 			Type: "stdin",
+	// 			Body: data,
+	// 		}
 
-			encoded, err := EncodeStructAvroBinary(codec, &message)
-			if err != nil {
-				log.Println("encode:", err)
-				continue
-			}
+	// 		encoded, err := EncodeStructAvroBinary(codec, &message)
+	// 		if err != nil {
+	// 			log.Println("encode:", err)
+	// 			continue
+	// 		}
 
-			err = conn.WriteMessage(websocket.BinaryMessage, encoded)
+	// 		err = conn.WriteMessage(websocket.BinaryMessage, encoded)
 
-			if err != nil {
-				log.Println("write:", err)
+	// 		if err != nil {
+	// 			log.Println("write:", err)
 
-			}
-		}
-	}()
+	// 		}
+	// 	}
+	// }()
 	for {
 		mt, message, err := conn.ReadMessage()
 		if err, ok := err.(*websocket.CloseError); ok {
@@ -291,6 +298,27 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// if err := cmd.Wait(); err != nil {
 	// 	log.Fatal(err)
 	// }
+}
+
+func sendMessageToWebsocketStdin(data []byte, conn *websocket.Conn, codec *goavro.Codec) {
+	log.Println("stdin recv Binary length: ", len(data))
+	var message = BinaryMessage{
+		Type: "stdin",
+		Body: data,
+	}
+
+	encoded, err := EncodeStructAvroBinary(codec, &message)
+	if err != nil {
+		log.Println("encode:", err)
+		return
+	}
+
+	err = conn.WriteMessage(websocket.BinaryMessage, encoded)
+
+	if err != nil {
+		log.Println("write:", err)
+
+	}
 }
 
 // configureWebSocketTLSCA 配置 WebSocket 的 TLS 客户端证书认证。

@@ -65,12 +65,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	var binaryandtextchannel = make(chan WebsocketMessage)
 	defer close(binaryandtextchannel)
 	defer conn.Close()
-	var in_queue = make(chan []byte)
+	// var in_queue = make(chan []byte)
 	var err_queue = make(chan []byte)
 	var out_queue = make(chan []byte)
 	defer close(out_queue)
 	defer close(err_queue)
-	defer close(in_queue)
+	// defer close(in_queue)
 	go func() {
 		var err error
 		for {
@@ -112,7 +112,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		// }()
 		close(out_queue)
 		close(err_queue)
-		close(in_queue)
+		// close(in_queue)
 		conn.Close()
 
 		if cmd.Process != nil {
@@ -177,10 +177,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 		CopyReaderToChan(err_queue, stderr)
 	}()
-	go func() {
-		CopyChanToWriter(stdin, in_queue)
+	// go func() {
+	// 	CopyChanToWriter(stdin, in_queue)
 
-	}()
+	// }()
 	go func() {
 		if err := cmd.Wait(); err != nil {
 			log.Println(err)
@@ -321,7 +321,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				if md.Type == "stdin" {
 					log.Println("server stdin received:", len(message))
 					var body = md.Body
-					go func() { in_queue <- body }()
+					go func() {
+						//in_queue <- body
+						stdin.Write(body)
+					}()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}
