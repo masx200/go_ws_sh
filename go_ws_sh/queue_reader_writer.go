@@ -64,9 +64,12 @@ func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
+	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
+
 		q.cond.Wait()
 	}
+	q.mu.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -109,9 +112,12 @@ func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
+	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
+
 		q.cond.Wait()
 	}
+	q.mu.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -243,9 +249,12 @@ func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
+	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
+
 		q.cond.Wait()
 	}
+	q.mu.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -283,9 +292,12 @@ func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
 	if q.closed {
 		return 0, false
 	}
+	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
+
 		q.cond.Wait()
 	}
+	q.mu.Unlock()
 	if q.closed {
 		return 0, false
 	}
@@ -396,9 +408,12 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 	if q.closed {
 		return nil
 	}
+	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
+
 		q.cond.Wait()
 	}
+	q.mu.Unlock()
 	if q.closed {
 		return nil
 	}
@@ -473,9 +488,12 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	if q.closed {
 		return 0, io.EOF
 	}
+	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
+
 		q.cond.Wait()
 	}
+	q.mu.Unlock()
 	if q.closed {
 		return 0, io.EOF
 	}
