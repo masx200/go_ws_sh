@@ -316,6 +316,7 @@ func (q *BlockingChannelDeque) Enqueue(value []byte) error {
 // This function is blocking; if there are no messages in the queue, it will wait until a message is available or the queue is closed.
 // Returns nil if the queue is closed and there are no messages available.
 func (q *BlockingChannelDeque) Dequeue() []byte {
+	//TODO: Implement the method
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
@@ -369,6 +370,7 @@ func (q *BlockingChannelDeque) PushFront(value byte) error {
 //	n: 实际读取的字节数。
 //	err: 错误信息，如果队列已关闭或没有数据可读，则返回 io.EOF。
 func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
+	//TODO: Implement the method
 	if q.closed {
 		return 0, io.EOF
 	}
@@ -409,14 +411,22 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 //	n int: 成功写入的字节数。
 //	err error: 如果写入失败，返回错误。
 func (q *BlockingChannelDeque) Write(p []byte) (n int, err error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
 	if q.closed {
-		return 0, io.EOF
+		return n, io.EOF
 	}
-	err = q.Enqueue((p))
-	if err != nil {
-		return 0, err
+	if len(p) == 0 {
+		return n, nil
 	}
-	return len(p), nil
+	q.data.Grow(len(p))
+	for _, b := range p {
+		q.data.PushBack((b))
+	}
+	// q.data.PushBack((value))
+	n = len(p)
+	q.cond.Signal()
+	return n, nil
 }
 
 // BlockingDeque 是一个阻塞双端队列的接口，提供了在队列两端进行插入和移除操作的能力
