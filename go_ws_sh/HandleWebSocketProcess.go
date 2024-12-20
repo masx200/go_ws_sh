@@ -327,10 +327,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					// log.Println("server stdin received:", len(message))
 					var body = md.Body
 					// log.Println("body:", body)
-					go func() {
-						//in_queue <- body
-						stdin.Write(body)
-					}()
+					// go func() {
+					//in_queue <- body
+					stdin.Write(body)
+					// }()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
 				}
