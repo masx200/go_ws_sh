@@ -162,12 +162,12 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	closable, startable, err := TermboxPipe(func(p []byte) (n int, err error) {
 
 		// log.Println("write to stdin length:", len(p))
-		go func() {
+		// go func() {
 
-			// in_queue <- (p)
-			sendMessageToWebsocketStdin(p /* conn, */, codec, binaryandtextchannel)
+		// in_queue <- (p)
+		sendMessageToWebsocketStdin(p /* conn, */, codec, binaryandtextchannel)
 
-		}()
+		// }()
 
 		return n, nil
 	}, func() error {
