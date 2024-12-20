@@ -233,14 +233,22 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			return
 		}
 		if mt == websocket.TextMessage {
-			var data TextMessage
+			var array []string
 			//parse json data
 
-			err = json.Unmarshal(message, &data)
+			err = json.Unmarshal(message, &array)
 			if err != nil {
 				log.Println("read:", err)
 				//return
-				log.Printf("ignored recv text: %s", message)
+				// log.Printf("ignored recv text: %s", message)
+				return
+			}
+			var data TextMessage
+			err = DecodeTextMessageFromStringArray(array, &data)
+			if err != nil {
+				log.Println("read:", err)
+				//return
+				// log.Printf("ignored recv text: %s", message)
 				return
 			}
 			// log.Println("websocket recv text length: ", len(message))

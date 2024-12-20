@@ -24,7 +24,7 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string /*  mu
 	var data TextMessage
 	data.Type = typestring
 	data.Body = body
-	databuf, err := json.Marshal(data)
+	databuf, err := json.Marshal(EncodeTextMessageToStringArray(data))
 	if err != nil {
 		return err
 	}
