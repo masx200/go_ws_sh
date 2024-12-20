@@ -2,7 +2,9 @@ package go_ws_sh
 
 import (
 	"io"
+	"log"
 	"math"
+	"time"
 	// "slices"
 	"sync"
 
@@ -67,6 +69,7 @@ func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
 	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 	q.mu.Unlock()
@@ -84,7 +87,7 @@ func (q *BlockingChannelDeque) PeekFirst() (byte, bool) {
 	// 	return nil, false
 	// }
 	// for q.data.Len() == 0 && !q.closed {
-	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
 	// }
 	// if q.data.Len() > 0 {
 	// 	value := q.data.Front()
@@ -115,6 +118,7 @@ func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
 	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 	q.mu.Unlock()
@@ -132,7 +136,7 @@ func (q *BlockingChannelDeque) PeekLast() (byte, bool) {
 	// 	return nil, false
 	// }
 	// for q.data.Len() == 0 && !q.closed {
-	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
 	// }
 	// if q.data.Len() == 0 {
 	// 	return nil, false
@@ -164,6 +168,7 @@ func (q *BlockingChannelDeque) Wait() {
 	// The use of conditional variables here allows the current goroutine to wait until notified,
 	// thus avoiding unnecessary busy waiting and improving program efficiency.
 	for !q.closed {
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 
@@ -252,6 +257,7 @@ func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
 	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 	q.mu.Unlock()
@@ -271,7 +277,7 @@ func (q *BlockingChannelDeque) TakeFirst() (byte, bool) {
 	// 	return nil, false
 	// }
 	// for q.data.Len() == 0 && !q.closed {
-	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
 	// }
 	// if q.data.Len() > 0 {
 	// 	value := q.data.Front()
@@ -295,6 +301,7 @@ func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
 	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 	q.mu.Unlock()
@@ -314,7 +321,7 @@ func (q *BlockingChannelDeque) TakeLast() (byte, bool) {
 	// 	return nil, false
 	// }
 	// for q.data.Len() == 0 && !q.closed {
-	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
 	// }
 	// if q.data.Len() == 0 {
 	// 	return nil, false
@@ -411,6 +418,7 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 	q.mu.Unlock()
@@ -437,7 +445,7 @@ func (q *BlockingChannelDeque) Dequeue() []byte {
 	// 	return nil
 	// }
 	// for q.data.Len() == 0 && !q.closed {
-	// 	q.cond.Wait() // Wait until there is data or the queue is closed
+	// 	time.Sleep(1 * time.Millisecond);q.cond.Wait(); // Wait until there is data or the queue is closed
 	// }
 	// if q.data.Len() > 0 {
 	// 	value := q.data.Front()
@@ -491,6 +499,7 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	q.mu.Lock()
 	for (q.data.Len() == 0) && !q.closed {
 
+		time.Sleep(1 * time.Millisecond)
 		q.cond.Wait()
 	}
 	q.mu.Unlock()
@@ -508,6 +517,7 @@ func (q *BlockingChannelDeque) Read(p []byte) (n int, err error) {
 	for i := 0; i <= int(minsize)-1; i++ {
 		q.data.Remove(0)
 	}
+	log.Println("Read length:", minsize)
 	return minsize, nil
 	// //先尝试从队列中取出数据
 	// //PeekFirst()
