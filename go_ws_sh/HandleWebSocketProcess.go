@@ -214,6 +214,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					return
 				}
 			}
+			log.Println("server stdout received body:", data)
 			// log.Printf("stdout recv Binary length: %v", len(data))
 			var message = BinaryMessage{
 				Type: "stdout",
@@ -254,6 +255,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					return
 				}
 			}
+			log.Println("server stderr received body:", data)
 			// log.Printf("stderr recv Binary length: %v", len(data))
 			var message = BinaryMessage{
 				Type: "stderr",
@@ -326,7 +328,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				if md.Type == "stdin" {
 					// log.Println("server stdin received:", len(message))
 					var body = md.Body
-					// log.Println("body:", body)
+					log.Println("server stdin received body:", body)
 					// go func() {
 					//in_queue <- body
 					stdin.Write(body)
