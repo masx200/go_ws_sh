@@ -23,6 +23,10 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 		defer func() { go closable() }()
 		for {
 			switch ev := termbox.PollEvent(); ev.Type {
+
+			// case termbox.EventRaw:
+			// 	log.Println(
+			// 		"raw event: ", ev)
 			case termbox.EventKey:
 				switch ev.Key {
 				case termbox.KeyTab:

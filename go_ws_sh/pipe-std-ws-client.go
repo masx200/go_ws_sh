@@ -188,6 +188,20 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		log.Println(err)
 		return
 	}
+
+	// go func() {
+	// 	for {
+	// 		var data, err = ReadFixedSizeFromReader(os.Stdin, 1024*1024)
+	// 		if data == nil || nil != err {
+	// 			if err != nil {
+	// 				log.Println("encode:", err)
+	// 				return
+	// 			}
+	// 		}
+	// 		log.Printf("os.stdin recv Binary length: %v", len(data))
+	// 	}
+
+	// }()
 	defer func() { go closable() }()
 	go func() {
 		startable()
