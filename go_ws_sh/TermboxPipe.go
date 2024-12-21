@@ -104,7 +104,11 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				// 	 writable([]byte{0x00})
 
 				default:
-					if ev.Ch != 0 {
+					/* Ctrl 的传递方式通常与从系统接收完全相同。 这通常是向下移到控制字符保留空间 (0x0-
+					0x1f) 的单个字符。 例 */
+					if ev.Key <= termbox.KeyCtrl8 && termbox.KeyCtrlA <= ev.Key {
+						writable([]byte{byte(ev.Key)})
+					} else if ev.Ch != 0 {
 						// fmt.Printf("Character '%c' (code: %d) was pressed\n", ev.Ch, ev.Ch)
 
 						writable([]byte{byte(ev.Ch)})
