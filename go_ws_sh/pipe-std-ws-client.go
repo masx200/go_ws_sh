@@ -159,6 +159,23 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// go func() {
 	// 	io.Copy(in_queue, os.Stdin)
 	// }()
+	var onsizechange = func(cols int, rows int) {
+
+		var msgsize = EncodeMessageSizeToStringArray(MessageSize{
+			Cols: cols,
+			Rows: rows,
+			Type: "resize",
+		})
+		databuf, err := json.Marshal(msgsize)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		binaryandtextchannel <- WebsocketMessage{
+			Body: databuf,
+			Type: websocket.TextMessage,
+		}
+	}
 	closable, startable, cols, rows, err := TermboxPipe(func(p []byte) (n int, err error) {
 
 		// log.Println("write to stdin length:", len(p))
@@ -183,7 +200,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		// close(in_queue)
 		defer os.Exit(0)
 		return nil
-	})
+	}, onsizechange)
 	if err != nil {
 		log.Println(err)
 		return

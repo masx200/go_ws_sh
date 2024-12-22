@@ -8,7 +8,7 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
-func TermboxPipe(writable func(p []byte) (n int, err error), closable func() error) (onCancel func() error, startable func(), cols int, rows int, err error) {
+func TermboxPipe(writable func(p []byte) (n int, err error), closable func() error, onsizechange func(cols int, rows int)) (onCancel func() error, startable func(), cols int, rows int, err error) {
 	const ESCCH = 0x1B
 	err = termbox.Init()
 	if err != nil {
@@ -23,7 +23,9 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 		defer func() { go closable() }()
 		for {
 			switch ev := termbox.PollEvent(); ev.Type {
-
+			case termbox.EventResize:
+				cols, rows = ev.Width, ev.Height
+				onsizechange(cols, rows)
 			// case termbox.EventRaw:
 			// 	log.Println(
 			// 		"raw event: ", ev)
