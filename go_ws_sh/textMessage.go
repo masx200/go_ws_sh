@@ -40,7 +40,7 @@ func EncodeMessageSizeToStringArray(msg MessageSize) []any {
 }
 
 // DecodeTextMessageFromStringArray 将 []string 数组解码为 TextMessage 结构体
-func DecodeMessageSizeToStringArray(strArray []any, result *MessageSize) error {
+func DecodeMessageSizeFromStringArray(strArray []any, result *MessageSize) error {
 	if len(strArray) != 3 {
 		return fmt.Errorf("invalid string array length, expected 2")
 	}

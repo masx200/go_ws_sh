@@ -325,7 +325,41 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		}
 		if mt == websocket.TextMessage {
 			// log.Printf("websocket recv text length: %v", len(message))
-			log.Printf("ignored recv text: %s", message)
+			// log.Printf("ignored recv text: %s", message)
+			var array []any
+			//parse json data
+
+			err = json.Unmarshal(message, &array)
+			if err != nil {
+				log.Println("read:", err)
+				//return
+				// log.Printf("ignored recv text: %s", message)
+				return err
+			}
+			var data MessageSize
+			err = DecodeMessageSizeFromStringArray(array, &data)
+			if err != nil {
+				log.Println("read:", err)
+				//return
+				// log.Printf("ignored recv text: %s", message)
+				return err
+			}
+			// log.Println("websocket recv text length: ", len(message))
+			if data.Type == "resize" {
+				log.Println("resize:", data.Cols, data.Rows)
+				if cmd != nil {
+					cmd.SetSize(data.Cols, data.Rows)
+				}
+				// defer os.Exit(0)
+				// return
+				//break
+			} else {
+				log.Printf("ignored unknown recv text:%v", data)
+			}
+			/* else if data.Type == "resolved" {
+				log.Println("resolved:", data.Body)
+			} */
+
 		} else {
 			// log.Printf("websocket recv Binary length: %v", len(message))
 
