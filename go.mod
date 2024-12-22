@@ -60,6 +60,12 @@ require (
 	golang.org/x/net v0.33.0 // indirect
 )
 
+require (
+	github.com/creack/pty v1.1.24 // indirect
+	github.com/iamacarpet/go-winpty v1.0.4 // indirect
+	github.com/runletapp/go-console v0.0.0-20211204140000-27323a28410a // indirect
+)
+
 //replace github.com/lucas-clemente/quic-go v0.31.0 => github.com/quic-go/quic-go v0.38.2
 
 // replace github.com/masx200/go_ws_sh/network/quic-go v0.1.0 => github.com/masx200/go_ws_sh/network/quic-go v0.0.0
