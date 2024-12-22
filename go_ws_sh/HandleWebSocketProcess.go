@@ -122,7 +122,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			cmd.Process.Kill()
 		}
 	}
-	cmd.Args = session.Args
+	// cmd.Args = session.Args
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
