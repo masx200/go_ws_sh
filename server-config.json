@@ -1,21 +1,21 @@
 {
-    "credentials": [
-        {
-            "username": "admin",
-            "password": "pass"
-        }
-    ],
-    "sessions": [
-        {
-            "path": "pwsh",
-            "cmd": "pwsh",
-            "args": []
-        }
-    ],
-    "servers": [
-        {
-            "port": "28080",
-            "protocol": "http"
-        }
-    ]
+  "credentials": [
+    {
+      "username": "admin",
+      "password": "pass"
+    }
+  ],
+  "sessions": [
+    {
+      "path": "pwsh",
+      "cmd": "pwsh",
+      "args": []
+    }
+  ],
+  "servers": [
+    {
+      "port": "28080",
+      "protocol": "http"
+    }
+  ]
 }

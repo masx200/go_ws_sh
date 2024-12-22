@@ -1,31 +1,31 @@
 {
-    "credentials": [
-        {
-            "username": "admin",
-            "password": "pass"
-        }
-    ],
-    "sessions": [
-        {
-            "path": "pwsh",
-            "cmd": "pwsh",
-            "args": []
-        }
-    ],
-    "servers": [
-        {
-            "alpn": "h2",
-            "port": "28443",
-            "protocol": "https",
-            "cert": "localhost.crt",
-            "key": "localhost.key"
-        },
-        {
-            "alpn": "h3",
-            "port": "28443",
-            "protocol": "https",
-            "cert": "localhost.crt",
-            "key": "localhost.key"
-        }
-    ]
+  "credentials": [
+    {
+      "username": "admin",
+      "password": "pass"
+    }
+  ],
+  "sessions": [
+    {
+      "path": "pwsh",
+      "cmd": "pwsh",
+      "args": []
+    }
+  ],
+  "servers": [
+    {
+      "alpn": "h2",
+      "port": "28443",
+      "protocol": "https",
+      "cert": "localhost.crt",
+      "key": "localhost.key"
+    },
+    {
+      "alpn": "h3",
+      "port": "28443",
+      "protocol": "https",
+      "cert": "localhost.crt",
+      "key": "localhost.key"
+    }
+  ]
 }

@@ -1,16 +1,16 @@
 {
-    "credentials": {
-        "username": "admin",
-        "password": "pass"
-    },
-    "sessions": {
-        "path": "pwsh"
-    },
-    "servers": {
-        "port": "28443",
-        "protocol": "https",
-        "ca": "localhost.crt",
-        "insecure": false,
-        "host": "localhost"
-    }
+  "credentials": {
+    "username": "admin",
+    "password": "pass"
+  },
+  "sessions": {
+    "path": "pwsh"
+  },
+  "servers": {
+    "port": "28443",
+    "protocol": "https",
+    "ca": "localhost.crt",
+    "insecure": false,
+    "host": "localhost"
+  }
 }
