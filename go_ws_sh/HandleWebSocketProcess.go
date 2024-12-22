@@ -104,7 +104,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	// var w, cancel = context.WithCancel(context.Background())
 	// defer cancel()
 
-	cmd := exec.Command(session.Cmd)
+	cmd := exec.Command(session.Cmd, session.Args...)
 
 	var Clear = func() {
 		//recover panic
