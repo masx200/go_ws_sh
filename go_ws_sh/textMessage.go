@@ -30,8 +30,8 @@ func DecodeTextMessageFromStringArray(strArray []string, result *TextMessage) er
 
 type MessageSize struct {
 	Type string
-	Cols int
-	Rows int
+	Cols int64
+	Rows int64
 }
 
 // EncodeTextMessageToStringArray 将 TextMessage 结构体编码为 []string 数组
@@ -50,13 +50,17 @@ func DecodeMessageSizeFromStringArray(strArray []any, result *MessageSize) error
 	if !ok {
 		return fmt.Errorf("input is not a map[string]interface{} of MessageSize")
 	}
-	result.Cols, ok = strArray[1].(int)
+
+	cols, ok := strArray[1].(float64)
 	if !ok {
 		return fmt.Errorf("input is not a map[string]interface{} of MessageSize")
 	}
-	result.Rows, ok = strArray[2].(int)
+	result.Cols = int64(cols)
+
+	rows, ok := strArray[2].(float64)
 	if !ok {
 		return fmt.Errorf("input is not a map[string]interface{} of MessageSize")
 	}
+	result.Rows = int64(rows)
 	return nil
 }

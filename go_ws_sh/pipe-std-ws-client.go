@@ -163,8 +163,8 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	var onsizechange = func(cols int, rows int) {
 
 		var msgsize = EncodeMessageSizeToStringArray(MessageSize{
-			Cols: cols,
-			Rows: rows,
+			Cols: int64(cols),
+			Rows: int64(rows),
 			Type: "resize",
 		})
 		databuf, err := json.Marshal(msgsize)
@@ -207,8 +207,8 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		return
 	}
 	var msgsize = EncodeMessageSizeToStringArray(MessageSize{
-		Cols: cols,
-		Rows: rows,
+		Cols: int64(cols),
+		Rows: int64(rows),
 		Type: "resize",
 	})
 	databuf, err := json.Marshal(msgsize)

@@ -151,6 +151,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			// log.Printf("ignored recv text: %s", message)
 			return err
 		}
+		log.Println("websocket recv text : ", (array))
 		var data MessageSize
 		err = DecodeMessageSizeFromStringArray(array, &data)
 		if err != nil {
@@ -162,15 +163,15 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		// log.Println("websocket recv text length: ", len(message))
 		if data.Type == "resize" {
 			log.Println("resize:", data.Cols, data.Rows)
-			if cmd != nil {
-				cmd.SetSize(data.Cols, data.Rows)
-			} else {
-				cmd, err = console.New(data.Cols, data.Rows)
-				if err != nil {
-					log.Println("resize:", err)
-					return err
-				}
+			// if cmd != nil {
+			// 	cmd.SetSize(data.Cols, data.Rows)
+			// } else {
+			cmd, err = console.New(int(data.Cols), int(data.Rows))
+			if err != nil {
+				log.Println("resize:", err)
+				return err
 			}
+			// }
 			// defer os.Exit(0)
 			// return
 			//break
@@ -413,6 +414,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				// log.Printf("ignored recv text: %s", message)
 				return err
 			}
+
+			log.Println("websocket recv text : ", (array))
 			var data MessageSize
 			err = DecodeMessageSizeFromStringArray(array, &data)
 			if err != nil {
@@ -425,7 +428,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			if data.Type == "resize" {
 				log.Println("resize:", data.Cols, data.Rows)
 				if cmd != nil {
-					cmd.SetSize(data.Cols, data.Rows)
+					cmd.SetSize(int(data.Cols), int(data.Rows))
 				}
 				// defer os.Exit(0)
 				// return
