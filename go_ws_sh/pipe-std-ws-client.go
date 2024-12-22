@@ -101,13 +101,14 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	// fmt.Println("Authorization:", authHeader)
 	header.Set("Authorization", authHeader)
 	conn, response, err := x.Dial(url, header)
-	defer func() { os.Exit(0) }()
+
 	defer func() {
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 		// if err := defer conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
 		// 	log.Println(err)
 		// }
 	}()
+	defer func() { os.Exit(0) }()
 	if response != nil {
 		log.Println("Response Status:", response.Status)
 		fmt.Println("Response Headers:")
