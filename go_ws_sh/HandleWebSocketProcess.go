@@ -132,11 +132,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		}
 		// break
 		return err
-	} else  if err != nil
-	 
-	 {
-	 log.Println("read:", err)
-	 return err
+	} else if err != nil {
+		log.Println("read:", err)
+		return err
 	}
 	if mt == websocket.TextMessage {
 		// log.Printf("websocket recv text length: %v", len(message))
