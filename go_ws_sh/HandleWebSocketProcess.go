@@ -120,11 +120,11 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	mt, message, err = conn.ReadMessage()
 	var ok bool
-	err, ok = err.(*websocket.CloseError)
+	errclose, ok := err.(*websocket.CloseError)
 
 	if ok {
 
-		log.Println("close:", err)
+		log.Println("close:", errclose)
 		if cmd != nil {
 			// if cmd.Process != nil {
 			cmd.Kill()
@@ -132,12 +132,12 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		}
 		// break
 		return err
-	} else /* if err != nil
-	 */
-	//  {
-	// log.Println("read:", err)
-	// return err
-	// }
+	} else  if err != nil
+	 
+	 {
+	 log.Println("read:", err)
+	 return err
+	}
 	if mt == websocket.TextMessage {
 		// log.Printf("websocket recv text length: %v", len(message))
 		// log.Printf("ignored recv text: %s", message)
@@ -387,9 +387,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		// default:
 
 		mt, message, err := conn.ReadMessage()
-		if err, ok := err.(*websocket.CloseError); ok {
+		if errclose, ok := err.(*websocket.CloseError); ok {
 
-			log.Println("close:", err)
+			log.Println("close:", errclose)
 			if cmd != nil {
 				// if cmd.Process != nil {
 				cmd.Kill()
