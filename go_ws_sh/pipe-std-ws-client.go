@@ -305,6 +305,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 				log.Println("resolved:", data.Body)
 			} else {
 				log.Printf("ignored unknown recv text:%v", data)
+				return
 			}
 		} else {
 			// log.Println("websocket recv binary length: ", len(message))
@@ -337,6 +338,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 					// }()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
+					return
 				}
 			}
 		}

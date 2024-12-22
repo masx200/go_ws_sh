@@ -432,6 +432,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				//break
 			} else {
 				log.Printf("ignored unknown recv text:%v", data)
+				return errors.New("ignored unknown recv text console message size expected")
 			}
 			/* else if data.Type == "resolved" {
 				log.Println("resolved:", data.Body)
@@ -463,6 +464,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					// }()
 				} else {
 					log.Println("ignored unknown type:", md.Type)
+					return errors.New("ignored unknown type  stdin expected ")
+
 				}
 				// }
 			}
