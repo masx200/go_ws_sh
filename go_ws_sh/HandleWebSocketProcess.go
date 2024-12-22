@@ -3,6 +3,7 @@ package go_ws_sh
 import (
 	// "context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	// "io"
 	// "fmt"
@@ -66,6 +67,7 @@ type WebsocketMessage struct {
 //
 //	如果执行过程中发生错误，则返回该错误。
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
+	var err error
 	defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 	var binaryandtextchannel = make(chan WebsocketMessage)
 	defer close(binaryandtextchannel)
@@ -108,8 +110,82 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	// defer cancel()
 
 	var cmd console.Console = nil
-	//exec.Command(session.Cmd, session.Args...)
 
+	/* 读取第一条消息,
+	获取终端大小,
+	否则断开连接 */
+	//exec.Command(session.Cmd, session.Args...)
+	var mt int
+	var message []byte
+
+	mt, message, err = conn.ReadMessage()
+	var ok bool
+	err, ok = err.(*websocket.CloseError)
+
+	if ok {
+
+		log.Println("close:", err)
+		if cmd != nil {
+			// if cmd.Process != nil {
+			cmd.Kill()
+			// }
+		}
+		// break
+		return err
+	} else /* if err != nil
+	 */
+	//  {
+	// log.Println("read:", err)
+	// return err
+	// }
+	if mt == websocket.TextMessage {
+		// log.Printf("websocket recv text length: %v", len(message))
+		// log.Printf("ignored recv text: %s", message)
+		var array []any
+		//parse json data
+
+		err = json.Unmarshal(message, &array)
+		if err != nil {
+			log.Println("read:", err)
+			//return
+			// log.Printf("ignored recv text: %s", message)
+			return err
+		}
+		var data MessageSize
+		err = DecodeMessageSizeFromStringArray(array, &data)
+		if err != nil {
+			log.Println("read:", err)
+			//return
+			// log.Printf("ignored recv text: %s", message)
+			return err
+		}
+		// log.Println("websocket recv text length: ", len(message))
+		if data.Type == "resize" {
+			log.Println("resize:", data.Cols, data.Rows)
+			if cmd != nil {
+				cmd.SetSize(data.Cols, data.Rows)
+			} else {
+				cmd, err = console.New(data.Cols, data.Rows)
+				if err != nil {
+					log.Println("resize:", err)
+					return err
+				}
+			}
+			// defer os.Exit(0)
+			// return
+			//break
+		} else {
+			log.Printf("ignored unknown recv text:%v", data)
+			return errors.New("unknown recv text,first message console size expected")
+		}
+		/* else if data.Type == "resolved" {
+			log.Println("resolved:", data.Body)
+		} */
+
+	} else {
+
+		return errors.New("unknown recv binary,first message console size expected")
+	}
 	var Clear = func() {
 		//recover panic
 		// defer func() {
@@ -182,7 +258,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}()
 	x := "process " + session.Cmd + " started success"
 	log.Println("resolved:" + x)
-	var err = SendTextMessage(conn, "resolved", x /* &mutext */, binaryandtextchannel)
+	err = SendTextMessage(conn, "resolved", x /* &mutext */, binaryandtextchannel)
 	if err != nil {
 		return err
 	}
@@ -198,6 +274,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	// }()
 	go func() {
+
 		state, err := cmd.Wait()
 		if err != nil {
 			log.Println(err)
@@ -215,7 +292,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		// conn.WriteControl()
 		Clear()
 		conn.Close()
-
+		// return
 	}()
 	go func() {
 
