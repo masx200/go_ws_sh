@@ -321,7 +321,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			} else {
 				// log.Printf("recv binary: %s", decoded)
 				var md = result
-				if md.Type == "stderr" {
+				/* 	if md.Type == "stderr" {
 					var body = md.Body
 					// go func() {
 
@@ -329,7 +329,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 					os.Stderr.Write(body)
 					// }()
 
-				} else if md.Type == "stdout" {
+				} else */if md.Type == "stdout" {
 					var body = md.Body
 					// go func() {
 					os.Stdout.Write(body)

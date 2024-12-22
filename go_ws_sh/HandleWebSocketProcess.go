@@ -3,14 +3,16 @@ package go_ws_sh
 import (
 	// "context"
 	"encoding/json"
+	"fmt"
 	// "io"
 	// "fmt"
 	// "io"
 	"log"
-	"os/exec"
+	// "os/exec"
 
 	"github.com/hertz-contrib/websocket"
 	"github.com/linkedin/goavro/v2"
+	"github.com/runletapp/go-console"
 )
 
 // SendTextMessage 通过WebSocket连接发送文本消息
@@ -64,6 +66,7 @@ type WebsocketMessage struct {
 //
 //	如果执行过程中发生错误，则返回该错误。
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
+	defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 	var binaryandtextchannel = make(chan WebsocketMessage)
 	defer close(binaryandtextchannel)
 	defer conn.Close()
@@ -104,7 +107,8 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	// var w, cancel = context.WithCancel(context.Background())
 	// defer cancel()
 
-	cmd := exec.Command(session.Cmd, session.Args...)
+	var cmd console.Console = nil
+	//exec.Command(session.Cmd, session.Args...)
 
 	var Clear = func() {
 		//recover panic
@@ -116,60 +120,69 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		// close(out_queue)
 		// close(err_queue)
 		// close(in_queue)
-		conn.Close()
 
-		if cmd.Process != nil {
-			cmd.Process.Kill()
+		conn.Close()
+		if cmd != nil {
+			cmd.Kill()
 		}
+
 	}
+	defer Clear()
 	// cmd.Args = session.Args
 
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		log.Println(err)
+	// stdin, err := cmd.StdinPipe()
+	// if err != nil {
+	// 	log.Println(err)
 
+	// 	err := SendTextMessage(conn, "rejected", err.Error() /* &mutext */, binaryandtextchannel)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+
+	// 	Clear()
+	// 	return err
+	// }
+	var stdin = cmd
+	var stdout = cmd
+	// var stderr = cmd
+	// stdout, err := cmd.StdoutPipe()
+	// if err != nil {
+	// 	log.Println(err)
+	// 	err := SendTextMessage(conn, "rejected", err.Error() /*  &mutext */, binaryandtextchannel)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	Clear()
+	// 	return err
+	// }
+	// stderr, err := cmd.StderrPipe()
+	// if err != nil {
+	// 	log.Println(err)
+	// 	err := SendTextMessage(conn, "rejected", err.Error() /*  &mutext */, binaryandtextchannel)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	Clear()
+	// 	return err
+	// }
+
+	if err := cmd.Start(append([]string{session.Cmd}, session.Args...)); err != nil {
+		log.Println(err)
 		err := SendTextMessage(conn, "rejected", err.Error() /* &mutext */, binaryandtextchannel)
 		if err != nil {
 			return err
 		}
-
 		Clear()
 		return err
 	}
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error() /*  &mutext */, binaryandtextchannel)
-		if err != nil {
-			return err
+	defer func() {
+		if cmd != nil {
+			cmd.Kill()
 		}
-		Clear()
-		return err
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error() /*  &mutext */, binaryandtextchannel)
-		if err != nil {
-			return err
-		}
-		Clear()
-		return err
-	}
-
-	if err := cmd.Start(); err != nil {
-		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error() /* &mutext */, binaryandtextchannel)
-		if err != nil {
-			return err
-		}
-		Clear()
-		return err
-	}
-	defer cmd.Process.Kill()
+	}()
 	x := "process " + session.Cmd + " started success"
 	log.Println("resolved:" + x)
-	err = SendTextMessage(conn, "resolved", x /* &mutext */, binaryandtextchannel)
+	var err = SendTextMessage(conn, "resolved", x /* &mutext */, binaryandtextchannel)
 	if err != nil {
 		return err
 	}
@@ -185,12 +198,13 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	// }()
 	go func() {
-		if err := cmd.Wait(); err != nil {
+		state, err := cmd.Wait()
+		if err != nil {
 			log.Println(err)
 			Clear()
 			return
 		}
-		log.Println("process " + session.Cmd + " exit success")
+		log.Println("process " + session.Cmd + " exit success" + " code:" + fmt.Sprintf("%d", state.ExitCode()))
 
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 		// cancel()
@@ -245,46 +259,46 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			// }
 		}
 	}()
-	go func() {
+	// go func() {
 
-		for {
-			var data, err = ReadFixedSizeFromReader(stderr, 1024*1024)
-			if data == nil || nil != err {
-				if err != nil {
-					log.Println("encode:", err)
-					return
-				}
-			}
-			log.Println("server stderr received body:", data)
-			// log.Printf("stderr recv Binary length: %v", len(data))
-			var message = BinaryMessage{
-				Type: "stderr",
-				Body: data,
-			}
+	// 	for {
+	// 		var data, err = ReadFixedSizeFromReader(stderr, 1024*1024)
+	// 		if data == nil || nil != err {
+	// 			if err != nil {
+	// 				log.Println("encode:", err)
+	// 				return
+	// 			}
+	// 		}
+	// 		log.Println("server stderr received body:", data)
+	// 		// log.Printf("stderr recv Binary length: %v", len(data))
+	// 		var message = BinaryMessage{
+	// 			Type: "stderr",
+	// 			Body: data,
+	// 		}
 
-			encoded, err := EncodeStructAvroBinary(codec, &message)
-			// encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
-			// 	"type": "stderr",
-			// 	"body": data,
-			// })
-			if err != nil {
-				log.Println("encode:", err)
-				continue
-			}
-			binaryandtextchannel <- WebsocketMessage{
-				Body: encoded,
-				Type: websocket.BinaryMessage,
-			} //encoded
-			// mubinary.Lock()
-			// defer mubinary.Unlock()
-			// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
+	// 		encoded, err := EncodeStructAvroBinary(codec, &message)
+	// 		// encoded, err := codec.BinaryFromNative(nil, map[string]interface{}{
+	// 		// 	"type": "stderr",
+	// 		// 	"body": data,
+	// 		// })
+	// 		if err != nil {
+	// 			log.Println("encode:", err)
+	// 			continue
+	// 		}
+	// 		binaryandtextchannel <- WebsocketMessage{
+	// 			Body: encoded,
+	// 			Type: websocket.BinaryMessage,
+	// 		} //encoded
+	// 		// mubinary.Lock()
+	// 		// defer mubinary.Unlock()
+	// 		// err = conn.WriteMessage(websocket.BinaryMessage, encoded)
 
-			// if err != nil {
-			// 	log.Println("write:", err)
+	// 		// if err != nil {
+	// 		// 	log.Println("write:", err)
 
-			// }
-		}
-	}()
+	// 		// }
+	// 	}
+	// }()
 
 	for {
 
@@ -298,8 +312,11 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		if err, ok := err.(*websocket.CloseError); ok {
 
 			log.Println("close:", err)
-
-			cmd.Process.Kill()
+			if cmd != nil {
+				// if cmd.Process != nil {
+				cmd.Kill()
+				// }
+			}
 			break
 		}
 		if err != nil {
