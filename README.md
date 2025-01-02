@@ -6,6 +6,20 @@ go_ws_sh
 
 这款远程Shell模拟器完全使用Go语言开发，客户端和服务端均基于Go构建。它利用WebSocket协议实现高效双向通信，并支持伪终端（PTY）窗口大小的实时同步，确保本地与远程环境的一致性。该模拟器提供了类似`gotty`的功能，如多用户会话共享、URL链接分享和自定义命令启动，同时增强了安全性和跨平台兼容性。适用于运维管理、开发协作、教育培训及产品演示等多种场景，提供流畅、安全的远程命令行体验。
 
+# 支持的身份认证方式
+
+1.http basic身份验证
+
+```http
+Authorization : Basic YWRtaW46cGFzcw==
+```
+
+2.websocket protocol 身份验证
+
+```http
+sec-websocket-protocol:token%3Db6e915c46
+```
+
 # 用法
 
 ```

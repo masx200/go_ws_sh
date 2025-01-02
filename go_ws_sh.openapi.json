@@ -1,0 +1,251 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "go_ws_sh",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "login",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              },
+              "example": {
+                "username": "admin",
+                "password": "pass"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "token",
+                    "username"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "message": "Login successful",
+                      "token": "d72d524688268d15efc956d5229dd552ef2fc73fbbabe11ee8b60ced8c7b35b2a9b75eae0499bdb2743c627ce3585f813820eb581b4102c2a42a8731c4dde26b"
+                    }
+                  },
+                  "2": {
+                    "summary": "成功示例",
+                    "value": {
+                      "message": "Login successful",
+                      "token": "3418ba91b9313df8b5486c56e0b2d43008fad3742c690d9ef33dfa145a2654852cee2e93ae5c911f5f2ae2f639386bac9b36b4d4c287fed9512542ccef2f55598b6bad4f0e5e1a5dd9979c73b3049d385fc096c35bcb44b504652886f8581582",
+                      "username": "admin"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/logout": {
+      "post": {
+        "summary": "logout",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              },
+              "example": {
+                "token": "3418ba91b9313df8b5486c56e0b2d43008fad3742c690d9ef33dfa145a2654852cee2e93ae5c911f5f2ae2f639386bac9b36b4d4c287fed9512542ccef2f55598b6bad4f0e5e1a5dd9979c73b3049d385fc096c35bcb44b504652886f8581582"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "token"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "message": "Logout successful",
+                      "token": "3418ba91b9313df8b5486c56e0b2d43008fad3742c690d9ef33dfa145a2654852cee2e93ae5c911f5f2ae2f639386bac9b36b4d4c287fed9512542ccef2f55598b6bad4f0e5e1a5dd9979c73b3049d385fc096c35bcb44b504652886f8581582"
+                    }
+                  },
+                  "2": {
+                    "summary": "成功示例",
+                    "value": {
+                      "message": "Login successful",
+                      "token": "3418ba91b9313df8b5486c56e0b2d43008fad3742c690d9ef33dfa145a2654852cee2e93ae5c911f5f2ae2f639386bac9b36b4d4c287fed9512542ccef2f55598b6bad4f0e5e1a5dd9979c73b3049d385fc096c35bcb44b504652886f8581582",
+                      "username": "admin"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/list": {
+      "post": {
+        "summary": "list",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              },
+              "example": {
+                "token": "3418ba91b9313df8b5486c56e0b2d43008fad3742c690d9ef33dfa145a2654852cee2e93ae5c911f5f2ae2f639386bac9b36b4d4c287fed9512542ccef2f55598b6bad4f0e5e1a5dd9979c73b3049d385fc096c35bcb44b504652886f8581582"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "list",
+                    "message",
+                    "username"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "list": [
+                        "pwsh"
+                      ],
+                      "message": "List of Sessions ok",
+                      "username": "admin"
+                    }
+                  },
+                  "2": {
+                    "summary": "成功示例",
+                    "value": {
+                      "message": "Login successful",
+                      "token": "3418ba91b9313df8b5486c56e0b2d43008fad3742c690d9ef33dfa145a2654852cee2e93ae5c911f5f2ae2f639386bac9b36b4d4c287fed9512542ccef2f55598b6bad4f0e5e1a5dd9979c73b3049d385fc096c35bcb44b504652886f8581582",
+                      "username": "admin"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {}
+  },
+  "servers": []
+}
