@@ -113,6 +113,24 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 				r.WriteString("No Authorization header")
 				return
 			}
+			if strings.HasPrefix(auth, "Bearer ") {
+				token := strings.TrimPrefix(auth, "Bearer ")
+				if token == "" {
+					r.AbortWithMsg("Error: Unauthorized token is empty", consts.StatusUnauthorized)
+					return
+				}
+				if ok, result := ValidateToken(token, store); !ok {
+					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+					return
+				} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
+					log.Println("用户登录成功:" + result["username"] + ":" + token)
+					next(w, r)
+					return
+				} else {
+					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+					return
+				}
+			}
 			if !strings.HasPrefix(auth, "Basic ") {
 				log.Println("No Basic auth")
 				r.SetStatusCode(consts.StatusUnauthorized)

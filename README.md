@@ -14,6 +14,10 @@ go_ws_sh
 Authorization : Basic YWRtaW46cGFzcw==
 ```
 
+```http
+Authorization : Bearer b6e915c46
+```
+
 2.websocket protocol 身份验证
 
 ```http

@@ -135,6 +135,9 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 }
 
 func ValidateToken(token string, store file.Store) (bool, map[string]string) {
+	if token == "" {
+		return false, nil
+	}
 	var result = map[string]string{}
 	found, err := store.Get(token, &result)
 
