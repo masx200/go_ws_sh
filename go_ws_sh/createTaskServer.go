@@ -5,11 +5,13 @@ import (
 	"crypto/tls"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/network/standard"
 	"github.com/cloudwego/hertz/pkg/protocol/suite"
+	"github.com/hertz-contrib/cors"
 	"github.com/hertz-contrib/http2"
 	"github.com/hertz-contrib/http2/config"
 	factoryh2 "github.com/hertz-contrib/http2/factory"
@@ -20,6 +22,36 @@ import (
 	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
 )
 
+func InitHertzApp(h *server.Hertz) {
+	h.Use(cors.New(cors.Config{
+
+		//准许跨域请求网站,多个使用,分开,限制使用*
+		AllowOrigins: []string{
+
+			"*"},
+		//准许使用的请求方式
+		AllowMethods: []string{
+
+			"PUT", "PATCH", "POST", "GET", "DELETE"},
+		//准许使用的请求表头
+		AllowHeaders: []string{
+
+			"Origin", "Authorization", "Content-Type"},
+		//显示的请求表头
+		ExposeHeaders: []string{
+
+			"Content-Type"},
+		//凭证共享,确定共享
+		AllowCredentials: true,
+		//容许跨域的原点网站,可以直接return true就万事大吉了
+		AllowOriginFunc: func(origin string) bool {
+
+			return true
+		},
+		//超时时间设定
+		MaxAge: 24 * time.Hour,
+	}))
+}
 func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
 	if serverconfig.Alpn == "h2" {
 
@@ -53,6 +85,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// config.WithReadTimeout(time.Minute),
 			// config.WithDisableKeepAlive(false)))
 			hertzapp.Use(accesslog.New())
+			InitHertzApp(hertzapp)
 			// hertzapp.AddProtocol(suite.HTTP3, factoryh3.NewServerFactory(&http3.Option{}))
 			log.Println("Alpn == h2")
 			log.Println("TLS enabled and " + "WebSocket server started at :" + serverconfig.Port)
@@ -63,7 +96,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// 	Addr:    ":" + serverconfig.Port,
 			// 	Handler: h2c.NewHandler(http.HandlerFunc(handler), h2s),
 			// }
-			hertzapp.GET("/:name", func(c context.Context, ctx *app.RequestContext) {
+			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
 			x := hertzapp.Run()
@@ -104,7 +137,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// cfg.NextProtos = append(cfg.NextProtos, "h2")
 			hertzapp := server.Default( /* server.WithAltTransport(netpoll.NewTransporter) */ server.WithALPN(true), server.WithTLS(cfg), server.WithHostPorts(":"+serverconfig.Port), server.WithTransport(quic.NewTransporter))
 			/* server.WithAltTransport(standard.NewTransporter) */ //)
-
+			InitHertzApp(hertzapp)
 			// hertzapp.AddProtocol("h2", factoryh2.NewServerFactory(config.WithDisableKeepAlive(false)))
 			// config.WithReadTimeout(time.Minute),
 			// config.WithDisableKeepAlive(false)))
@@ -134,6 +167,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 	} else {
 		return func() (interface{}, error) {
 			hertzapp := server.Default(server.WithHostPorts(":" + serverconfig.Port))
+			InitHertzApp(hertzapp)
 			hertzapp.Use(accesslog.New())
 			log.Println("TLS disabled and " + "WebSocket server started at :" + serverconfig.Port)
 			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {

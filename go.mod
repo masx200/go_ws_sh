@@ -70,6 +70,7 @@ require github.com/philippgille/gokv/file v0.7.0
 
 require (
 	github.com/akrennmair/slice v0.0.0-20220105203817-49445747ab81
+	github.com/hertz-contrib/cors v0.1.0
 	github.com/philippgille/gokv/encoding v0.7.0 // indirect
 	github.com/philippgille/gokv/util v0.7.0 // indirect
 )
