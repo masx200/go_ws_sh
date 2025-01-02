@@ -27,6 +27,10 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 	var store, err = file.NewStore(file.Options{Directory: TokenFolder})
 	return func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
+		if err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
 		if name == "list" {
 			var credential LogoutInfo = LogoutInfo{}
 			var err = r.BindJSON(&credential)
@@ -131,11 +135,13 @@ func generateHexKey(length int) (string, error) {
 	randomBytes := make([]byte, length)
 
 	// 使用crypto/rand读取随机字节
-	_, err := rand.Read(randomBytes)
+	n, err := rand.Read(randomBytes)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate random bytes: %v", err)
 	}
-
+	if n != length {
+		return "", fmt.Errorf("failed to generate random bytes: %v", err)
+	}
 	// 将字节切片转换为16进制字符串
 	hexString := hex.EncodeToString(randomBytes)
 
