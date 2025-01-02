@@ -26,9 +26,9 @@ func InitHertzApp(h *server.Hertz) {
 	h.Use(cors.New(cors.Config{
 		AllowAllOrigins: true,
 		//准许跨域请求网站,多个使用,分开,限制使用*
-		AllowOrigins: []string{
+		// AllowOrigins: []string{
 
-			"*"},
+		// 	"*"},
 		//准许使用的请求方式
 		AllowMethods: []string{
 
@@ -46,10 +46,10 @@ func InitHertzApp(h *server.Hertz) {
 		AllowCredentials: true,
 		AllowWildcard:    true,
 		//容许跨域的原点网站,可以直接return true就万事大吉了
-		AllowOriginFunc: func(origin string) bool {
+		// AllowOriginFunc: func(origin string) bool {
 
-			return true
-		},
+		// 	return true
+		// },
 		//超时时间设定
 		MaxAge:                 24 * time.Hour,
 		AllowBrowserExtensions: true,
