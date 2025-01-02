@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"slices"
 
 	"github.com/akrennmair/slice"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -52,7 +53,7 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 			if ok, result := ValidateToken(token, store); !ok {
 				r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
 				return
-			} else {
+			} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
 				r.JSON(
 					consts.StatusOK,
 					map[string]interface{}{
@@ -63,9 +64,13 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 						"username": result["username"],
 					},
 				)
+				return
+			} else {
+				r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+				return
 			}
 
-			return
+			// return
 		}
 		if name == "login" {
 			if err != nil {
