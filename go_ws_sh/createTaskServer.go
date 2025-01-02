@@ -51,8 +51,8 @@ func InitHertzApp(h *server.Hertz) {
 		// 	return true
 		// },
 		//超时时间设定
-		MaxAge:                 24 * time.Hour,
-		AllowBrowserExtensions: true,
+		MaxAge: 24 * time.Hour,
+		// AllowBrowserExtensions: true,
 	}))
 }
 func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
