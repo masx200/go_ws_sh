@@ -3,12 +3,21 @@ package go_ws_sh
 import (
 	"context"
 	"log"
+	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/websocket"
 )
 
+// createHandleWebSocket 创建处理WebSocket连接的函数
+// 参数:
+//
+//	session: 会话对象，用于维护会话状态
+//
+// 返回值:
+//
+//	一个函数，用于处理WebSocket连接请求
 func createhandleWebSocket(session Session) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
 		codec, err := create_msg_codec()
@@ -26,6 +35,10 @@ func createhandleWebSocket(session Session) func(w context.Context, r *app.Reque
 				return true // 允许跨域
 			},
 			EnableCompression: true,
+		}
+		proto := r.Request.Header.Get("Sec-Websocket-Protocol")
+		if proto != "" {
+			upgrader.Subprotocols = strings.Split(proto, ",")
 		}
 		err = upgrader.Upgrade(r, func(conn *websocket.Conn) {
 			err := HandleWebSocketProcess(session, codec, conn)
