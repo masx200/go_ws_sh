@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"net/url"
 	"slices"
 	"strings"
 
@@ -48,23 +49,34 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 		//Sec-Websocket-Protocol
 		proto := r.Request.Header.Get("Sec-Websocket-Protocol")
 		if proto != "" {
-			parsed, err := parseKeyValuePairs(proto)
-			if err != nil {
-				fmt.Printf("Error parsing input: %v\n", err)
-				r.SetStatusCode(consts.StatusUnauthorized)
-				r.WriteString(err.Error())
-				return
-			}
-			var token = parsed["token"]
-			if ok, result := ValidateToken(token, store); !ok {
-				r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
-				next(w, r)
-				return
-			} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
-				return
-			} else {
-				r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
-				return
+			for _, str := range strings.Split(proto, ",") {
+
+				decoded, err := url.QueryUnescape(str)
+				if err != nil {
+					fmt.Printf("Error parsing input: %v\n", err)
+					r.SetStatusCode(consts.StatusUnauthorized)
+					r.WriteString(err.Error())
+					return
+				}
+				parsed, err := parseKeyValuePairs(decoded)
+				if err != nil {
+					fmt.Printf("Error parsing input: %v\n", err)
+					r.SetStatusCode(consts.StatusUnauthorized)
+					r.WriteString(err.Error())
+					return
+				}
+				var token = parsed["token"]
+				if ok, result := ValidateToken(token, store); !ok {
+					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+
+					return
+				} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
+					next(w, r)
+					return
+				} else {
+					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+					return
+				}
 			}
 		}
 		auth := r.Request.Header.Get("Authorization")
