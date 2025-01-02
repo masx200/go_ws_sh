@@ -71,7 +71,7 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 
 					return
 				} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
-					log.Println("用户登录成功:" + result["username"])
+					log.Println("用户登录成功:" + result["username"] + ":" + token)
 					next(w, r)
 					// return
 				} else {
