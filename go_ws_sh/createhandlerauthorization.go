@@ -88,8 +88,8 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 						return
 					}
 				}
-				var token = parsed["token"]
-				if ok, result := ValidateToken(token, store); !ok {
+				var token, ok3 = parsed["token"]
+				if ok, result := ValidateToken(token, store); !ok3 || !ok {
 					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
 
 					return
