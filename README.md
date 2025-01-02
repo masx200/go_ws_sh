@@ -20,6 +20,10 @@ Authorization : Basic YWRtaW46cGFzcw==
 sec-websocket-protocol:token%3Db6e915c46
 ```
 
+```http
+sec-websocket-protocol:username%3Dadmin%3Bpassword%3Dpass
+```
+
 # 用法
 
 ```
