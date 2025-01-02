@@ -13,7 +13,7 @@ import (
 	"github.com/philippgille/gokv/file"
 )
 
-type LogoutInfo struct {
+type TokenInfo struct {
 	Token string `json:"token"`
 }
 
@@ -28,11 +28,12 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 	return func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
 		if err != nil {
+			log.Println("Error: " + err.Error())
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
 		}
 		if name == "list" {
-			var credential LogoutInfo = LogoutInfo{}
+			var credential TokenInfo = TokenInfo{}
 			var err = r.BindJSON(&credential)
 			if err != nil {
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -81,18 +82,19 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 				// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
 				return
 			}
-			numBytes := 128
+			numBytes := 120
 			hexString, err := generateHexKey(numBytes)
 			if err != nil {
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 				return
 			}
 			if err := store.Set(hexString, map[string]string{"username": credential.Username}); err != nil {
+				log.Println("Error: " + err.Error())
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 				return
 			}
 			r.JSON(consts.StatusOK, map[string]string{"token": hexString,
-				"message": "Login successful",
+				"message": "Login successful", "username": credential.Username,
 			})
 			return
 
@@ -101,7 +103,7 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 				return
 			}
-			var credential LogoutInfo = LogoutInfo{}
+			var credential TokenInfo = TokenInfo{}
 			var err = r.BindJSON(&credential)
 			if err != nil {
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)

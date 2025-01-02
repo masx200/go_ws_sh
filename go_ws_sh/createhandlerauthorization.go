@@ -33,6 +33,7 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 	}
 	return func(w context.Context, r *app.RequestContext) {
 		if err != nil {
+			log.Println("Error: " + err.Error())
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
 		}
