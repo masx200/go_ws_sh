@@ -33,6 +33,11 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 		credentialsmap[credential.Username+":"+credential.Password] = true
 	}
 	return func(w context.Context, r *app.RequestContext) {
+		if TokenFolder == "" {
+			log.Println("Error: " + "TokenFolder is empty")
+			r.AbortWithMsg("Error:  "+"TokenFolder is empty", consts.StatusInternalServerError)
+			return
+		}
 		if err != nil {
 			log.Println("Error: " + err.Error())
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)

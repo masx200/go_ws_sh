@@ -27,6 +27,11 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 	var store, err = file.NewStore(file.Options{Directory: TokenFolder})
 	return func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
+		if TokenFolder == "" {
+			log.Println("Error: " + "TokenFolder is empty")
+			r.AbortWithMsg("Error:  "+"TokenFolder is empty", consts.StatusInternalServerError)
+			return
+		}
 		if err != nil {
 			log.Println("Error: " + err.Error())
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
