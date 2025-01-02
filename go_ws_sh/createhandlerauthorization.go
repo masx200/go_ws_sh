@@ -71,6 +71,23 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 					r.WriteString(err.Error())
 					return
 				}
+				var username, ok1 = parsed["username"]
+				var password, ok2 = parsed["password"]
+				if ok1 && ok2 {
+					var rawcredential = username + ":" + password
+					if _, ok := credentialsmap[string(rawcredential)]; !ok {
+						log.Println("Invalid credential", username+":"+password)
+						r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
+						r.SetStatusCode(consts.StatusUnauthorized)
+						r.WriteString("Invalid credential Unauthorized")
+						// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
+						return
+					} else {
+						log.Println("用户登录成功:" + username + ":" + password)
+						next(w, r)
+						return
+					}
+				}
 				var token = parsed["token"]
 				if ok, result := ValidateToken(token, store); !ok {
 					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
