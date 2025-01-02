@@ -50,9 +50,10 @@ func createhandlerauthorization(TokenFolder string, credentials []Credentials /*
 		proto := r.Request.Header.Get("Sec-Websocket-Protocol")
 		if proto != "" {
 			for _, str := range strings.Split(proto, ",") {
-				log.Println("proto", str)
+
 				decoded, err := url.QueryUnescape(str)
 				if err != nil {
+					log.Println("proto", str)
 					fmt.Printf("Error parsing input: %v\n", err)
 					r.SetStatusCode(consts.StatusUnauthorized)
 					r.WriteString(err.Error())

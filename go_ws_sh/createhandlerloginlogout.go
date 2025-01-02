@@ -127,8 +127,9 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 func ValidateToken(token string, store file.Store) (bool, map[string]string) {
 	var result = map[string]string{}
 	found, err := store.Get(token, &result)
-	log.Println("ValidateToken", token, result, found, err)
+
 	if err != nil || !found {
+		log.Println("ValidateToken", token, result, found, err)
 		return false, nil
 	}
 	return true, result
