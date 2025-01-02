@@ -66,6 +66,14 @@ require (
 	github.com/runletapp/go-console v0.0.0-20211204140000-27323a28410a
 )
 
+require github.com/philippgille/gokv/file v0.7.0
+
+require (
+	github.com/akrennmair/slice v0.0.0-20220105203817-49445747ab81
+	github.com/philippgille/gokv/encoding v0.7.0 // indirect
+	github.com/philippgille/gokv/util v0.7.0 // indirect
+)
+
 //replace github.com/lucas-clemente/quic-go v0.31.0 => github.com/quic-go/quic-go v0.38.2
 
 // replace github.com/masx200/go_ws_sh/network/quic-go v0.1.0 => github.com/masx200/go_ws_sh/network/quic-go v0.0.0

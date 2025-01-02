@@ -1,4 +1,5 @@
 {
+  "token_folder": "token_folder",
   "credentials": [
     {
       "username": "admin",

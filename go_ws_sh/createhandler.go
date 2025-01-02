@@ -21,7 +21,7 @@ import (
 // Returns:
 //
 //	A function that takes a context and a RequestContext, performs authentication, and calls the next function if successful.
-func createhandler(credentials []Credentials /* config Config, */, next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
+func createhandlerauthorization(credentials []Credentials /* config Config, */, next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
 
 	var credentialsmap = map[string]bool{}
 
@@ -69,7 +69,7 @@ func createhandler(credentials []Credentials /* config Config, */, next func(w c
 			log.Println("Invalid credential", credential)
 			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
 			r.SetStatusCode(consts.StatusUnauthorized)
-			r.WriteString("Invalid credential")
+			r.WriteString("Invalid credential Unauthorized")
 			// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
 			return
 		}

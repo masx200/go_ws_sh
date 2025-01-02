@@ -27,7 +27,7 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)
 	}
-	handler := createhandler(config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerGet := createhandlerauthorization(config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
@@ -44,9 +44,29 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 
 	// }
 	tasks := []func() (interface{}, error){}
+	handlerPost := createhandlerloginlogout(config.Sessions, config.TokenFolder, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 
+		r.AbortWithMsg("Not Found", consts.StatusNotFound)
+		// return
+
+		// handlermap[name](w, r)
+	})
 	for _, serverconfig := range config.Servers {
-		tasks = append(tasks, createTaskServer(serverconfig, handler))
+		tasks = append(tasks, createTaskServer(serverconfig, func(w context.Context, r *app.RequestContext) {
+			if string(r.Method()) == consts.MethodGet {
+				handlerGet(w, r)
+				return
+			}
+			if string(r.Method()) == consts.MethodPost {
+				handlerPost(w, r)
+				return
+			}
+			r.AbortWithMsg(
+				"Method Not Allowed",
+
+				consts.StatusMethodNotAllowed)
+			// return
+		}))
 	}
 	// 启动服务器
 	result := <-PromiseAll(tasks)
@@ -146,6 +166,8 @@ type ConfigServer struct {
 	Credentials []Credentials  `json:"credentials"`
 	Sessions    []Session      `json:"sessions"`
 	Servers     []ServerConfig `json:"servers"`
+
+	TokenFolder string `json:"token_folder"`
 }
 
 func Server_start(config string) {
