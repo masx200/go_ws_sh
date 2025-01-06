@@ -50,8 +50,8 @@ func Client_start(config string) {
 }
 
 func pipe_std_ws_client(configdata ConfigClient) {
-	var binaryandtextchannel = NewSafeChannel(WebsocketMessage)
-	defer close(binaryandtextchannel)
+	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
+	defer (binaryandtextchannel).Close()
 
 	codec, err := create_msg_codec()
 	if err != nil {
@@ -127,10 +127,10 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			log.Println(err)
 			return
 		}
-		binaryandtextchannel <- WebsocketMessage{
+		binaryandtextchannel.Send(WebsocketMessage{
 			Body: databuf,
 			Type: websocket.TextMessage,
-		}
+		})
 	}
 	closable, startable, cols, rows, err := TermboxPipe(func(p []byte) (n int, err error) {
 
@@ -160,10 +160,10 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		log.Println(err)
 		return
 	}
-	binaryandtextchannel <- WebsocketMessage{
+	binaryandtextchannel.Send(WebsocketMessage{
 		Body: databuf,
 		Type: websocket.TextMessage,
-	}
+	})
 
 	defer func() { go closable() }()
 	go func() {
@@ -241,7 +241,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 }
 
-func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtextchannel chan WebsocketMessage) error {
+func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtextchannel *SafeChannel[WebsocketMessage]) error {
 
 	var message = BinaryMessage{
 		Type: "stdin",
@@ -253,10 +253,10 @@ func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtext
 		log.Println("encode:", err)
 		return err
 	}
-	binaryandtextchannel <- WebsocketMessage{
+	binaryandtextchannel.Send(WebsocketMessage{
 		Body: encoded,
 		Type: websocket.BinaryMessage,
-	}
+	})
 	return nil
 
 }

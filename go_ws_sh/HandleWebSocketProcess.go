@@ -11,7 +11,7 @@ import (
 	"github.com/runletapp/go-console"
 )
 
-func SendTextMessage(conn *websocket.Conn, typestring string, body string, binaryandtextchannel chan WebsocketMessage) error {
+func SendTextMessage(conn *websocket.Conn, typestring string, body string, binaryandtextchannel *SafeChannel[WebsocketMessage]) error {
 
 	var data TextMessage
 	data.Type = typestring
@@ -21,11 +21,11 @@ func SendTextMessage(conn *websocket.Conn, typestring string, body string, binar
 		return err
 	}
 
-	binaryandtextchannel <- WebsocketMessage{
+	binaryandtextchannel.Send(WebsocketMessage{
 		Body: databuf,
 		Type: websocket.TextMessage,
-	}
-
+	},
+	)
 	return nil
 }
 
@@ -37,8 +37,8 @@ type WebsocketMessage struct {
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
 	var err error
 	defer conn.WriteMessage(websocket.CloseMessage, []byte{})
-	var binaryandtextchannel = NewSafeChannel(WebsocketMessage)
-	defer close(binaryandtextchannel)
+	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
+	defer (binaryandtextchannel).Close()
 	defer conn.Close()
 
 	go func() {
@@ -185,10 +185,10 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				log.Println("encode:", err)
 				return
 			}
-			binaryandtextchannel <- WebsocketMessage{
+			binaryandtextchannel.Send(WebsocketMessage{
 				Body: encoded,
 				Type: websocket.BinaryMessage,
-			}
+			})
 
 		}
 	}()

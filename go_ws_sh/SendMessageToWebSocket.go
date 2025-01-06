@@ -35,12 +35,12 @@ func SendMessageToWebSocket(conn WebsocketConnectionWritableClosable, encoded We
 	err = conn.WriteMessage(websocket.BinaryMessage, bg)
 	return err
 }
-func SendMessageToWebSocketLoop(conn WebsocketConnectionWritableClosable, binaryandtextchannel chan WebsocketMessage) {
+func SendMessageToWebSocketLoop(conn WebsocketConnectionWritableClosable, binaryandtextchannel *SafeChannel[WebsocketMessage]) {
 	defer conn.Close()
 
 	for {
 		var err error
-		encoded, ok := <-binaryandtextchannel
+		encoded, ok := binaryandtextchannel.Receive()
 		if ok {
 			err = SendMessageToWebSocket(conn, encoded)
 			if err != nil {
