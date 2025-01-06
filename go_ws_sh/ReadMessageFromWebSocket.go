@@ -19,15 +19,15 @@ func ReadMessageFromWebSocket(c WebsocketConnectionReadable) (messageType int, p
 	log.Printf("ReadMessageFromWebSocket before decode %v %v \n", messageType, compressedData)
 	decompressedData, err := GzipDeCompress(compressedData)
 	if err != nil {
-		log.Println("decompress:", err)
-		return messageType, nil, err
+		log.Println("decompress1:", err)
+		return messageType, decompressedData, err
 	}
 
 	var wsmsg = Wsmsg{}
 	err = proto.Unmarshal(decompressedData, &wsmsg)
 	if err != nil {
-		log.Println("decompress:", err)
-		return messageType, nil, err
+		log.Println("decompress2:", err)
+		return messageType, decompressedData, err
 	}
 	log.Printf("ReadMessageFromWebSocket after decode %v %v \n", wsmsg.Type, wsmsg.Data)
 	return int(wsmsg.Type), wsmsg.Data, nil
