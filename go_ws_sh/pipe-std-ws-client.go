@@ -115,38 +115,8 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	defer conn.Close()
 	go func() {
-		defer conn.Close()
+		SendMessageToWebSocket(conn, binaryandtextchannel)
 
-		for {
-			var err error
-			encoded, ok := <-binaryandtextchannel
-			if ok {
-				var b []byte
-				var wsmsg = Wsmsg{}
-				wsmsg.Type = int32(encoded.Type)
-				wsmsg.Data = encoded.Body
-				b, err = proto.Marshal(&wsmsg)
-				if err != nil {
-					log.Println("write:", err)
-					return
-				}
-				bg, shouldReturn, err := GzipCompress(b)
-				if err != nil {
-					log.Println("write:", err)
-					return
-				}
-				if shouldReturn {
-					return
-				}
-				err = conn.WriteMessage(websocket.BinaryMessage, bg)
-				if err != nil {
-					log.Println("write:", err)
-					return
-				}
-			} else {
-				break
-			}
-		}
 	}()
 
 	var onsizechange = func(cols int, rows int) {
@@ -273,6 +243,47 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		}
 	}
 
+}
+
+type WebsocketConnection interface {
+	WriteMessage(messageType int, data []byte) error
+	Close() error
+}
+
+func SendMessageToWebSocket(conn WebsocketConnection, binaryandtextchannel chan WebsocketMessage) {
+	defer conn.Close()
+
+	for {
+		var err error
+		encoded, ok := <-binaryandtextchannel
+		if ok {
+			var b []byte
+			var wsmsg = Wsmsg{}
+			wsmsg.Type = int32(encoded.Type)
+			wsmsg.Data = encoded.Body
+			b, err = proto.Marshal(&wsmsg)
+			if err != nil {
+				log.Println("write:", err)
+				return
+			}
+			bg, shouldReturn, err := GzipCompress(b)
+			if err != nil {
+				log.Println("write:", err)
+				return
+			}
+			if shouldReturn {
+				return
+			}
+			err = conn.WriteMessage(websocket.BinaryMessage, bg)
+			if err != nil {
+				log.Println("write:", err)
+				return
+			}
+		} else {
+			break
+		}
+	}
+	return
 }
 func GzipCompress(data []byte) ([]byte, bool, error) {
 	var buf bytes.Buffer

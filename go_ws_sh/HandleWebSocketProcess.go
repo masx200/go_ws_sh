@@ -42,21 +42,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer conn.Close()
 
 	go func() {
-		var err error
-		for {
-
-			encoded, ok := <-binaryandtextchannel
-			if ok {
-
-				err = conn.WriteMessage(encoded.Type, encoded.Body)
-				if err != nil {
-					log.Println("write:", err)
-					return
-				}
-			} else {
-				break
-			}
-		}
+		SendMessageToWebSocket(conn, binaryandtextchannel)
 	}()
 
 	defer func() {
