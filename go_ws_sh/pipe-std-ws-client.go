@@ -130,17 +130,15 @@ func pipe_std_ws_client(configdata ConfigClient) {
 					log.Println("write:", err)
 					return
 				}
-				br := bytes.NewReader(b)
-				gr, err := gzip.NewReader(br)
+				bg, shouldReturn, err := GzipCompress(b)
 				if err != nil {
 					log.Println("write:", err)
 					return
 				}
-				defer gr.Close()
-
-				var bg bytes.Buffer
-				io.Copy(&bg, gr)
-				err = conn.WriteMessage(websocket.BinaryMessage, bg.Bytes())
+				if shouldReturn {
+					return
+				}
+				err = conn.WriteMessage(websocket.BinaryMessage, bg)
 				if err != nil {
 					log.Println("write:", err)
 					return
@@ -275,6 +273,42 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		}
 	}
 
+}
+func GzipCompress(data []byte) ([]byte, bool, error) {
+	var buf bytes.Buffer
+
+	// 创建一个gzip.Writer，用于压缩数据
+	gzWriter := gzip.NewWriter(&buf)
+	defer func() {
+		err := gzWriter.Close()
+		if err != nil {
+			fmt.Println("Error closing gzip writer:", err)
+			return
+		}
+	}()
+	// 将数据写入gzip.Writer
+	_, err := io.Copy(gzWriter, bytes.NewBuffer(data))
+	if err != nil {
+		fmt.Println("Error compressing data:", err)
+		return nil, true, err
+	}
+
+	// 关闭gzip.Writer，确保所有数据都被压缩并写入缓冲区
+
+	return buf.Bytes(), false, err
+}
+func GzipDeCompress(b []byte) ([]byte, bool, error) {
+	br := bytes.NewReader(b)
+	gr, err := gzip.NewReader(br)
+	if err != nil {
+		log.Println("write:", err)
+		return nil, true, nil
+	}
+	defer gr.Close()
+
+	var bg bytes.Buffer
+	io.Copy(&bg, gr)
+	return bg.Bytes(), false, err
 }
 
 func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtextchannel chan WebsocketMessage) error {
