@@ -162,3 +162,9 @@ https://pkg.go.dev/github.com/runletapp/go-console
 处理逻辑，而 `pipe-std-ws-client.go` 则实现了客户端的 WebSocket
 连接和交互逻辑。两者通过 Avro
 编解码器进行数据交换，确保了数据格式的一致性和高效传输。
+
+## 生成protobuf文件
+
+```
+protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
+```

@@ -1,11 +1,14 @@
 package go_ws_sh
 
 import (
+	"bytes"
+	"compress/gzip"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +16,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/linkedin/goavro/v2"
+	"google.golang.org/protobuf/proto"
 )
 
 type ClientSession struct {
@@ -111,13 +115,32 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	defer conn.Close()
 	go func() {
-		var err error
-		for {
+		defer conn.Close()
 
+		for {
+			var err error
 			encoded, ok := <-binaryandtextchannel
 			if ok {
+				var b []byte
+				var wsmsg = Wsmsg{}
+				wsmsg.Type = int32(encoded.Type)
+				wsmsg.Data = encoded.Body
+				b, err = proto.Marshal(&wsmsg)
+				if err != nil {
+					log.Println("write:", err)
+					return
+				}
+				br := bytes.NewReader(b)
+				gr, err := gzip.NewReader(br)
+				if err != nil {
+					log.Println("write:", err)
+					return
+				}
+				defer gr.Close()
 
-				err = conn.WriteMessage(encoded.Type, encoded.Body)
+				var bg bytes.Buffer
+				io.Copy(&bg, gr)
+				err = conn.WriteMessage(websocket.BinaryMessage, bg.Bytes())
 				if err != nil {
 					log.Println("write:", err)
 					return

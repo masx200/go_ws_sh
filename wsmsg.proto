@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package go_ws_sh; // 定义包名
+
+// 定义一个消息类型
+message wsmsg {
+  int32 type = 1;  // 整数类型的字段
+  bytes data = 2;  // 字节流类型的字段
+}
