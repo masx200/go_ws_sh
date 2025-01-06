@@ -21,17 +21,19 @@ func SendMessageToWebSocket(conn WebsocketConnectionWritableClosable, encoded We
 	wsmsg.Data = encoded.Body
 	b, err = proto.Marshal(&wsmsg)
 	if err != nil {
-		log.Println("write:", err)
+		log.Println("write3:", err)
 		return err
 	}
 	bg, shouldReturn, err := GzipCompress(b)
 	if err != nil {
-		log.Println("write:", err)
+		log.Println("write4:", err)
 		return err
 	}
 	if shouldReturn {
 		return err
 	}
+	log.Printf("SendMessageToWebSocket before encode %v %v\n", encoded.Type, encoded.Body)
+	log.Printf("SendMessageToWebSocket after encode %v %v\n", websocket.BinaryMessage, bg)
 	err = conn.WriteMessage(websocket.BinaryMessage, bg)
 	return err
 }
@@ -44,7 +46,7 @@ func SendMessageToWebSocketLoop(conn WebsocketConnectionWritableClosable, binary
 		if ok {
 			err = SendMessageToWebSocket(conn, encoded)
 			if err != nil {
-				log.Println("write:", err)
+				log.Println("write5:", err)
 				return
 			}
 		} else {

@@ -56,6 +56,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	var message []byte
 
 	mt, message, err = ReadMessageFromWebSocket(conn)
+	log.Printf("first message %v %v %v \n", mt, message, err)
 	var ok bool
 	errclose, ok := err.(*websocket.CloseError)
 
@@ -70,7 +71,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 		return err
 	} else if err != nil {
-		log.Println("read:", err)
+		log.Println("read1:", err)
 		return err
 	}
 	if mt == websocket.TextMessage {
@@ -79,7 +80,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 		err = json.Unmarshal(message, &array)
 		if err != nil {
-			log.Println("read:", err)
+			log.Println("read2:", err)
 
 			return err
 		}
@@ -87,7 +88,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		var data MessageSize
 		err = DecodeMessageSizeFromStringArray(array, &data)
 		if err != nil {
-			log.Println("read:", err)
+			log.Println("read3:", err)
 
 			return err
 		}
@@ -206,7 +207,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			break
 		}
 		if err != nil {
-			log.Println("read:", err)
+			log.Println("read4:", err)
 			break
 		}
 		if mt == websocket.TextMessage {
@@ -215,7 +216,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 			err = json.Unmarshal(message, &array)
 			if err != nil {
-				log.Println("read:", err)
+				log.Println("read5:", err)
 
 				return err
 			}
@@ -224,7 +225,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			var data MessageSize
 			err = DecodeMessageSizeFromStringArray(array, &data)
 			if err != nil {
-				log.Println("read:", err)
+				log.Println("read6:", err)
 
 				return err
 			}

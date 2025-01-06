@@ -183,7 +183,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			break
 		}
 		if err != nil {
-			log.Println("read:", err)
+			log.Println("read7:", err)
 			return
 		}
 		if mt == websocket.TextMessage {
@@ -191,14 +191,14 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 			err = json.Unmarshal(message, &array)
 			if err != nil {
-				log.Println("read:", err)
+				log.Println("read8:", err)
 
 				return
 			}
 			var data TextMessage
 			err = DecodeTextMessageFromStringArray(array, &data)
 			if err != nil {
-				log.Println("read:", err)
+				log.Println("read9:", err)
 
 				return
 			}
@@ -257,11 +257,12 @@ func GzipCompress(data []byte) ([]byte, bool, error) {
 		}
 	}()
 	// 将数据写入gzip.Writer
-	_, err := io.Copy(gzWriter, bytes.NewBuffer(data))
-	if err != nil {
-		fmt.Println("Error compressing data:", err)
-		return nil, true, err
-	}
+	_, err :=
+		io.Copy(gzWriter, bytes.NewBuffer(data))
+	// if err != nil && err != io.EOF {
+	// 	fmt.Println("Error compressing data:", err)
+	// 	return nil, true, err
+	// }
 
 	// 关闭gzip.Writer，确保所有数据都被压缩并写入缓冲区
 
@@ -271,17 +272,18 @@ func GzipDeCompress(b []byte) ([]byte, bool, error) {
 	br := bytes.NewReader(b)
 	gr, err := gzip.NewReader(br)
 	if err != nil {
-		log.Println("write:", err)
+		log.Println("write1:", err)
 		return nil, true, nil
 	}
 	defer gr.Close()
 
 	var bg bytes.Buffer
-	_, err = io.Copy(&bg, gr)
-	if err != nil {
-		log.Println("write:", err)
-		return nil, true, nil
-	}
+	_, err =
+		io.Copy(&bg, gr)
+	// if err != nil && err != io.EOF {
+	// 	log.Println("write2:", err)
+	// 	return nil, true, nil
+	// }
 	return bg.Bytes(), false, err
 }
 
