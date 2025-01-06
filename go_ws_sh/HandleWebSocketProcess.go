@@ -42,7 +42,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer conn.Close()
 
 	go func() {
-		SendMessageToWebSocket(conn, binaryandtextchannel)
+		SendMessageToWebSocketLoop(conn, binaryandtextchannel)
 	}()
 
 	defer func() {
@@ -55,7 +55,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	var mt int
 	var message []byte
 
-	mt, message, err = conn.ReadMessage()
+	mt, message, err = ReadMessageFromWebSocket(conn)
 	var ok bool
 	errclose, ok := err.(*websocket.CloseError)
 
@@ -194,7 +194,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	for {
 
-		mt, message, err := conn.ReadMessage()
+		mt, message, err := ReadMessageFromWebSocket(conn)
 		if errclose, ok := err.(*websocket.CloseError); ok {
 
 			log.Println("close:", errclose)

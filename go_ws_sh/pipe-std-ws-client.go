@@ -16,7 +16,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/linkedin/goavro/v2"
-	"google.golang.org/protobuf/proto"
 )
 
 type ClientSession struct {
@@ -115,7 +114,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	defer conn.Close()
 	go func() {
-		SendMessageToWebSocket(conn, binaryandtextchannel)
+		SendMessageToWebSocketLoop(conn, binaryandtextchannel)
 
 	}()
 
@@ -175,7 +174,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	}()
 
 	for {
-		mt, message, err := conn.ReadMessage()
+		mt, message, err := ReadMessageFromWebSocket(conn)
 		if err, ok := err.(*websocket.CloseError); ok {
 
 			log.Println("close:", err)
@@ -245,46 +244,6 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 }
 
-type WebsocketConnection interface {
-	WriteMessage(messageType int, data []byte) error
-	Close() error
-}
-
-func SendMessageToWebSocket(conn WebsocketConnection, binaryandtextchannel chan WebsocketMessage) {
-	defer conn.Close()
-
-	for {
-		var err error
-		encoded, ok := <-binaryandtextchannel
-		if ok {
-			var b []byte
-			var wsmsg = Wsmsg{}
-			wsmsg.Type = int32(encoded.Type)
-			wsmsg.Data = encoded.Body
-			b, err = proto.Marshal(&wsmsg)
-			if err != nil {
-				log.Println("write:", err)
-				return
-			}
-			bg, shouldReturn, err := GzipCompress(b)
-			if err != nil {
-				log.Println("write:", err)
-				return
-			}
-			if shouldReturn {
-				return
-			}
-			err = conn.WriteMessage(websocket.BinaryMessage, bg)
-			if err != nil {
-				log.Println("write:", err)
-				return
-			}
-		} else {
-			break
-		}
-	}
-	return
-}
 func GzipCompress(data []byte) ([]byte, bool, error) {
 	var buf bytes.Buffer
 

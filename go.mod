@@ -74,9 +74,3 @@ require (
 	github.com/philippgille/gokv/encoding v0.7.0 // indirect
 	github.com/philippgille/gokv/util v0.7.0 // indirect
 )
-
-//replace github.com/lucas-clemente/quic-go v0.31.0 => github.com/quic-go/quic-go v0.38.2
-
-// replace github.com/masx200/go_ws_sh/network/quic-go v0.1.0 => github.com/masx200/go_ws_sh/network/quic-go v0.0.0
-
-// replace github.com/masx200/go_ws_sh/server/quic-go v0.1.0 => github.com/masx200/go_ws_sh/server/quic-go v0.0.0
