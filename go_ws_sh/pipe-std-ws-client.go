@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -268,23 +269,20 @@ func GzipCompress(data []byte) ([]byte, bool, error) {
 
 	return buf.Bytes(), false, err
 }
-func GzipDeCompress(b []byte) ([]byte, bool, error) {
-	br := bytes.NewReader(b)
-	gr, err := gzip.NewReader(br)
+func GzipDeCompress(b []byte) ([]byte, error) {
+	reader, err := gzip.NewReader(bytes.NewReader(b))
 	if err != nil {
-		log.Println("write1:", err)
-		return nil, true, nil
+		return nil, err
 	}
-	defer gr.Close()
+	defer reader.Close()
 
-	var bg bytes.Buffer
-	_, err =
-		io.Copy(&bg, gr)
-	// if err != nil && err != io.EOF {
-	// 	log.Println("write2:", err)
-	// 	return nil, true, nil
-	// }
-	return bg.Bytes(), false, err
+	// 读取解压缩后的数据
+	decompressed, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return nil, err
+	}
+
+	return decompressed, nil
 }
 
 func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtextchannel chan WebsocketMessage) error {
