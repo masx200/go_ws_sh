@@ -66,7 +66,12 @@ require (
 	github.com/runletapp/go-console v0.0.0-20211204140000-27323a28410a
 )
 
-require github.com/philippgille/gokv/file v0.7.0
+require (
+	github.com/klauspost/pgzip v1.2.6
+	github.com/philippgille/gokv/file v0.7.0
+)
+
+require github.com/klauspost/compress v1.17.11 // indirect
 
 require (
 	github.com/akrennmair/slice v0.0.0-20220105203817-49445747ab81

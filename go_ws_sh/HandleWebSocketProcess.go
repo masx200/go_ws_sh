@@ -56,7 +56,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	var message []byte
 
 	mt, message, err = ReadMessageFromWebSocket(conn)
-	log.Printf("first message %v %v %v \n", mt, message, err)
+	// log.Printf("first message %v %v %v \n", mt, message, err)
 	var ok bool
 	errclose, ok := err.(*websocket.CloseError)
 
@@ -84,7 +84,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 			return err
 		}
-		log.Println("websocket recv text : ", (array))
+		// log.Println("websocket recv text : ", (array))
 		var data MessageSize
 		err = DecodeMessageSizeFromStringArray(array, &data)
 		if err != nil {
@@ -94,7 +94,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		}
 
 		if data.Type == "resize" {
-			log.Println("resize:", data.Cols, data.Rows)
+			// log.Println("resize:", data.Cols, data.Rows)
 
 			cmd, err = console.New(int(data.Cols), int(data.Rows))
 			if err != nil {
@@ -172,7 +172,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 					return
 				}
 			}
-			log.Println("server stdout received body:", data)
+			// log.Println("server stdout received body:", data)
 
 			var message = BinaryMessage{
 				Type: "stdout",
@@ -221,7 +221,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				return err
 			}
 
-			log.Println("websocket recv text : ", (array))
+			// log.Println("websocket recv text : ", (array))
 			var data MessageSize
 			err = DecodeMessageSizeFromStringArray(array, &data)
 			if err != nil {
@@ -231,7 +231,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			}
 
 			if data.Type == "resize" {
-				log.Println("resize:", data.Cols, data.Rows)
+				// log.Println("resize:", data.Cols, data.Rows)
 				if cmd != nil {
 					cmd.SetSize(int(data.Cols), int(data.Rows))
 				}
@@ -259,7 +259,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 				if md.Type == "stdin" {
 
 					var body = md.Body
-					log.Println("server stdin received body:", body)
+					// log.Println("server stdin received body:", body)
 
 					stdin.Write(body)
 

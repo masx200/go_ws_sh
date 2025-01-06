@@ -2,22 +2,24 @@ package go_ws_sh
 
 import (
 	"bytes"
-	"compress/gzip"
-	"io/ioutil"
+	"io"
+
+	"github.com/klauspost/pgzip"
 )
 
 func GzipDeCompress(b []byte) ([]byte, error) {
-	reader, err := gzip.NewReader(bytes.NewReader(b))
+	reader, err := pgzip.NewReader(bytes.NewReader(b))
 	if err != nil {
 		return nil, err
 	}
 	defer reader.Close()
-
-	// 读取解压缩后的数据
-	decompressed, err := ioutil.ReadAll(reader)
+	var buf *bytes.Buffer = &bytes.Buffer{}
+	_, err = io.Copy(buf, reader)
 	if err != nil {
-		return decompressed, err
+		return nil, err
 	}
-
+	reader.Close()
+	// 读取解压缩后的数据
+	var decompressed = buf.Bytes()
 	return decompressed, nil
 }

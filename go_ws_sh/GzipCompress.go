@@ -2,16 +2,18 @@ package go_ws_sh
 
 import (
 	"bytes"
-	"compress/gzip"
+
 	"fmt"
 	"io"
+
+	"github.com/klauspost/pgzip"
 )
 
-func GzipCompress(data []byte) ([]byte, bool, error) {
-	var buf bytes.Buffer
+func GzipCompress(data []byte) ([]byte, error) {
+	var buf *bytes.Buffer = &bytes.Buffer{}
 
 	// 创建一个gzip.Writer，用于压缩数据
-	gzWriter := gzip.NewWriter(&buf)
+	gzWriter := pgzip.NewWriter(buf)
 	defer func() {
 		err := gzWriter.Close()
 		if err != nil {
@@ -29,5 +31,6 @@ func GzipCompress(data []byte) ([]byte, bool, error) {
 
 		// 关闭gzip.Writer，确保所有数据都被压缩并写入缓冲区
 	gzWriter.Flush()
-	return buf.Bytes(), false, err
+	gzWriter.Close()
+	return buf.Bytes(), err
 }

@@ -16,7 +16,7 @@ func ReadMessageFromWebSocket(c WebsocketConnectionReadable) (messageType int, p
 		log.Println("read10:", err)
 		return messageType, nil, err
 	}
-	log.Printf("ReadMessageFromWebSocket before decode %v %v \n", messageType, compressedData)
+	// log.Printf("ReadMessageFromWebSocket before decode %v %v \n", messageType, compressedData)
 	decompressedData, err := GzipDeCompress(compressedData)
 	if err != nil {
 		log.Println("decompress1:", err)
@@ -29,6 +29,6 @@ func ReadMessageFromWebSocket(c WebsocketConnectionReadable) (messageType int, p
 		log.Println("decompress2:", err)
 		return messageType, decompressedData, err
 	}
-	log.Printf("ReadMessageFromWebSocket after decode %v %v \n", wsmsg.Type, wsmsg.Data)
+	// log.Printf("ReadMessageFromWebSocket after decode %v %v \n", wsmsg.Type, wsmsg.Data)
 	return int(wsmsg.Type), wsmsg.Data, nil
 }
