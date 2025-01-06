@@ -69,19 +69,21 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 		}))
 	}
 	// 启动服务器
-	result := <-PromiseAll(tasks)
-
-	switch v := result.(type) {
-	case error:
-		fmt.Printf("Error: %v\n", v)
-	case []interface{}:
-		fmt.Println("All tasks completed successfully. Results:")
-		for _, res := range v {
-			fmt.Printf("%v\n", res)
+	result, ok := PromiseAll(tasks).Receive()
+	if ok {
+		switch v := result.(type) {
+		case error:
+			fmt.Printf("Error: %v\n", v)
+		case []interface{}:
+			fmt.Println("All tasks completed successfully. Results:")
+			for _, res := range v {
+				fmt.Printf("%v\n", res)
+			}
+		default:
+			fmt.Println("Unexpected result type")
 		}
-	default:
-		fmt.Println("Unexpected result type")
 	}
+
 }
 
 // 定义结构体以匹配JSON结构

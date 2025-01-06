@@ -2,13 +2,13 @@ package go_ws_sh
 
 import "sync"
 
-func PromiseAll(tasks []func() (interface{}, error)) <-chan interface{} {
-	resultCh := make(chan interface{})
+func PromiseAll(tasks []func() (interface{}, error)) *SafeChannel[any] {
+	resultCh := NewSafeChannel[any]()
 	go func() {
-		defer close(resultCh)
+		defer (resultCh).Close()
 
 		var wg sync.WaitGroup
-		errChan := make(chan error, len(tasks))
+		errChan := NewSafeChannel[error](len(tasks))
 		results := make([]interface{}, len(tasks))
 
 		for i, task := range tasks {
@@ -17,10 +17,7 @@ func PromiseAll(tasks []func() (interface{}, error)) <-chan interface{} {
 				defer wg.Done()
 				result, err := t()
 				if err != nil {
-					select {
-					case errChan <- err:
-					default:
-					}
+					errChan.Send(err)
 					return
 				}
 				results[index] = result
@@ -29,20 +26,27 @@ func PromiseAll(tasks []func() (interface{}, error)) <-chan interface{} {
 
 		go func() {
 			wg.Wait()
-			close(errChan)
+			(errChan).Close()
 		}()
 
 		var firstErr error
-		for err := range errChan {
+		for {
+
+			var err, ok = errChan.Receive()
+			if !ok {
+				break
+			}
 			if err != nil && firstErr == nil {
 				firstErr = err
 			}
 		}
 
 		if firstErr != nil {
-			resultCh <- firstErr
+
+			resultCh.Send(firstErr)
 		} else {
-			resultCh <- results
+			resultCh.Send(results)
+
 		}
 	}()
 	return resultCh

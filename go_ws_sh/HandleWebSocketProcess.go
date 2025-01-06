@@ -37,7 +37,7 @@ type WebsocketMessage struct {
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
 	var err error
 	defer conn.WriteMessage(websocket.CloseMessage, []byte{})
-	var binaryandtextchannel = make(chan WebsocketMessage)
+	var binaryandtextchannel = NewSafeChannel(WebsocketMessage)
 	defer close(binaryandtextchannel)
 	defer conn.Close()
 

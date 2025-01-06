@@ -50,7 +50,7 @@ func Client_start(config string) {
 }
 
 func pipe_std_ws_client(configdata ConfigClient) {
-	var binaryandtextchannel = make(chan WebsocketMessage)
+	var binaryandtextchannel = NewSafeChannel(WebsocketMessage)
 	defer close(binaryandtextchannel)
 
 	codec, err := create_msg_codec()

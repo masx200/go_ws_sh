@@ -78,4 +78,5 @@ require (
 	github.com/hertz-contrib/cors v0.1.0
 	github.com/philippgille/gokv/encoding v0.7.0 // indirect
 	github.com/philippgille/gokv/util v0.7.0 // indirect
+	github.com/zeebo/assert v1.3.1
 )

@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/klauspost/pgzip"
+	"github.com/zeebo/assert"
 )
 
 func TestGzipCompress(t *testing.T) {
@@ -37,4 +38,5 @@ func TestGzipCompress(t *testing.T) {
 		t.Fatal(err)
 	}
 	log.Println(buf.Bytes())
+	assert.Equal(t, input, buf.Bytes())
 }
