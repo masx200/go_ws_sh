@@ -307,7 +307,11 @@ func GzipDeCompress(b []byte) ([]byte, bool, error) {
 	defer gr.Close()
 
 	var bg bytes.Buffer
-	io.Copy(&bg, gr)
+	_, err = io.Copy(&bg, gr)
+	if err != nil {
+		log.Println("write:", err)
+		return nil, true, nil
+	}
 	return bg.Bytes(), false, err
 }
 
