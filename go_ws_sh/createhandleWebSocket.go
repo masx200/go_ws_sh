@@ -41,6 +41,12 @@ func createhandleWebSocket(session Session) func(w context.Context, r *app.Reque
 			upgrader.Subprotocols = strings.Split(proto, ",")
 		}
 		err = upgrader.Upgrade(r, func(conn *websocket.Conn) {
+			//recover
+			defer func() {
+				if r := recover(); r != nil {
+					log.Println("Recovered in f", r)
+				}
+			}()
 			err := HandleWebSocketProcess(session, codec, conn)
 			if err != nil {
 				log.Println(err)
