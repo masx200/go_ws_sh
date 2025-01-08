@@ -35,6 +35,11 @@ type WebsocketMessage struct {
 }
 
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("Recovered in f", r)
+		}
+	}()
 	var err error
 	defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
@@ -42,10 +47,20 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer conn.Close()
 
 	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Recovered in f", r)
+			}
+		}()
 		SendMessageToWebSocketLoop(conn, binaryandtextchannel)
 	}()
 
 	defer func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Recovered in f", r)
+			}
+		}()
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 
 	}()
@@ -92,7 +107,11 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}
 
 	go func() {
-
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Recovered in f", r)
+			}
+		}()
 		state, err := cmd.Wait()
 		if err != nil {
 			log.Println(err)

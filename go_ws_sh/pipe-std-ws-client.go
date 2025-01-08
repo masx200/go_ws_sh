@@ -93,6 +93,11 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		return
 	}
 	defer func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Recovered in f", r)
+			}
+		}()
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 
 	}()
@@ -109,6 +114,11 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	defer conn.Close()
 	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Recovered in f", r)
+			}
+		}()
 		SendMessageToWebSocketLoop(conn, binaryandtextchannel)
 
 	}()
@@ -136,7 +146,11 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 		return n, nil
 	}, func() error {
-
+		defer func() {
+			if r := recover(); r != nil {
+				log.Println("Recovered in f", r)
+			}
+		}()
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 
 		conn.Close()

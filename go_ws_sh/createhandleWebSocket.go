@@ -62,26 +62,6 @@ func createhandleWebSocket(session Session) func(w context.Context, r *app.Reque
 			// w.Write([]byte("Internal Server Error" + "\n" + err.Error()))
 			return
 		}
-		// 设置标准输入、输出和错误流
-		// 启动命令
-		// 处理标准输出和错误流
-		// 等待命令执行完毕
-		//进程结束
-		// 处理标准输入流
-		//读取out_queue,并转换
-		//将数据转换为二进制
-		// 发送消息到WebSocket连接
-		//读取out_queue,并转换
-		//将数据转换为二进制
-		// 发送消息到WebSocket连接
-		// 循环读取WebSocket消息
-		//连接结束
-		// 将消息发送回客户端
-		// err = conn.WriteMessage(mt, message)
-		// if err != nil {
-		// 	log.Println("write:", err)
-		// 	break
-		// }
 
 	}
 }
