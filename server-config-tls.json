@@ -10,7 +10,9 @@
     {
       "path": "pwsh",
       "cmd": "pwsh",
-      "args": []
+      "args": [
+        "-noProfile"
+      ]
     }
   ],
   "servers": [

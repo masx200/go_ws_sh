@@ -8,7 +8,6 @@ import (
 
 	"github.com/hertz-contrib/websocket"
 	"github.com/linkedin/goavro/v2"
-	"github.com/runletapp/go-console"
 )
 
 func SendTextMessage(conn *websocket.Conn, typestring string, body string, binaryandtextchannel *SafeChannel[WebsocketMessage]) error {
@@ -40,7 +39,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 			log.Println("Recovered in f", r)
 		}
 	}()
-	var err error
+	var err2 error
 	defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
 	defer (binaryandtextchannel).Close()
@@ -65,9 +64,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	}()
 
-	cmd, err := handleWebSocketConnection(conn, binaryandtextchannel)
-	if err != nil {
-		return err
+	cmd, err2 := handleWebSocketConnection(conn)
+	if err2 != nil {
+		return sendErrorMessageToWebSocket(conn, err2)
 	}
 	var Clear = func() {
 
@@ -87,7 +86,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	if err := cmd.Start(append([]string{session.Cmd}, session.Args...)); err != nil {
 		log.Println(err)
-		err := SendTextMessage(conn, "rejected", err.Error(), binaryandtextchannel)
+		err := sendErrorMessageToWebSocket(conn, err)
 		if err != nil {
 			return err
 		}
@@ -101,9 +100,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	}()
 	x := "process " + session.Cmd + " started success"
 	log.Println("resolved:" + x)
-	err = SendTextMessage(conn, "resolved", x, binaryandtextchannel)
-	if err != nil {
-		return err
+	err2 = SendTextMessage(conn, "resolved", x, binaryandtextchannel)
+	if err2 != nil {
+		return err2
 	}
 
 	go func() {
@@ -239,91 +238,4 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	}
 	return nil
-}
-
-func handleWebSocketConnection(conn *websocket.Conn, binaryandtextchannel *SafeChannel[WebsocketMessage]) (console.Console, error) {
-	var cmd console.Console = nil
-	var err error
-	var mt int
-	var message []byte
-
-	mt, message, err = ReadMessageFromWebSocket(conn)
-	// log.Printf("first message %v %v %v \n", mt, message, err)
-	var ok bool
-	errclose, ok := err.(*websocket.CloseError)
-
-	if ok {
-
-		log.Println("close:", errclose)
-		// if cmd != nil {
-
-		// 	cmd.Kill()
-
-		// }
-
-		return nil, err
-	} else if err != nil {
-		log.Println("read1:", err)
-		err2 := SendTextMessage(conn, "rejected", "unknown recv message,first message console size expected", binaryandtextchannel)
-		if err2 != nil {
-			return nil, err2
-		}
-		return nil, err
-	}
-	if mt == websocket.TextMessage {
-
-		var array []any
-
-		err = json.Unmarshal(message, &array)
-		if err != nil {
-			log.Println("read2:", err)
-			err2 := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
-			if err2 != nil {
-				return nil, err2
-			}
-			return nil, err
-		}
-		// log.Println("websocket recv text : ", (array))
-		var data MessageSize
-		err = DecodeMessageSizeFromStringArray(array, &data)
-		if err != nil {
-			log.Println("read3:", err)
-			err2 := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
-			if err2 != nil {
-				return nil, err2
-			}
-			return nil, err
-		}
-
-		if data.Type == "resize" {
-			// log.Println("resize:", data.Cols, data.Rows)
-
-			cmd, err = console.New(int(data.Cols), int(data.Rows))
-			if err != nil {
-				log.Println("resize:", err)
-				err2 := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
-				if err2 != nil {
-					return nil, err2
-				}
-				return nil, err
-			}
-			return cmd, nil
-		} else {
-			log.Printf("ignored unknown recv text:%v", data)
-			err2 := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
-			if err2 != nil {
-				return nil, err2
-			}
-			return nil, errors.New("unknown recv text,first message console size expected")
-		}
-
-	} else {
-		log.Printf("ignored unknown recv binary:%v", message)
-		err2 := SendTextMessage(conn, "rejected", "unknown recv binary,first message console size expected", binaryandtextchannel)
-		if err2 != nil {
-			return nil, err2
-		}
-		return nil, errors.New("unknown recv binary,first message console size expected")
-	}
-
 }

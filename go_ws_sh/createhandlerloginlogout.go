@@ -142,7 +142,7 @@ func ValidateToken(token string, store file.Store) (bool, map[string]string) {
 	found, err := store.Get(token, &result)
 
 	if err != nil || !found {
-		log.Println("ValidateToken", token, result, found, err)
+		// log.Println("ValidateToken", token, result, found, err)
 		return false, nil
 	}
 	return true, result
