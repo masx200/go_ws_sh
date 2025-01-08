@@ -3,7 +3,7 @@ module github.com/masx200/go_ws_sh
 go 1.23.2
 
 require (
-	github.com/cloudwego/hertz v0.9.4
+	github.com/cloudwego/hertz v0.9.5
 	//github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
 	github.com/linkedin/goavro/v2 v2.13.0
