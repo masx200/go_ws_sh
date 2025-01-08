@@ -50,66 +50,9 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	}()
 
-	var cmd console.Console = nil
-
-	var mt int
-	var message []byte
-
-	mt, message, err = ReadMessageFromWebSocket(conn)
-	// log.Printf("first message %v %v %v \n", mt, message, err)
-	var ok bool
-	errclose, ok := err.(*websocket.CloseError)
-
-	if ok {
-
-		log.Println("close:", errclose)
-		if cmd != nil {
-
-			cmd.Kill()
-
-		}
-
+	cmd, err := handleWebSocketConnection(conn, binaryandtextchannel)
+	if err != nil {
 		return err
-	} else if err != nil {
-		log.Println("read1:", err)
-		return err
-	}
-	if mt == websocket.TextMessage {
-
-		var array []any
-
-		err = json.Unmarshal(message, &array)
-		if err != nil {
-			log.Println("read2:", err)
-
-			return err
-		}
-		// log.Println("websocket recv text : ", (array))
-		var data MessageSize
-		err = DecodeMessageSizeFromStringArray(array, &data)
-		if err != nil {
-			log.Println("read3:", err)
-
-			return err
-		}
-
-		if data.Type == "resize" {
-			// log.Println("resize:", data.Cols, data.Rows)
-
-			cmd, err = console.New(int(data.Cols), int(data.Rows))
-			if err != nil {
-				log.Println("resize:", err)
-				return err
-			}
-
-		} else {
-			log.Printf("ignored unknown recv text:%v", data)
-			return errors.New("unknown recv text,first message console size expected")
-		}
-
-	} else {
-
-		return errors.New("unknown recv binary,first message console size expected")
 	}
 	var Clear = func() {
 
@@ -274,4 +217,91 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	}
 	return nil
+}
+
+func handleWebSocketConnection(conn *websocket.Conn, binaryandtextchannel *SafeChannel[WebsocketMessage]) (console.Console, error) {
+	var cmd console.Console = nil
+	var err error
+	var mt int
+	var message []byte
+
+	mt, message, err = ReadMessageFromWebSocket(conn)
+	// log.Printf("first message %v %v %v \n", mt, message, err)
+	var ok bool
+	errclose, ok := err.(*websocket.CloseError)
+
+	if ok {
+
+		log.Println("close:", errclose)
+		// if cmd != nil {
+
+		// 	cmd.Kill()
+
+		// }
+
+		return nil, err
+	} else if err != nil {
+		log.Println("read1:", err)
+		err := SendTextMessage(conn, "rejected", "unknown recv message,first message console size expected", binaryandtextchannel)
+		if err != nil {
+			return nil, err
+		}
+		return nil, err
+	}
+	if mt == websocket.TextMessage {
+
+		var array []any
+
+		err = json.Unmarshal(message, &array)
+		if err != nil {
+			log.Println("read2:", err)
+			err := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
+			if err != nil {
+				return nil, err
+			}
+			return nil, err
+		}
+		// log.Println("websocket recv text : ", (array))
+		var data MessageSize
+		err = DecodeMessageSizeFromStringArray(array, &data)
+		if err != nil {
+			log.Println("read3:", err)
+			err := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
+			if err != nil {
+				return nil, err
+			}
+			return nil, err
+		}
+
+		if data.Type == "resize" {
+			// log.Println("resize:", data.Cols, data.Rows)
+
+			cmd, err = console.New(int(data.Cols), int(data.Rows))
+			if err != nil {
+				log.Println("resize:", err)
+				err := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
+				if err != nil {
+					return nil, err
+				}
+				return nil, err
+			}
+			return cmd, nil
+		} else {
+			log.Printf("ignored unknown recv text:%v", data)
+			err := SendTextMessage(conn, "rejected", "unknown recv text,first message console size expected", binaryandtextchannel)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.New("unknown recv text,first message console size expected")
+		}
+
+	} else {
+		log.Printf("ignored unknown recv binary:%v", message)
+		err := SendTextMessage(conn, "rejected", "unknown recv binary,first message console size expected", binaryandtextchannel)
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.New("unknown recv binary,first message console size expected")
+	}
+
 }
