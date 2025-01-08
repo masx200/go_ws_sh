@@ -11,11 +11,12 @@ import (
 func main() {
 	// 定义一个字符串变量来存储config参数的值
 	var config string
+	// var reconnect_delay int
 	var mode string
 	// 使用flag.String定义一个名为config的命令行参数，该参数有一个默认值和一个帮助说明
 	flag.StringVar(&config, "config", "", "the configuration file")
 	flag.StringVar(&mode, "mode", "", "server or client mode")
-
+	// flag.IntVar(&reconnect_delay, "reconnect_delay", 0, "client reconnect delay seconds")
 	// 打印用法信息并检查参数是否有效
 	flag.Parse() // 解析命令行参数
 	if mode == "" {
@@ -31,7 +32,25 @@ func main() {
 		go_ws_sh.Server_start(config)
 	} else {
 		if mode == "client" {
+			// for {
+			// 	if reconnect_delay > 0 {
+			// 		fmt.Printf("reconnect_delay : %d\n", reconnect_delay)
+			//recover from panic
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Println("Recovered in f", r)
+				}
+			}()
 			go_ws_sh.Client_start(config)
+
+			// 	//sleep time delay
+			// 	time.Sleep(time.Duration(reconnect_delay) * time.Second)
+
+			// } else {
+			// 	return
+			// }
+			// }
+
 		}
 	}
 }

@@ -87,12 +87,16 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	header.Set("Authorization", authHeader)
 	conn, response, err := x.Dial(url, header)
+	if err != nil {
+		log.Println("Dial error:", err)
 
+		return
+	}
 	defer func() {
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
 
 	}()
-	defer func() { os.Exit(0) }()
+	// defer func() { os.Exit(0) }()
 	if response != nil {
 		log.Println("Response Status:", response.Status)
 		fmt.Println("Response Headers:")
@@ -101,12 +105,6 @@ func pipe_std_ws_client(configdata ConfigClient) {
 			fmt.Println(k, ":", strings.Join(v, ","))
 		}
 		fmt.Println("}")
-	}
-
-	if err != nil {
-		log.Println("Dial error:", err)
-
-		return
 	}
 
 	defer conn.Close()
@@ -143,7 +141,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 		conn.Close()
 
-		defer os.Exit(0)
+		// defer os.Exit(0)
 		return nil
 	}, onsizechange)
 	if err != nil {
@@ -176,7 +174,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 			log.Println("close:", err)
 
-			defer os.Exit(0)
+			// defer os.Exit(0)
 			break
 		}
 		if err != nil {
@@ -202,7 +200,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 			if data.Type == "rejected" {
 				log.Println("rejected:", data.Body)
-				defer os.Exit(0)
+				// defer os.Exit(0)
 				return
 
 			} else if data.Type == "resolved" {
