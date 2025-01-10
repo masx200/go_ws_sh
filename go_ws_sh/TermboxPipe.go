@@ -134,7 +134,7 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 		}
 	}
 	x := func() error {
-		// termbox.Interrupt()
+		termbox.Interrupt()
 		termbox.Close()
 		return nil
 	}
