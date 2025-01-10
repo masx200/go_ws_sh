@@ -126,7 +126,13 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 
 	}()
 	go func() {
-
+		//panic: send on closed channel
+		//recover
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println("Recovered in f", r)
+			}
+		}()
 		for {
 
 			var data, err = ReadFixedSizeFromReader(stdout, 1024*1024)

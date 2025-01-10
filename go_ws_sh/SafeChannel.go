@@ -1,6 +1,9 @@
 package go_ws_sh
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // SafeChannel 是一个包装了 channel 的结构体，提供了安全的发送、接收和关闭操作。
 type SafeChannel[T any] struct {
@@ -31,6 +34,13 @@ func (sc *SafeChannel[T]) IsClosed() bool {
 
 // Send 尝试向 channel 发送数据，如果 channel 已经关闭则返回 false。
 func (sc *SafeChannel[T]) Send(v T) bool {
+	//panic: send on closed channel
+	//recover
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r)
+		}
+	}()
 	sc.mu.Lock()
 
 	if sc.closed {
