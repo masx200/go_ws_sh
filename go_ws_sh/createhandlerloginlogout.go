@@ -18,28 +18,39 @@ type TokenInfo struct {
 	Token string `json:"token"`
 }
 
+// 创建一个登录登出处理函数
 func createhandlerloginlogout(Sessions []Session, TokenFolder string, credentials []Credentials, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
+	// 创建一个map，用于存储用户名和密码
 	var credentialsmap = map[string]bool{}
 
+	// 遍历credentials，将用户名和密码存入map中
 	for _, credential := range credentials {
 		credentialsmap[credential.Username+":"+credential.Password] = true
 	}
+	// 创建一个文件存储
 	var store, err = file.NewStore(file.Options{Directory: TokenFolder})
+	// 返回一个处理函数
 	return func(w context.Context, r *app.RequestContext) {
+		// 获取请求参数
 		var name = r.Param("name")
+		// 如果TokenFolder为空，则返回错误
 		if TokenFolder == "" {
 			log.Println("Error: " + "TokenFolder is empty")
 			r.AbortWithMsg("Error:  "+"TokenFolder is empty", consts.StatusInternalServerError)
 			return
 		}
+		// 如果创建文件存储失败，则返回错误
 		if err != nil {
 			log.Println("Error: " + err.Error())
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
 		}
+		// 如果请求参数为list，则处理列表请求
 		if name == "list" {
+			// 创建一个TokenInfo结构体
 			var credential TokenInfo = TokenInfo{}
+			// 将请求参数绑定到TokenInfo结构体中
 			var err = r.BindJSON(&credential)
 			if err != nil {
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
