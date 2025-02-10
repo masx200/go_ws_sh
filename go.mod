@@ -7,7 +7,7 @@ require (
 	//github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
 	github.com/linkedin/goavro/v2 v2.13.1
-	github.com/quic-go/quic-go v0.48.2
+	github.com/quic-go/quic-go v0.49.0
 )
 
 require (
