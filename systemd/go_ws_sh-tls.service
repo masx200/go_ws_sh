@@ -1,0 +1,13 @@
+[Unit]
+Description=go_ws_sh-tls
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/root/msx/Documents/server/loop-tls.sh
+Restart=always
+WorkingDirectory=/root/msx/Documents/server
+User=root
+Group=root
+[Install]
+WantedBy=multi-user.target

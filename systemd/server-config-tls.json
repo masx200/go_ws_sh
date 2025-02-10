@@ -1,0 +1,34 @@
+{
+    "token_folder": "token_folder",
+    "credentials": [
+        {
+            "username": "admin",
+            "password": "password"
+        }
+    ],
+    "sessions": [
+        {
+            "path": "bash",
+            "cmd": "bash",
+            "args": [
+                "-i"
+            ]
+        }
+    ],
+    "servers": [
+        {
+            "alpn": "h2",
+            "port": "28443",
+            "protocol": "https",
+            "cert": "/home/msx/Documents/localhost.crt",
+            "key": "/home/msx/Documents/localhost.key"
+        },
+        {
+            "alpn": "h3",
+            "port": "28443",
+            "protocol": "https",
+            "cert": "/home/msx/Documents/localhost.crt",
+            "key": "/home/msx/Documents/localhost.key"
+        }
+    ]
+}
