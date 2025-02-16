@@ -32,6 +32,7 @@ jobs:
           cd ./installer
           sudo apt update
           sudo apt install makeself    -y
+          mkdir source
           cp ../dist/linux-amd64/main ./source/
           sh build.sh
           cp ./build/go_ws_sh_installer.run ../dist/
