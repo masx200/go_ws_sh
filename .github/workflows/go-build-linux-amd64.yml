@@ -32,8 +32,10 @@ jobs:
           cd ./installer
           sudo apt update
           sudo apt install makeself    -y
+          cp ../dist/linux-amd64/main ./source/
           sh build.sh
           cp ./build/go_ws_sh_installer.run ../dist/
+          mv ../dist/go_ws_sh_installer.run ../dist/go_ws_sh_installer-linux-amd64.run
 
       - name: Release
         uses: softprops/action-gh-release@v2
