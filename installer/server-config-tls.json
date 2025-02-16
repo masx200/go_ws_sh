@@ -20,15 +20,15 @@
             "alpn": "h2",
             "port": "28443",
             "protocol": "https",
-            "cert": "/home/msx/Documents/localhost.crt",
-            "key": "/home/msx/Documents/localhost.key"
+            "cert": "/root/opt/go_ws_sh/server/localhost.crt",
+            "key": "/root/opt/go_ws_sh/server/localhost.key"
         },
         {
             "alpn": "h3",
             "port": "28443",
             "protocol": "https",
-            "cert": "/home/msx/Documents/localhost.crt",
-            "key": "/home/msx/Documents/localhost.key"
+            "cert": "/root/opt/go_ws_sh/server/localhost.crt",
+            "key": "/root/opt/go_ws_sh/server/localhost.key"
         }
     ]
 }
