@@ -1,7 +1,9 @@
+#!/bin/bash
+
 cp -v -f ./go_ws_sh-tls.service /etc/systemd/system/
 
 cp -v -f ./go_ws_sh.service /etc/systemd/system/
-
+mkdir -p -v /root/opt/go_ws_sh/server/
 cp -v -f ./loop.sh /root/opt/go_ws_sh/server/
 
 cp -v -f ./loop-tls.sh /root/opt/go_ws_sh/server/
