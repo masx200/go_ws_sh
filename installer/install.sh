@@ -32,6 +32,6 @@ systemctl enable go_ws_sh.service
 
 systemctl enable go_ws_sh-tls.service
 
-systemctl start go_ws_sh.service
+systemctl restart go_ws_sh.service
 
-systemctl start go_ws_sh-tls.service
+systemctl restart go_ws_sh-tls.service
