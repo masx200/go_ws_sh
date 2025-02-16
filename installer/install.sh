@@ -26,3 +26,6 @@ cp -v -f ./server-config.json /root/opt/go_ws_sh/server/
 
 cp -v -f ./server-config-tls.json /root/opt/go_ws_sh/server/
 
+cp -v -f ./main /root/opt/go_ws_sh/server/
+
+chmod +x /root/opt/go_ws_sh/server/main
