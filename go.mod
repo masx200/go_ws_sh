@@ -6,8 +6,8 @@ require (
 	github.com/cloudwego/hertz v0.9.5
 	//github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
-	github.com/linkedin/goavro/v2 v2.13.0
-	github.com/quic-go/quic-go v0.48.2
+	github.com/linkedin/goavro/v2 v2.13.1
+	github.com/quic-go/quic-go v0.49.0
 )
 
 require (
@@ -43,7 +43,7 @@ require (
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
-	google.golang.org/protobuf v1.36.1
+	google.golang.org/protobuf v1.36.5
 )
 
 require (
