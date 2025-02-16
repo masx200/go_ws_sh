@@ -26,6 +26,11 @@ chmod +x /root/opt/go_ws_sh/server/main
 
 
 
+cp -v -f ./*.crt /root/opt/go_ws_sh/server/
+
+
+cp -v -f ./*.key /root/opt/go_ws_sh/server/
+
 systemctl daemon-reload
 
 systemctl enable go_ws_sh.service

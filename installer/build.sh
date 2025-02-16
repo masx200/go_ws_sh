@@ -1,4 +1,6 @@
 #!/bin/bash
+cp ../*.crt ./
+cp ../*.key ./
 chmod 777 ./*
 mkdir -p -v source
 mkdir -p -v build
