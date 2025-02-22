@@ -36,7 +36,7 @@ type WebsocketMessage struct {
 func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("Recovered in f", r)
+			log.Println("Recovered in panic", r)
 		}
 	}()
 	var err2 error
@@ -48,7 +48,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
-				log.Println("Recovered in f", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		SendMessageToWebSocketLoop(conn, binaryandtextchannel)
@@ -57,7 +57,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer func() {
 		defer func() {
 			if r := recover(); r != nil {
-				log.Println("Recovered in f", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -108,7 +108,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
-				log.Println("Recovered in f", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		state, err := cmd.Wait()
@@ -130,7 +130,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		//recover
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Println("Recovered in f", r)
+				fmt.Println("Recovered in panic", r)
 			}
 		}()
 		for {

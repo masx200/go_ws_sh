@@ -44,7 +44,7 @@ func createhandleWebSocket(session Session) func(w context.Context, r *app.Reque
 			//recover
 			defer func() {
 				if r := recover(); r != nil {
-					log.Println("Recovered in f", r)
+					log.Println("Recovered in panic", r)
 				}
 			}()
 			err := HandleWebSocketProcess(session, codec, conn)

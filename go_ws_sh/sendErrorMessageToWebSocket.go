@@ -52,7 +52,7 @@ func sendErrorMessageToWebSocket(conn *websocket.Conn, err2 error) error {
 func handleWebSocketConnection(conn *websocket.Conn) (console.Console, error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("Recovered in f", r)
+			log.Println("Recovered in panic", r)
 		}
 	}()
 	var cmd console.Console = nil

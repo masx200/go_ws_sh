@@ -39,6 +39,8 @@ Usage of main.exe:
         the configuration file
   -mode string
         server or client mode
+  -serverip string
+        server ip
 ```
 
 ```

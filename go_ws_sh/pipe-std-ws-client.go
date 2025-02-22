@@ -1,15 +1,18 @@
 package go_ws_sh
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/linkedin/goavro/v2"
@@ -32,7 +35,7 @@ type ClientConfig struct {
 	Host     string `json:"host"`
 }
 
-func Client_start(config string) {
+func Client_start(config string, serverip string) {
 	configFile, err := os.Open(config)
 	if err != nil {
 		log.Fatal(err)
@@ -46,10 +49,10 @@ func Client_start(config string) {
 		log.Fatal(err)
 	}
 
-	pipe_std_ws_client(configdata)
+	pipe_std_ws_client(configdata, serverip)
 }
 
-func pipe_std_ws_client(configdata ConfigClient) {
+func pipe_std_ws_client(configdata ConfigClient, serverip string) {
 	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
 	defer (binaryandtextchannel).Close()
 
@@ -70,6 +73,63 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	url := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Sessions.Path
 
 	x := websocket.DefaultDialer
+	var tlscfg = &tls.Config{}
+	if configdata.Servers.Ca != "" || configdata.Servers.Insecure {
+		tlscfg = configureWebSocketTLSCA(x, configdata)
+	}
+	if serverip != "" {
+
+		var serverIP = serverip
+		x = &websocket.Dialer{
+			Proxy:            http.ProxyFromEnvironment,
+			HandshakeTimeout: 45 * time.Second,
+			NetDialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+				// 解析出原地址中的端口
+				_, port, err := net.SplitHostPort(addr)
+				if err != nil {
+					return nil, err
+				}
+				// 用指定的 IP 地址和原端口创建新地址
+				newAddr := net.JoinHostPort(serverIP, port)
+				// 创建 net.Dialer 实例
+				dialer := &net.Dialer{}
+				// 发起连接
+				return dialer.DialContext(ctx, network, newAddr)
+			},
+			NetDialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+
+				// 解析出原地址中的端口
+				address, port, err := net.SplitHostPort(addr)
+				if err != nil {
+					return nil, err
+				}
+				// 用指定的 IP 地址和原端口创建新地址
+				newAddr := net.JoinHostPort(serverIP, port)
+				// 创建 net.Dialer 实例
+				dialer := &net.Dialer{}
+				// 发起连接
+				conn, err := dialer.DialContext(ctx, network, newAddr)
+				if err != nil {
+					return nil, err
+				}
+				tlsConfig :=
+					tlscfg
+				tlsConfig.ServerName = address
+				// &tls.Config{
+				// 	ServerName: address,
+				// }
+				// 创建 TLS 连接
+				tlsConn := tls.Client(conn, tlsConfig)
+				// 进行 TLS 握手
+				err = tlsConn.HandshakeContext(ctx)
+				if err != nil {
+					conn.Close()
+					return nil, err
+				}
+				return tlsConn, nil
+			},
+		}
+	}
 	if configdata.Servers.Ca != "" || configdata.Servers.Insecure {
 		configureWebSocketTLSCA(x, configdata)
 	}
@@ -95,7 +155,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	defer func() {
 		defer func() {
 			if r := recover(); r != nil {
-				log.Println("Recovered in f", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -116,7 +176,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
-				log.Println("Recovered in f", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		SendMessageToWebSocketLoop(conn, binaryandtextchannel)
@@ -148,7 +208,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	}, func() error {
 		defer func() {
 			if r := recover(); r != nil {
-				log.Println("Recovered in f", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		defer conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -273,7 +333,7 @@ func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtext
 
 }
 
-func configureWebSocketTLSCA(x *websocket.Dialer, configdata ConfigClient) {
+func configureWebSocketTLSCA(x *websocket.Dialer, configdata ConfigClient) *tls.Config {
 	x.TLSClientConfig = &tls.Config{
 		RootCAs: x509.NewCertPool(),
 	}
@@ -286,4 +346,5 @@ func configureWebSocketTLSCA(x *websocket.Dialer, configdata ConfigClient) {
 	if !ok {
 		log.Fatal("Failed to append CA certificate")
 	}
+	return x.TLSClientConfig
 }
