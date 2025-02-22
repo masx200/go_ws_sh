@@ -12,7 +12,8 @@
       "cmd": "pwsh",
       "args": [
         "-noProfile"
-      ]
+      ],
+      "dir": "C:\\Users\\Public"
     }
   ],
   "servers": [

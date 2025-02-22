@@ -96,6 +96,7 @@ type Session struct {
 	Path string   `json:"path"`
 	Cmd  string   `json:"cmd"`
 	Args []string `json:"args"`
+	Dir  string   `json:"dir"`
 }
 
 type ServerConfig struct {

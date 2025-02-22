@@ -1,24 +1,25 @@
 {
-    "token_folder": "token_folder",
-    "credentials": [
-        {
-            "username": "admin",
-            "password": "password"
-        }
-    ],
-    "sessions": [
-        {
-            "path": "bash",
-            "cmd": "bash",
-            "args": [
-                "-i"
-            ]
-        }
-    ],
-    "servers": [
-        {
-            "port": "28080",
-            "protocol": "http"
-        }
-    ]
+  "token_folder": "token_folder",
+  "credentials": [
+    {
+      "username": "admin",
+      "password": "password"
+    }
+  ],
+  "sessions": [
+    {
+      "path": "bash",
+      "cmd": "bash",
+      "args": [
+        "-i"
+      ],
+      "dir": "/root"
+    }
+  ],
+  "servers": [
+    {
+      "port": "28080",
+      "protocol": "http"
+    }
+  ]
 }

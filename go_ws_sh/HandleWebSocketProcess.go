@@ -83,7 +83,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 	defer Clear()
 	var stdin = cmd
 	var stdout = cmd
-
+	cmd.SetCWD(session.Dir)
 	if err := cmd.Start(append([]string{session.Cmd}, session.Args...)); err != nil {
 		log.Println(err)
 		err := sendErrorMessageToWebSocket(conn, err)
