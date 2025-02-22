@@ -338,13 +338,17 @@ func configureWebSocketTLSCA(x *websocket.Dialer, configdata ConfigClient) *tls.
 		RootCAs: x509.NewCertPool(),
 	}
 	x.TLSClientConfig.InsecureSkipVerify = configdata.Servers.Insecure
-	caCert, err := os.ReadFile(configdata.Servers.Ca)
-	if err != nil {
-		log.Fatal(err)
+
+	if configdata.Servers.Ca != "" {
+		caCert, err := os.ReadFile(configdata.Servers.Ca)
+		if err != nil {
+			log.Fatal(err)
+		}
+		ok := x.TLSClientConfig.RootCAs.AppendCertsFromPEM(caCert)
+		if !ok {
+			log.Fatal("Failed to append CA certificate")
+		}
 	}
-	ok := x.TLSClientConfig.RootCAs.AppendCertsFromPEM(caCert)
-	if !ok {
-		log.Fatal("Failed to append CA certificate")
-	}
+
 	return x.TLSClientConfig
 }
