@@ -149,7 +149,9 @@ func pipe_std_ws_client(configdata ConfigClient, serverip string) {
 	conn, response, err := x.Dial(url, header)
 	if err != nil {
 		log.Println("Dial error:", err)
-
+		if response != nil {
+			printHttpResponseDetails(response)
+		}
 		return
 	}
 	defer func() {
@@ -163,15 +165,8 @@ func pipe_std_ws_client(configdata ConfigClient, serverip string) {
 	}()
 	// defer func() { os.Exit(0) }()
 	if response != nil {
-		log.Println("Response Status:", response.Status)
-		fmt.Println("Response Headers:")
-		fmt.Println("{")
-		for k, v := range response.Header {
-			fmt.Println(k, ":", strings.Join(v, ","))
-		}
-		fmt.Println("}")
+		printHttpResponseDetails(response)
 	}
-
 	defer conn.Close()
 	go func() {
 		defer func() {
@@ -311,6 +306,30 @@ func pipe_std_ws_client(configdata ConfigClient, serverip string) {
 		}
 	}
 
+}
+
+// printHttpResponseDetails 是一个处理 HTTP 响应的函数。
+// 它接受一个指向 http.Response 的指针作为参数，用于打印响应的状态和头部信息。
+// 如果 response 参数为 nil，函数将不会执行任何操作。
+func printHttpResponseDetails(response *http.Response) {
+	// 检查 response 是否为 nil，以避免空指针异常。
+	if response != nil {
+		// 使用 log 打印响应的状态信息。
+		log.Println("Response Status:", response.Status)
+
+		// 打印响应头部信息的开始。
+		fmt.Println("Response Headers:")
+		fmt.Println("{")
+
+		// 遍历 response.Header，打印每个头部信息的键值对。
+		for k, v := range response.Header {
+			// 使用 strings.Join 将每个头部信息的多个值以逗号连接。
+			fmt.Println(k, ":", strings.Join(v, ","))
+		}
+
+		// 打印响应头部信息的结束。
+		fmt.Println("}")
+	}
 }
 
 func sendMessageToWebsocketStdin(data []byte, codec *goavro.Codec, binaryandtextchannel *SafeChannel[WebsocketMessage]) error {
