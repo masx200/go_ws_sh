@@ -72,9 +72,10 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				case termbox.KeyPgdn:
 					writable([]byte{0x1B, '[', '6', '~'})
 				case termbox.KeyCtrlC:
-					fmt.Println("CtrlC key pressed exit")
-					go closable()
-					return // 退出程序
+					writable([]byte{0x03})
+				// 	fmt.Println("CtrlC key pressed exit")
+				// 	go closable()
+				// 	return // 退出程序
 				case termbox.KeyCtrlD:
 					fmt.Println("CtrlD key pressed exit")
 					go closable()
