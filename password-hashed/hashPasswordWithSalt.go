@@ -20,7 +20,7 @@ type Options struct {
 	saltLength int
 }
 func (hr HashResult) String() string {
-	return fmt.Sprintf("Hash: %s\nSalt: %s\nAlgorithm: %s", hr.Hash, hr.Salt, hr.Algorithm)
+	return fmt.Sprintf("HashResult {\n Hash: \"%s\" \n Salt: \"%s\" \n Algorithm: \"%s\" \n}", hr.Hash, hr.Salt, hr.Algorithm)
 }
 // HashPasswordWithSalt 生成加盐哈希，支持自定义算法和盐值长度
 func HashPasswordWithSalt(password string, options ...Options) (HashResult, error) {
