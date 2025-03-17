@@ -13,7 +13,8 @@ import (
 func TestGzipCompress(t *testing.T) {
 	compressed := &bytes.Buffer{}
 	var input = []byte("hello world")
-	log.Println(input)
+	log.Println("input:",input)
+	// log.Println(input)
 	w := pgzip.NewWriter(compressed)
 	defer w.Close()
 	var _, err = io.Copy(w, bytes.NewReader(input))
@@ -25,7 +26,9 @@ func TestGzipCompress(t *testing.T) {
 	w.Flush()
 	w.Close()
 	x := compressed.Bytes()
-	log.Println(x)
+	log.Println(
+		"compressed:",
+		x)
 
 	reader, err := pgzip.NewReader(bytes.NewReader(x))
 	if err != nil {
@@ -40,6 +43,8 @@ func TestGzipCompress(t *testing.T) {
 		t.Fatal(err)
 		return
 	}
-	log.Println(buf.Bytes())
+	log.Println(
+		"decompressed:",
+		buf.Bytes())
 	assert.Equal(t, input, buf.Bytes())
 }

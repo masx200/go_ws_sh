@@ -11,7 +11,5 @@ func TestHashPasswordWithSalt(t *testing.T) {
 		t.Fatal(err)
 		return
 	}
-	println("algorithm:", result["algorithm"]) // 输出SHA-512哈希值（128字符）
-	println("Hash:", result["hash"])           // 输出SHA-512哈希值（128字符）
-	println("Salt:", result["salt"])           // 输出盐值（128字符，64字节）
+	println(result.String())           // 输出盐值（128字符，64字节）
 }

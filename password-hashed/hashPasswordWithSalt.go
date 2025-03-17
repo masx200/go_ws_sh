@@ -6,16 +6,24 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"hash"
 )
 
+type HashResult struct {
+	Hash      string
+	Salt      string
+	Algorithm string
+}
 type Options struct {
 	algorithm  string
 	saltLength int
 }
-
+func (hr HashResult) String() string {
+	return fmt.Sprintf("Hash: %s\nSalt: %s\nAlgorithm: %s", hr.Hash, hr.Salt, hr.Algorithm)
+}
 // HashPasswordWithSalt 生成加盐哈希，支持自定义算法和盐值长度
-func HashPasswordWithSalt(password string, options ...Options) (map[string]string, error) {
+func HashPasswordWithSalt(password string, options ...Options) (HashResult, error) {
 	var option Options
 	// 可选参数,判断参数长度
 	if len(options) > 0 {
@@ -32,7 +40,7 @@ func HashPasswordWithSalt(password string, options ...Options) (map[string]strin
 	// 1. 生成随机盐值 [[7]]
 	salt := make([]byte, saltLength)
 	if _, err := rand.Read(salt); err != nil { // 使用crypto/rand生成安全随机数
-		return nil, err
+		return HashResult{}, err
 	}
 
 	// 2. 合并盐值和密码（盐值在前，密码在后）[[4]]
@@ -49,19 +57,19 @@ func HashPasswordWithSalt(password string, options ...Options) (map[string]strin
 	case "SHA-512":
 		hasher = sha512.New()
 	default:
-		return nil, errors.New("unsupported algorithm")
+		return HashResult{}, errors.New("unsupported algorithm")
 	}
 
 	// 4. 计算哈希值 [[8]]
 	if _, err := hasher.Write(merged); err != nil {
-		return nil, err
+		return HashResult{}, err
 	}
 	hashBytes := hasher.Sum(nil)
 
 	// 5. 转换为十六进制字符串 [[9]]
-	return map[string]string{
-		"hash":      hex.EncodeToString(hashBytes),
-		"salt":      hex.EncodeToString(salt),
-		"algorithm": algorithm,
+	return HashResult{
+		Hash:      hex.EncodeToString(hashBytes),
+		Salt:      hex.EncodeToString(salt),
+		Algorithm: algorithm,
 	}, nil
 }
