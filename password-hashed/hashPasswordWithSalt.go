@@ -17,11 +17,14 @@ type HashResult struct {
 }
 type Options struct {
 	algorithm  string
+	saltHex    string
 	saltLength int
 }
+
 func (hr HashResult) String() string {
 	return fmt.Sprintf("HashResult {\n Hash: \"%s\" \n Salt: \"%s\" \n Algorithm: \"%s\" \n}", hr.Hash, hr.Salt, hr.Algorithm)
 }
+
 // HashPasswordWithSalt 生成加盐哈希，支持自定义算法和盐值长度
 func HashPasswordWithSalt(password string, options ...Options) (HashResult, error) {
 	var option Options
@@ -31,18 +34,29 @@ func HashPasswordWithSalt(password string, options ...Options) (HashResult, erro
 	}
 	var saltLength = option.saltLength
 	var algorithm = option.algorithm
+	var saltHex = option.saltHex
 	if saltLength == 0 {
 		saltLength = 64 // 默认盐值长度为16字节
 	}
 	if algorithm == "" {
 		algorithm = "SHA-512" // 默认使用SHA-256算法
 	}
-	// 1. 生成随机盐值 [[7]]
-	salt := make([]byte, saltLength)
-	if _, err := rand.Read(salt); err != nil { // 使用crypto/rand生成安全随机数
-		return HashResult{}, err
-	}
 
+	var salt []byte
+	if saltHex != "" {
+		// Use the provided saltHex if it's not empty
+		var err error
+		salt, err = hex.DecodeString(saltHex)
+		if err != nil {
+			return HashResult{}, err
+		}
+	} else {
+		// 1. 生成随机盐值 [[7]]
+		salt = make([]byte, saltLength)
+		if _, err := rand.Read(salt); err != nil { // 使用crypto/rand生成安全随机数
+			return HashResult{}, err
+		}
+	}
 	// 2. 合并盐值和密码（盐值在前，密码在后）[[4]]
 	passwordBytes := []byte(password) // Go原生字符串即UTF-8编码 [[3]]
 	merged := append(salt, passwordBytes...)

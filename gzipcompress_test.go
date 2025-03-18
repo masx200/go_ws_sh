@@ -13,7 +13,7 @@ import (
 func TestGzipCompress(t *testing.T) {
 	compressed := &bytes.Buffer{}
 	var input = []byte("hello world")
-	log.Println("input:",input)
+	log.Println("input:", input)
 	// log.Println(input)
 	w := pgzip.NewWriter(compressed)
 	defer w.Close()
