@@ -27,7 +27,7 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)
 	}
-	handlerGet := createhandlerauthorization(config.TokenFile, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerGet := createhandlerauthorization(config.TokenFile, config.CredentialFile /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
@@ -44,7 +44,7 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 
 	// }
 	tasks := []func() (interface{}, error){}
-	handlerPost := createhandlerloginlogout(config.Sessions, config.TokenFile, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerPost := createhandlerloginlogout(config.Sessions, config.TokenFile, config.CredentialFile /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 
 		r.AbortWithMsg("Not Found", consts.StatusNotFound)
 		// return
