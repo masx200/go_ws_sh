@@ -22,7 +22,11 @@ import (
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
 func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, handler func(w context.Context, r *app.RequestContext) */) {
-
+	err := EnsureCredentials(config)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)

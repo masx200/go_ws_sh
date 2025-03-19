@@ -17,7 +17,7 @@ type HashResult struct {
 	Algorithm string
 }
 type Options struct {
-	algorithm  string
+	Algorithm  string
 	saltHex    string
 	saltLength int
 }
@@ -34,7 +34,7 @@ func HashPasswordWithSalt(password string, options ...Options) (HashResult, erro
 		option = options[0]
 	}
 	var saltLength = option.saltLength
-	var algorithm = strings.ToUpper(option.algorithm) // option.algorithm
+	var algorithm = strings.ToUpper(option.Algorithm) // option.algorithm
 	var saltHex = option.saltHex
 	if saltLength == 0 {
 		saltLength = 64 // 默认盐值长度为16字节

@@ -7,7 +7,7 @@ import (
 
 func TestHashPasswordWithSaltSHA256(t *testing.T) {
 	options := Options{
-		algorithm:  "SHA-256",
+		Algorithm:  "SHA-256",
 		saltLength: 32,
 	}
 	result, err := HashPasswordWithSalt("pass", options)
@@ -23,7 +23,7 @@ func TestHashPasswordWithSaltSHA256(t *testing.T) {
 
 func TestHashPasswordWithSaltSHA384(t *testing.T) {
 	options := Options{
-		algorithm:  "SHA-384",
+		Algorithm:  "SHA-384",
 		saltLength: 48,
 	}
 	result, err := HashPasswordWithSalt("pass", options)
@@ -63,7 +63,7 @@ func TestHashPasswordWithSaltSHA512(t *testing.T) {
 
 func TestHashPasswordWithSaltShouldUseProvidedSaltHex(t *testing.T) {
 	options := Options{
-		algorithm:  "SHA-512",
+		Algorithm:  "SHA-512",
 		saltHex:    strings.Repeat("1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", 2),
 		saltLength: 64,
 	}
