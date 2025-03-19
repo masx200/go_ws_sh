@@ -116,6 +116,10 @@ type ConfigServer struct {
 	Servers        []ServerConfig `json:"servers"`
 
 	TokenFile string `json:"token_file"`
+
+	// 添加初始化用户名和初始密码字段
+	InitialUsername string `json:"initial_username"`
+	InitialPassword string `json:"initial_password"`
 }
 
 func Server_start(config string) {

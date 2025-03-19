@@ -1,30 +1,30 @@
 [
-    {
-        "algorithm": "sha-512",
-        "identifier": "1",
-        "username": "admin",
-        "salt": "873a19f77ea77128837afcf08244062efe972496afbeb77a253adaaf0d96856f4a74d3361a5db2bdbe4c95c687f6312efe6f86c9134530a0bb68e949a0feb51d",
-        "hash": "c8e2eee0a5b3979b7eaba14405bfc99e3142fad587b30c7cee0a30e28e38e55141e0ef00cbbbd95111b06f14c8129e2d4073d1570f5238fcfd328694614b0a0b"
-    },
-    {
-        "algorithm": "sha-512",
-        "identifier": "2",
-        "username": "admin",
-        "salt": "e452ae16d7f58893291232b1ddcb8aa55329e01eb75d07e066e136a36f78a6e9d9446f12f87e360ef3d81efc7e994ea03ae54b92aa2b7170431ca97933e5ded2",
-        "hash": "38881273180b56660ec021251e962bd62ec9ab113bd672714e6b81fdc58f4052957acf5b508d3d819bf47ab0b75b6b3a058f5bfe2118e59719b5f739c1fd3b29"
-    },
-    {
-        "hash": "3f24dbc68758663830d03f62e5612d989c96a90ded454854b6158a1148add8a9f7cf7cdca1f5602d53d1dfbd2cf02e9cdfb9d995b7aec821224e5c127ce39eaa",
-        "algorithm": "sha-512",
-        "identifier": "3",
-        "username": "admin",
-        "salt": "12a3972a5924fb72d43f3ab1959f72dc303b5ecd0422786239efd04a9b9ddb6af79c4c1ffec2e4c07a28da2ef1fc48fa698c0120554a23aa9db7b451a030a924"
-    },
-    {
-        "algorithm": "sha-512",
-        "identifier": "4",
-        "username": "admin",
-        "salt": "8f579fc86ab8ec135d38fc163c96625f7a2af0a1c20fca4000eaf7910c656873bd7f541f9ece460fc07d597d6f327c0ea044e989a0d86b4a6fe4fc933460796c",
-        "hash": "5733c2c3ebab4cfca90ecfcc93b6d51d7306a0d2e24544b6d9f8ed7b58ae39e6cd74a5c5f47ecb38c83546a713e74fb0d0a1b18e277793192bf774126d4d8f17"
-    }
+  {
+    "algorithm": "sha-512",
+    "identifier": "1",
+    "username": "admin",
+    "salt": "873a19f77ea77128837afcf08244062efe972496afbeb77a253adaaf0d96856f4a74d3361a5db2bdbe4c95c687f6312efe6f86c9134530a0bb68e949a0feb51d",
+    "hash": "c8e2eee0a5b3979b7eaba14405bfc99e3142fad587b30c7cee0a30e28e38e55141e0ef00cbbbd95111b06f14c8129e2d4073d1570f5238fcfd328694614b0a0b"
+  },
+  {
+    "algorithm": "sha-512",
+    "identifier": "2",
+    "username": "admin",
+    "salt": "e452ae16d7f58893291232b1ddcb8aa55329e01eb75d07e066e136a36f78a6e9d9446f12f87e360ef3d81efc7e994ea03ae54b92aa2b7170431ca97933e5ded2",
+    "hash": "38881273180b56660ec021251e962bd62ec9ab113bd672714e6b81fdc58f4052957acf5b508d3d819bf47ab0b75b6b3a058f5bfe2118e59719b5f739c1fd3b29"
+  },
+  {
+    "hash": "3f24dbc68758663830d03f62e5612d989c96a90ded454854b6158a1148add8a9f7cf7cdca1f5602d53d1dfbd2cf02e9cdfb9d995b7aec821224e5c127ce39eaa",
+    "algorithm": "sha-512",
+    "identifier": "3",
+    "username": "admin",
+    "salt": "12a3972a5924fb72d43f3ab1959f72dc303b5ecd0422786239efd04a9b9ddb6af79c4c1ffec2e4c07a28da2ef1fc48fa698c0120554a23aa9db7b451a030a924"
+  },
+  {
+    "algorithm": "sha-512",
+    "identifier": "4",
+    "username": "admin",
+    "salt": "8f579fc86ab8ec135d38fc163c96625f7a2af0a1c20fca4000eaf7910c656873bd7f541f9ece460fc07d597d6f327c0ea044e989a0d86b4a6fe4fc933460796c",
+    "hash": "5733c2c3ebab4cfca90ecfcc93b6d51d7306a0d2e24544b6d9f8ed7b58ae39e6cd74a5c5f47ecb38c83546a713e74fb0d0a1b18e277793192bf774126d4d8f17"
+  }
 ]

@@ -1,6 +1,8 @@
 {
   "token_file": "token_store.json",
   "credential_file": "credential_store.json",
+  "initial_username": "admin",
+  "initial_password": "pass",
   "sessions": [
     {
       "username": "admin",
@@ -16,7 +18,6 @@
     {
       "port": "28080",
       "protocol": "http"
-      
     }
   ]
 }
