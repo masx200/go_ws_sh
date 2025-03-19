@@ -184,6 +184,8 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 {
   "token_file": "token_store.json",
   "credential_file": "credential_store.json",
+  "initial_username": "admin",
+  "initial_password": "pass",
   "sessions": [
     {
       "username": "admin",
@@ -218,6 +220,8 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 {
   "token_file": "token_store.json",
   "credential_file": "credential_store.json",
+  "initial_username": "admin",
+  "initial_password": "pass",
   "sessions": [
     {
       "username": "admin",
