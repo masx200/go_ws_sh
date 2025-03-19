@@ -70,6 +70,8 @@ require (
 // github.com/philippgille/gokv/file v0.7.0
 )
 
+require github.com/bwmarrin/snowflake v0.3.0 // indirect
+
 require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

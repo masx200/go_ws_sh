@@ -2,7 +2,10 @@ package go_ws_sh
 
 import (
 	"context"
+	"fmt"
+	randv2 "math/rand/v2"
 
+	"github.com/bwmarrin/snowflake"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
@@ -18,11 +21,11 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 
 		switch string(method) {
 		case consts.MethodPost:
-			handlePost(r, credentialdb,tokendb)
+			handlePost(r, credentialdb, tokendb)
 		case consts.MethodPut:
-			handlePut(r, credentialdb,tokendb)
+			handlePut(r, credentialdb, tokendb)
 		case consts.MethodDelete:
-			handleDelete(r, credentialdb,tokendb)
+			handleDelete(r, credentialdb, tokendb)
 		default:
 			r.AbortWithMsg("Method Not Allowed", consts.StatusMethodNotAllowed)
 		}
@@ -30,7 +33,7 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 }
 
 // handlePost 处理 POST 请求，支持用户名密码认证和创建新的 Token
-func handlePost(r *app.RequestContext,credentialdb *gorm.DB,  tokendb *gorm.DB) {
+func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		Username string `json:"username"`
 		// Identifier string `json:"identifier"`
@@ -81,6 +84,17 @@ func handlePost(r *app.RequestContext,credentialdb *gorm.DB,  tokendb *gorm.DB) 
 		return
 	}
 	var Identifier string
+	
+	node, err := snowflake.NewNode(randv2.Int64())
+	if err != nil {
+		fmt.Println(err)
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// Generate a snowflake ID.
+	id := node.Generate()
+	Identifier = id.String()
 	newToken := Tokens{
 		Hash:       hashresult.Hash,
 		Salt:       hashresult.Salt,
@@ -95,8 +109,12 @@ func handlePost(r *app.RequestContext,credentialdb *gorm.DB,  tokendb *gorm.DB) 
 	r.JSON(consts.StatusOK, map[string]string{"token": hexString, "message": "Login successful"})
 }
 
+func ValidatePassword(s1, s2, s3, s4 string) bool {
+	
+}
+
 // handlePut 处理 PUT 请求，修改用户名密码
-func handlePut(r *app.RequestContext,credentialdb *gorm.DB, tokendb *gorm.DB) {
+func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		Username    string `json:"username"`
 		OldPassword string `json:"old_password"`
@@ -133,7 +151,7 @@ func handlePut(r *app.RequestContext,credentialdb *gorm.DB, tokendb *gorm.DB) {
 }
 
 // handleDelete 处理 DELETE 请求，删除某个 Token
-func handleDelete(r *app.RequestContext, credentialdb *gorm.DB,tokendb *gorm.DB) {
+func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		Token string `json:"token"`
 	}
