@@ -151,6 +151,7 @@ func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
 // handlePut 处理 PUT 请求，修改用户名密码
 func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
+		CredentialsClient
 		Username    string `json:"username"`
 		OldPassword string `json:"old_password"`
 		NewPassword string `json:"new_password"`
@@ -162,27 +163,37 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	}
 
 	var cred Credentials
-	if err := tokendb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
+	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return
 	}
-
+	var reqcre CredentialsClient = CredentialsClient{
+		Username:   req.Username,
+		Password:   req.OldPassword,
+		Type:       req.Type,
+		Token:      req.Token,
+		Identifier: req.Identifier,
+	}
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	if !ValidatePassword(req.OldPassword, cred.Hash, cred.Salt, cred.Algorithm) {
-		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+	shouldReturn := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
+	if shouldReturn {
 		return
 	}
-
 	// 更新密码
-	newHash, newSalt := HashPasswordWithSalt(req.NewPassword, cred.Salt)
-	cred.Hash = newHash
-	cred.Salt = newSalt
+	newHashresult, err := password_hashed.HashPasswordWithSalt(req.NewPassword)
+
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	cred.Hash = newHashresult.Hash
+	cred.Salt = newHashresult.Salt
 	if err := tokendb.Save(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	r.JSON(consts.StatusOK, map[string]string{"message": "Password updated successfully"})
+	r.JSON(consts.StatusOK, map[string]string{"message": "Password updated successfully", "username": req.Username})
 }
 
 // handleDelete 处理 DELETE 请求，删除某个 Token
