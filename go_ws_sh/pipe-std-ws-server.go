@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
 	// "net/http"
 	"os"
 	// "strings"
@@ -21,7 +22,7 @@ import (
 // 每个函数应该没有参数并且返回一个接口和一个错误。
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
-func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, handler func(w context.Context, r *app.RequestContext) */) {
+func pipe_std_ws_server(config ConfigServer, getcredentailfilepath func() (string, error), gettokenfilepath func() (string, error)) {
 	err := EnsureCredentials(config)
 	if err != nil {
 		log.Fatal(err)
@@ -138,8 +139,49 @@ func Server_start(config string) {
 	err = jsonDecoder.Decode(&configdata)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 	// var httpServeMux = http.NewServeMux()
+	var getcredentailfilepath = func() (string, error) {
 
-	pipe_std_ws_server(configdata /* httpServeMux, handler */)
+		configFile, err := os.Open(config)
+		if err != nil {
+			return "", err
+		}
+		defer configFile.Close()
+
+		jsonDecoder := json.NewDecoder(configFile)
+		var configdata ConfigServer
+		err = jsonDecoder.Decode(&configdata)
+		if err != nil {
+			return "", err
+		}
+		credentialFile := configdata.CredentialFile
+		if credentialFile == "" {
+			credentialFile = "credential_store.json"
+		}
+		return credentialFile, nil
+	}
+
+	var gettokenfilepath = func() (string, error) {
+
+		configFile, err := os.Open(config)
+		if err != nil {
+			return "", err
+		}
+		defer configFile.Close()
+
+		jsonDecoder := json.NewDecoder(configFile)
+		var configdata ConfigServer
+		err = jsonDecoder.Decode(&configdata)
+		if err != nil {
+			return "", err
+		}
+		tokenFile := configdata.TokenFile
+		if tokenFile == "" {
+			tokenFile = "token_store.json"
+		}
+		return tokenFile, nil
+	}
+	pipe_std_ws_server(configdata, getcredentailfilepath, gettokenfilepath)
 }
