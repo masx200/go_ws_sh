@@ -161,7 +161,11 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
+	//检查NewPassword不为空
+	if req.NewPassword == "" {
 
+		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
+	}
 	var cred Credentials
 	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
@@ -181,7 +185,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		return
 	}
 	// 更新密码
-	newHashresult, err := password_hashed.HashPasswordWithSalt(req.NewPassword)
+	newHashresult, err := password_hashed.HashPasswordWithSalt(req.NewPassword, password_hashed.Options{Algorithm: "SHA-512"})
 
 	if err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -189,6 +193,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	}
 	cred.Hash = newHashresult.Hash
 	cred.Salt = newHashresult.Salt
+	cred.Algorithm = "SHA-512" // 假设使用 SHA-512 算法
 	if err := tokendb.Save(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return

@@ -49,7 +49,7 @@ func main() {
 					fmt.Println("Recovered in panic", r)
 				}
 			}()
-			go_ws_sh.Client_start(config/* , serverip */)
+			go_ws_sh.Client_start(config /* , serverip */)
 
 			// 	//sleep time delay
 			// 	time.Sleep(time.Duration(reconnect_delay) * time.Second)

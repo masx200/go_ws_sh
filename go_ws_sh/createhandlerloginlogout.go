@@ -20,7 +20,7 @@ type TokenInfo struct {
 }
 
 // 创建一个登录登出处理函数
-func createhandlerloginlogout(Sessions []Session,  credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
+func createhandlerloginlogout(Sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
 	// 返回一个处理函数
 	return func(w context.Context, r *app.RequestContext) {

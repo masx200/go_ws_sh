@@ -26,8 +26,8 @@ import (
 // Returns:
 //
 //	A function that takes a context and a RequestContext, performs authentication, and calls the next function if successful.
-func createhandlerauthorization( credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext) ) func(w context.Context, r *app.RequestContext) {
-	
+func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
+
 	return func(w context.Context, r *app.RequestContext) {
 		if TokenFile == "" {
 			log.Println("Error: " + "TokenFile is empty")
