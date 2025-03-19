@@ -64,7 +64,7 @@ func TestHashPasswordWithSaltSHA512(t *testing.T) {
 func TestHashPasswordWithSaltShouldUseProvidedSaltHex(t *testing.T) {
 	options := Options{
 		Algorithm:  "SHA-512",
-		saltHex:    strings.Repeat("1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", 2),
+		SaltHex:    strings.Repeat("1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", 2),
 		saltLength: 64,
 	}
 	result, err := HashPasswordWithSalt("password", options)

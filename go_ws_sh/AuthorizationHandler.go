@@ -3,6 +3,7 @@ package go_ws_sh
 import (
 	"context"
 	"fmt"
+	"log"
 	randv2 "math/rand/v2"
 
 	"github.com/bwmarrin/snowflake"
@@ -31,30 +32,42 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 		}
 	}
 }
+func ValidateToken(req CredentialsClient, tokendb *gorm.DB) (bool, error) {
+	var token Tokens
+	if err := tokendb.Where(&Tokens{Identifier: req.Identifier}).First(&token).Error; err != nil {
+
+		return false, err
+	}
+
+	var hashresult, err = password_hashed.HashPasswordWithSalt(req.Token, password_hashed.Options{Algorithm: token.Algorithm,
+		SaltHex: token.Salt,
+	})
+	if err != nil {
+		return false, err
+	}
+	var hash = hashresult.Hash
+	if hash != token.Hash {
+		return false, fmt.Errorf("token is invalid")
+	}
+	return true, nil
+}
 
 // handlePost 处理 POST 请求，支持用户名密码认证和创建新的 Token
 func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
-	var req struct {
-		Username string `json:"username"`
-		// Identifier string `json:"identifier"`
-		Password string `json:"password"`
-		Token    string `json:"token"`
-	}
+	var req CredentialsClient
 
 	if err := r.BindJSON(&req); err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
 
-	if req.Token != "" {
+	if req.Type == "token" && req.Token != "" && req.Identifier != "" {
 		// Token 认证
-		var token Tokens
-		if err := tokendb.Where("hash = ?", req.Token).First(&token).Error; err != nil {
-			r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+		if ok, err := ValidateToken(req, tokendb); !ok {
+			log.Println(err)
+			r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 			return
 		}
-		r.JSON(consts.StatusOK, map[string]string{"message": "Token authentication successful"})
-		return
 	}
 
 	// 用户名密码认证
@@ -67,7 +80,8 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 	// 验证密码
 	// 这里需要实现具体的密码验证逻辑
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	if !ValidatePassword(req.Password, cred.Hash, cred.Salt, cred.Algorithm) {
+	if ok, err := ValidatePassword(req.Password, cred.Hash, cred.Salt, cred.Algorithm); !ok {
+		log.Println(err)
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return
 	}
@@ -84,7 +98,7 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 		return
 	}
 	var Identifier string
-	
+
 	node, err := snowflake.NewNode(randv2.Int64())
 	if err != nil {
 		fmt.Println(err)
@@ -109,8 +123,18 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 	r.JSON(consts.StatusOK, map[string]string{"token": hexString, "message": "Login successful"})
 }
 
-func ValidatePassword(s1, s2, s3, s4 string) bool {
-	
+func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
+	var hashresult, err = password_hashed.HashPasswordWithSalt(Password, password_hashed.Options{Algorithm: Algorithm,
+		SaltHex: Salt,
+	})
+	if err != nil {
+		return false, err
+	}
+	var hash = hashresult.Hash
+	if hash != Hash {
+		return false, fmt.Errorf("token is invalid")
+	}
+	return true, nil
 }
 
 // handlePut 处理 PUT 请求，修改用户名密码

@@ -137,19 +137,6 @@ func createhandlerloginlogout(Sessions []Session,  credentialdb *gorm.DB, tokend
 	}
 }
 
-func ValidateToken(token string, store file.Store) (bool, map[string]string) {
-	if token == "" {
-		return false, nil
-	}
-	var result = map[string]string{}
-	found, err := store.Get(token, &result)
-
-	if err != nil || !found {
-		// log.Println("ValidateToken", token, result, found, err)
-		return false, nil
-	}
-	return true, result
-}
 func generateHexKey(length int) (string, error) {
 	// 创建一个字节数组来保存随机字节
 	randomBytes := make([]byte, length)
