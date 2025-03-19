@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"strings"
 )
 
 type HashResult struct {
@@ -33,11 +34,12 @@ func HashPasswordWithSalt(password string, options ...Options) (HashResult, erro
 		option = options[0]
 	}
 	var saltLength = option.saltLength
-	var algorithm = option.algorithm
+	var algorithm = strings.ToUpper(option.algorithm) // option.algorithm
 	var saltHex = option.saltHex
 	if saltLength == 0 {
 		saltLength = 64 // 默认盐值长度为16字节
 	}
+
 	if algorithm == "" {
 		algorithm = "SHA-512" // 默认使用SHA-256算法
 	}
