@@ -203,17 +203,22 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 
 // handleDelete 处理 DELETE 请求，删除某个 Token
 func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
-	var req struct {
-		Token string `json:"token"`
-	}
+	var req CredentialsClient
 
 	if err := r.BindJSON(&req); err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-
+	//检查Identifier不为空
+	if req.Identifier == "" {
+		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+	}
+	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
 	var token Tokens
-	if err := tokendb.Where("hash = ?", req.Token).First(&token).Error; err != nil {
+	if err := tokendb.Where(&Tokens{Identifier: req.Identifier}).First(&token).Error; err != nil {
 		r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
 		return
 	}
