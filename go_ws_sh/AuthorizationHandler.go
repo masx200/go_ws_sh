@@ -34,7 +34,9 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 }
 func ValidateToken(req CredentialsClient, tokendb *gorm.DB) (bool, error) {
 	var token Tokens
-	if err := tokendb.Where(&Tokens{Identifier: req.Identifier}).First(&token).Error; err != nil {
+	if err := tokendb.Where(&Tokens{Identifier: req.Identifier,
+		Username: req.Username,
+	}).First(&token).Error; err != nil {
 
 		return false, err
 	}
@@ -218,7 +220,7 @@ func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB
 		return
 	}
 	var token Tokens
-	if err := tokendb.Where(&Tokens{Identifier: req.Identifier}).First(&token).Error; err != nil {
+	if err := tokendb.Where(&Tokens{Identifier: req.Identifier, Username: req.Username}).First(&token).Error; err != nil {
 		r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
 		return
 	}

@@ -128,10 +128,10 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 // 定义结构体以匹配JSON结构
 type Credentials struct {
 	gorm.Model
-	Username  string `json:"username" gorm:"unique;not null"`
-	Hash      string `json:"hash" gorm:"not null"`
-	Salt      string `json:"salt" gorm:"not null"`
-	Algorithm string `json:"algorithm" gorm:"not null"`
+	Username  string `json:"username" gorm:"index;unique;not null"`
+	Hash      string `json:"hash" gorm:"index;not null"`
+	Salt      string `json:"salt" gorm:"index;not null"`
+	Algorithm string `json:"algorithm" gorm:"index;not null"`
 }
 
 func (Credentials) TableName() string {
@@ -141,11 +141,11 @@ func (Credentials) TableName() string {
 // Token 定义 Token 结构体
 type Tokens struct {
 	gorm.Model
-	Hash       string `json:"hash" gorm:"not null"`
-	Salt       string `json:"salt" gorm:"not null"`
-	Algorithm  string `json:"algorithm" gorm:"not null"`
-	Identifier string `json:"identifier" gorm:"unique;not null"`
-	Username   string `json:"username" gorm:"not null"`
+	Hash       string `json:"hash" gorm:"index;not null"`
+	Salt       string `json:"salt" gorm:"index;not null"`
+	Algorithm  string `json:"algorithm" gorm:"index;not null"`
+	Identifier string `json:"identifier" gorm:"unique;index;not null"`
+	Username   string `json:"username" gorm:"index;not null"`
 }
 
 func (Tokens) TableName() string {
