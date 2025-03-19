@@ -61,28 +61,8 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 		return
 	}
 
-	if req.Type == "token" && req.Token != "" && req.Identifier != "" {
-		// Token 认证
-		if ok, err := ValidateToken(req, tokendb); !ok {
-			log.Println(err)
-			r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
-			return
-		}
-	}
-
-	// 用户名密码认证
-	var cred Credentials
-	if err := tokendb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
-		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
-		return
-	}
-
-	// 验证密码
-	// 这里需要实现具体的密码验证逻辑
-	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	if ok, err := ValidatePassword(req.Password, cred.Hash, cred.Salt, cred.Algorithm); !ok {
-		log.Println(err)
-		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+	if shouldReturn {
 		return
 	}
 	numBytes := 120
@@ -121,6 +101,34 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 		return
 	}
 	r.JSON(consts.StatusOK, map[string]string{"token": hexString, "message": "Login successful"})
+}
+
+func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, tokendb *gorm.DB, r *app.RequestContext) bool {
+	if req.Type == "token" && req.Token != "" && req.Identifier != "" {
+		// Token 认证
+		if ok, err := ValidateToken(req, tokendb); !ok {
+			log.Println(err)
+			r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+			return true
+		}
+	}
+
+	// 用户名密码认证
+	var cred Credentials
+	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
+		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+		return true
+	}
+
+	// 验证密码
+	// 这里需要实现具体的密码验证逻辑
+	// 假设已经有一个函数 ValidatePassword 用于验证密码
+	if ok, err := ValidatePassword(req.Password, cred.Hash, cred.Salt, cred.Algorithm); !ok {
+		log.Println(err)
+		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+		return true
+	}
+	return false
 }
 
 func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
