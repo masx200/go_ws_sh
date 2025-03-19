@@ -110,8 +110,6 @@ type ServerConfig struct {
 	Key      string `json:"key"`
 }
 
-type CredentialsStore []Credentials
-
 type ConfigServer struct {
 	CredentialFile string         `json:"credential_file"`
 	Sessions       []Session      `json:"sessions"`
