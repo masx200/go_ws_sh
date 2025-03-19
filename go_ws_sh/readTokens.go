@@ -6,13 +6,7 @@ import (
 )
 
 // TokenStore 定义 Token 存储的结构体
-type TokenStore []struct {
-	Hash       string `json:"hash"`
-	Salt       string `json:"salt"`
-	Algorithm  string `json:"algorithm"`
-	Identifier string `json:"identifier"`
-	Username   string `json:"username"`
-}
+type TokenStore []Tokens
 
 // readTokens 函数读取指定路径的 JSON 文件，并将其解析为 TokenStore 类型的数组，同时返回可能出现的错误
 func readTokens(getfilepath func() (string, error)) (TokenStore, error) {

@@ -12,7 +12,7 @@ func EnsureCredentials(config ConfigServer) error {
 	// 获取 CredentialFile，如果为空则使用默认值
 	credentialFile := config.CredentialFile
 	if credentialFile == "" {
-		credentialFile = "credential_store.json"
+		credentialFile = "credential_store.db"
 	}
 
 	// 检查文件是否存在

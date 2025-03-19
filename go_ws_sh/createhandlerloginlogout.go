@@ -11,6 +11,7 @@ import (
 	"github.com/akrennmair/slice"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"gorm.io/gorm"
 	// "github.com/philippgille/gokv/file"
 )
 
@@ -19,17 +20,8 @@ type TokenInfo struct {
 }
 
 // 创建一个登录登出处理函数
-func createhandlerloginlogout(Sessions []Session, TokenFile string, credentials []Credentials, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
+func createhandlerloginlogout(Sessions []Session,  credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
-	// 创建一个map，用于存储用户名和密码
-	var credentialsmap = map[string]bool{}
-
-	// 遍历credentials，将用户名和密码存入map中
-	for _, credential := range credentials {
-		credentialsmap[credential.Username+":"+credential.Password] = true
-	}
-	// 创建一个文件存储
-	var store, err = file.NewStore(file.Options{Directory: TokenFile})
 	// 返回一个处理函数
 	return func(w context.Context, r *app.RequestContext) {
 		// 获取请求参数

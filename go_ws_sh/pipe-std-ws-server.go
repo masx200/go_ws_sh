@@ -5,16 +5,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-
-	// "net/http"
 	"os"
-	// "strings"
-	// "unicode/utf8"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 	// "github.com/hertz-contrib/websocket"
 )
+
+type RouteConfig struct {
+	Path    string
+	Method  string
+	Handler func(context.Context, *app.RequestContext)
+}
 
 // handleWebSocket 处理WebSocket请求
 
@@ -22,7 +26,28 @@ import (
 // 每个函数应该没有参数并且返回一个接口和一个错误。
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
-func pipe_std_ws_server(config ConfigServer, getcredentailfilepath func() (string, error), gettokenfilepath func() (string, error)) {
+func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB) {
+
+	authHandler := AuthorizationHandler(credentialdb, tokendb)
+	var routes = []RouteConfig{
+
+		{
+			Path:    "/authorization",
+			Method:  "POST",
+			Handler: authHandler,
+		},
+		{
+			Path:    "/authorization",
+			Method:  "PUT",
+			Handler: authHandler,
+		},
+		{
+			Path:    "/authorization",
+			Method:  "DELETE",
+			Handler: authHandler,
+		},
+	}
+
 	err := EnsureCredentials(config)
 	if err != nil {
 		log.Fatal(err)
@@ -58,6 +83,15 @@ func pipe_std_ws_server(config ConfigServer, getcredentailfilepath func() (strin
 	})
 	for _, serverconfig := range config.Servers {
 		tasks = append(tasks, createTaskServer(serverconfig, func(w context.Context, r *app.RequestContext) {
+
+			//routes
+			for _, route := range routes {
+				if route.Path == string(r.Path()) && route.Method == string(r.Method()) {
+					route.Handler(w, r)
+					return
+				}
+			}
+
 			if string(r.Method()) == consts.MethodGet {
 				handlerGet(w, r)
 				return
@@ -93,10 +127,29 @@ func pipe_std_ws_server(config ConfigServer, getcredentailfilepath func() (strin
 
 // 定义结构体以匹配JSON结构
 type Credentials struct {
-	Username  string `json:"username"`
-	Hash      string `json:"hash"`
-	Salt      string `json:"salt"`
-	Algorithm string `json:"algorithm"`
+	gorm.Model
+	Username  string `json:"username" gorm:"unique;not null"`
+	Hash      string `json:"hash" gorm:"not null"`
+	Salt      string `json:"salt" gorm:"not null"`
+	Algorithm string `json:"algorithm" gorm:"not null"`
+}
+
+func (Credentials) TableName() string {
+	return "credentials"
+}
+
+// Token 定义 Token 结构体
+type Tokens struct {
+	gorm.Model
+	Hash       string `json:"hash" gorm:"not null"`
+	Salt       string `json:"salt" gorm:"not null"`
+	Algorithm  string `json:"algorithm" gorm:"not null"`
+	Identifier string `json:"identifier" gorm:"unique;not null"`
+	Username   string `json:"username" gorm:"not null"`
+}
+
+func (Tokens) TableName() string {
+	return "tokens"
 }
 
 type Session struct {
@@ -141,47 +194,27 @@ func Server_start(config string) {
 		log.Fatal(err)
 		return
 	}
-	// var httpServeMux = http.NewServeMux()
-	var getcredentailfilepath = func() (string, error) {
 
-		configFile, err := os.Open(config)
-		if err != nil {
-			return "", err
-		}
-		defer configFile.Close()
-
-		jsonDecoder := json.NewDecoder(configFile)
-		var configdata ConfigServer
-		err = jsonDecoder.Decode(&configdata)
-		if err != nil {
-			return "", err
-		}
-		credentialFile := configdata.CredentialFile
-		if credentialFile == "" {
-			credentialFile = "credential_store.json"
-		}
-		return credentialFile, nil
+	credentialFile := configdata.CredentialFile
+	if credentialFile == "" {
+		credentialFile = "credential_store.db"
 	}
 
-	var gettokenfilepath = func() (string, error) {
-
-		configFile, err := os.Open(config)
-		if err != nil {
-			return "", err
-		}
-		defer configFile.Close()
-
-		jsonDecoder := json.NewDecoder(configFile)
-		var configdata ConfigServer
-		err = jsonDecoder.Decode(&configdata)
-		if err != nil {
-			return "", err
-		}
-		tokenFile := configdata.TokenFile
-		if tokenFile == "" {
-			tokenFile = "token_store.json"
-		}
-		return tokenFile, nil
+	tokenFile := configdata.TokenFile
+	if tokenFile == "" {
+		tokenFile = "token_store.db"
 	}
-	pipe_std_ws_server(configdata, getcredentailfilepath, gettokenfilepath)
+	credentialdb, err := gorm.Open(sqlite.Open(credentialFile), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	tokendb, err := gorm.Open(sqlite.Open(tokenFile), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	credentialdb.AutoMigrate(&Credentials{})
+	tokendb.AutoMigrate(&Tokens{})
+	pipe_std_ws_server(configdata, credentialdb, tokendb)
 }

@@ -38,9 +38,9 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/mod v0.22.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
 	google.golang.org/protobuf v1.36.5
 )
@@ -70,7 +70,14 @@ require (
 // github.com/philippgille/gokv/file v0.7.0
 )
 
-require github.com/klauspost/compress v1.17.11 // indirect
+require (
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/klauspost/compress v1.17.11 // indirect
+	github.com/mattn/go-sqlite3 v1.14.24 // indirect
+	gorm.io/driver/sqlite v1.5.7
+	gorm.io/gorm v1.25.12
+)
 
 require (
 	github.com/akrennmair/slice v0.0.0-20220105203817-49445747ab81
