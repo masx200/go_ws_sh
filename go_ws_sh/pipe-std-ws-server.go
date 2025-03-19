@@ -27,7 +27,7 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)
 	}
-	handlerGet := createhandlerauthorization(config.TokenFolder, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerGet := createhandlerauthorization(config.TokenFile, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
@@ -44,7 +44,7 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 
 	// }
 	tasks := []func() (interface{}, error){}
-	handlerPost := createhandlerloginlogout(config.Sessions, config.TokenFolder, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerPost := createhandlerloginlogout(config.Sessions, config.TokenFile, config.Credentials /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
 
 		r.AbortWithMsg("Not Found", consts.StatusNotFound)
 		// return
@@ -88,15 +88,18 @@ func pipe_std_ws_server(config ConfigServer /* httpServeMux *http.ServeMux, hand
 
 // 定义结构体以匹配JSON结构
 type Credentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username  string `json:"username"`
+	Hash      string `json:"hash"`
+	Salt      string `json:"salt"`
+	Algorithm string `json:"algorithm"`
 }
 
 type Session struct {
-	Path string   `json:"path"`
-	Cmd  string   `json:"cmd"`
-	Args []string `json:"args"`
-	Dir  string   `json:"dir"`
+	Username string   `json:"username"`
+	Path     string   `json:"path"`
+	Cmd      string   `json:"cmd"`
+	Args     []string `json:"args"`
+	Dir      string   `json:"dir"`
 }
 
 type ServerConfig struct {
@@ -107,12 +110,17 @@ type ServerConfig struct {
 	Key      string `json:"key"`
 }
 
+type CredentialsStore []Credentials
+type TokenStore []struct {
+	Token    string `json:"token"`
+	Username string `json:"username"`
+}
 type ConfigServer struct {
-	Credentials []Credentials  `json:"credentials"`
-	Sessions    []Session      `json:"sessions"`
-	Servers     []ServerConfig `json:"servers"`
+	CredentialFile string         `json:"credential_file"`
+	Sessions       []Session      `json:"sessions"`
+	Servers        []ServerConfig `json:"servers"`
 
-	TokenFolder string `json:"token_folder"`
+	TokenFile string `json:"token_file"`
 }
 
 func Server_start(config string) {

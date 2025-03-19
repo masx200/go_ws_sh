@@ -19,13 +19,19 @@ import (
 )
 
 type ClientSession struct {
+	Token    string `json:"token"`
+	Type     string `json:"type"`
+	Username  string `json:"username"`
 	Path string `json:"path"`
 }
-
+type CredentialsClient struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 type ConfigClient struct {
-	Credentials Credentials   `json:"credentials"`
-	Sessions    ClientSession `json:"sessions"`
-	Servers     ClientConfig  `json:"servers"`
+	Credentials CredentialsClient `json:"credentials"`
+	Sessions    ClientSession     `json:"sessions"`
+	Servers     ClientConfig      `json:"servers"`
 }
 type ClientConfig struct {
 	Port     string `json:"port"`

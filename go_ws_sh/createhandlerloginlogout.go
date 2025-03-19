@@ -19,7 +19,7 @@ type TokenInfo struct {
 }
 
 // 创建一个登录登出处理函数
-func createhandlerloginlogout(Sessions []Session, TokenFolder string, credentials []Credentials, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
+func createhandlerloginlogout(Sessions []Session, TokenFile string, credentials []Credentials, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
 	// 创建一个map，用于存储用户名和密码
 	var credentialsmap = map[string]bool{}
@@ -29,15 +29,15 @@ func createhandlerloginlogout(Sessions []Session, TokenFolder string, credential
 		credentialsmap[credential.Username+":"+credential.Password] = true
 	}
 	// 创建一个文件存储
-	var store, err = file.NewStore(file.Options{Directory: TokenFolder})
+	var store, err = file.NewStore(file.Options{Directory: TokenFile})
 	// 返回一个处理函数
 	return func(w context.Context, r *app.RequestContext) {
 		// 获取请求参数
 		var name = r.Param("name")
-		// 如果TokenFolder为空，则返回错误
-		if TokenFolder == "" {
-			log.Println("Error: " + "TokenFolder is empty")
-			r.AbortWithMsg("Error:  "+"TokenFolder is empty", consts.StatusInternalServerError)
+		// 如果TokenFile为空，则返回错误
+		if TokenFile == "" {
+			log.Println("Error: " + "TokenFile is empty")
+			r.AbortWithMsg("Error:  "+"TokenFile is empty", consts.StatusInternalServerError)
 			return
 		}
 		// 如果创建文件存储失败，则返回错误

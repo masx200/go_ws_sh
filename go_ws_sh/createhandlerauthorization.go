@@ -25,17 +25,17 @@ import (
 // Returns:
 //
 //	A function that takes a context and a RequestContext, performs authentication, and calls the next function if successful.
-func createhandlerauthorization(TokenFolder string, credentials []Credentials /* config Config, */, next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
-	var store, err = file.NewStore(file.Options{Directory: TokenFolder})
+func createhandlerauthorization(TokenFile string, credentials []Credentials /* config Config, */, next func(w context.Context, r *app.RequestContext) /* httpServeMux *http.ServeMux */) func(w context.Context, r *app.RequestContext) {
+	var store, err = file.NewStore(file.Options{Directory: TokenFile})
 	var credentialsmap = map[string]bool{}
 
 	for _, credential := range credentials {
 		credentialsmap[credential.Username+":"+credential.Password] = true
 	}
 	return func(w context.Context, r *app.RequestContext) {
-		if TokenFolder == "" {
-			log.Println("Error: " + "TokenFolder is empty")
-			r.AbortWithMsg("Error:  "+"TokenFolder is empty", consts.StatusInternalServerError)
+		if TokenFile == "" {
+			log.Println("Error: " + "TokenFile is empty")
+			r.AbortWithMsg("Error:  "+"TokenFile is empty", consts.StatusInternalServerError)
 			return
 		}
 		if err != nil {
