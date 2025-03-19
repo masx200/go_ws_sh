@@ -184,15 +184,11 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 
 ```json
 {
-  "token_folder": "token_folder",
-  "credentials": [
-    {
-      "username": "admin",
-      "password": "pass"
-    }
-  ],
+  "token_file": "token_store.json",
+  "credential_file": "credential_store.json",
   "sessions": [
     {
+      "username": "admin",
       "path": "pwsh",
       "cmd": "pwsh",
       "args": ["-noProfile"],
@@ -222,15 +218,11 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 
 ```json
 {
-  "token_folder": "token_folder",
-  "credentials": [
-    {
-      "username": "admin",
-      "password": "password"
-    }
-  ],
+  "token_file": "token_store.json",
+  "credential_file": "credential_store.json",
   "sessions": [
     {
+      "username": "admin",
       "path": "bash",
       "cmd": "bash",
       "args": ["-i"],
@@ -242,15 +234,15 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
       "alpn": "h2",
       "port": "28443",
       "protocol": "https",
-      "cert": "/root/opt/go_ws_sh/server/localhost.crt",
-      "key": "/root/opt/go_ws_sh/server/localhost.key"
+      "cert": "localhost.crt",
+      "key": "localhost.key"
     },
     {
       "alpn": "h3",
       "port": "28443",
       "protocol": "https",
-      "cert": "/root/opt/go_ws_sh/server/localhost.crt",
-      "key": "/root/opt/go_ws_sh/server/localhost.key"
+      "cert": "localhost.crt",
+      "key": "localhost.key"
     }
   ]
 }

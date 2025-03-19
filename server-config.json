@@ -1,11 +1,6 @@
 {
-  "token_folder": "token_folder",
-  "credentials": [
-    {
-      "username": "admin",
-      "password": "pass"
-    }
-  ],
+  "token_file": "token_store.json",
+  "credential_file": "credential_store.json",
   "sessions": [
     {
       "username": "admin",
