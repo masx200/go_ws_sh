@@ -24,11 +24,11 @@ Authorization : Bearer b6e915c46
 2.websocket protocol 身份验证
 
 ```http
-sec-websocket-protocol:token%3Db6e915c46
+sec-websocket-protocol:token=b6e915c46
 ```
 
 ```http
-sec-websocket-protocol:username%3Dadmin%3Bpassword%3Dpass
+sec-websocket-protocol:username=admin;password=pass
 ```
 
 # 用法
@@ -282,6 +282,6 @@ Linux。配置文件使用 JSON 格式，定义了服务启动所需的各种参
 - **port**: 监听端口，均为 `"28443"`.
 - **protocol**: 使用的传输协议，均为 `"https"`.
 - **cert** 和 **key**: SSL/TLS 证书和私钥路径，在 Windows 中位于当前目录，而在
-  Linux 中则有绝对路径 `/root/opt/go_ws_sh/server/`.
+  Linux 中位于当前目录.
 
 这些配置项确保了服务在不同操作系统上能够正确初始化并运行。

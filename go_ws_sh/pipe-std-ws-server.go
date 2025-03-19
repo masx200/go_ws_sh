@@ -111,13 +111,7 @@ type ServerConfig struct {
 }
 
 type CredentialsStore []Credentials
-type TokenStore []struct {
-	Hash       string `json:"hash"`
-	Salt       string `json:"salt"`
-	Algorithm  string `json:"algorithm"`
-	Identifier string `json:"identifier"`
-	Username   string `json:"username"`
-}
+
 type ConfigServer struct {
 	CredentialFile string         `json:"credential_file"`
 	Sessions       []Session      `json:"sessions"`
