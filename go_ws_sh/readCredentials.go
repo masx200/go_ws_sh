@@ -15,6 +15,10 @@ func readCredentials(getfilepath func() (string, error)) (CredentialsStore, erro
 		// 返回错误，而不是使用 panic
 		return nil, err
 	}
+
+	if !FileExists(filePath) {
+		return nil, nil
+	}
 	// 打开文件
 	file, err := os.Open(filePath)
 	if err != nil {

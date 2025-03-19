@@ -22,6 +22,9 @@ func readTokens(getfilepath func() (string, error)) (TokenStore, error) {
 		// 返回错误，而不是使用 panic
 		return nil, err
 	}
+	if !FileExists(filePath) {
+		return nil, nil
+	}
 	// 打开文件
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -40,4 +43,11 @@ func readTokens(getfilepath func() (string, error)) (TokenStore, error) {
 	}
 
 	return tokenStore, nil
+}
+func FileExists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	return os.IsNotExist(err)
 }

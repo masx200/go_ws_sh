@@ -21,8 +21,8 @@ import (
 type ClientSession struct {
 	Token    string `json:"token"`
 	Type     string `json:"type"`
-	Username  string `json:"username"`
-	Path string `json:"path"`
+	Username string `json:"username"`
+	Path     string `json:"path"`
 }
 type CredentialsClient struct {
 	Username string `json:"username"`
@@ -39,9 +39,10 @@ type ClientConfig struct {
 	Ca       string `json:"ca"`
 	Insecure bool   `json:"insecure"`
 	Host     string `json:"host"`
+	IP       string `json:"ip"`
 }
 
-func Client_start(config string, serverip string) {
+func Client_start(config string /* , serverip string */) {
 	configFile, err := os.Open(config)
 	if err != nil {
 		log.Fatal(err)
@@ -55,10 +56,12 @@ func Client_start(config string, serverip string) {
 		log.Fatal(err)
 	}
 
-	pipe_std_ws_client(configdata, serverip)
+	pipe_std_ws_client(configdata /* , serverip */)
 }
 
-func pipe_std_ws_client(configdata ConfigClient, serverip string) {
+func pipe_std_ws_client(configdata ConfigClient) {
+	var serverip string
+	serverip = configdata.Servers.IP
 	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
 	defer (binaryandtextchannel).Close()
 
