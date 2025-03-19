@@ -1,9 +1,11 @@
 {
   "credentials": {
+    "type": "password",
     "username": "admin",
     "password": "pass"
   },
   "sessions": {
+    "username": "admin",
     "path": "pwsh"
   },
   "servers": {
