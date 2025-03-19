@@ -100,7 +100,10 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	r.JSON(consts.StatusOK, map[string]string{"token": hexString, "message": "Login successful"})
+	r.JSON(consts.StatusOK, map[string]string{"token": hexString, "message": "Login successful",
+
+		"identifier": Identifier, "username": req.Username, "type": "token",
+	})
 }
 
 func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, tokendb *gorm.DB, r *app.RequestContext) bool {
