@@ -48,7 +48,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		},
 	}
 
-	err := EnsureCredentials(config)
+	err := EnsureCredentials(config,credentialdb)
 	if err != nil {
 		log.Fatal(err)
 		return

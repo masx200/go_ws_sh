@@ -1,22 +1,25 @@
 package go_ws_sh
 
 import (
-	"encoding/json"
 	"os"
+
+	"gorm.io/gorm"
 
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 )
 
 // EnsureCredentials 函数用于确保认证信息文件存在，如果不存在则生成初始化认证信息
-func EnsureCredentials(config ConfigServer) error {
+func EnsureCredentials(config ConfigServer, credentialdb *gorm.DB) error {
 	// 获取 CredentialFile，如果为空则使用默认值
 	credentialFile := config.CredentialFile
 	if credentialFile == "" {
 		credentialFile = "credential_store.db"
 	}
-
+	// 检查数据库中是否存在记录
+	var count int64
+	credentialdb.Model(&Credentials{}).Count(&count)
 	// 检查文件是否存在
-	if _, err := os.Stat(credentialFile); os.IsNotExist(err) {
+	if _, err := os.Stat(credentialFile); os.IsNotExist(err) || count == 0 {
 		// 获取 InitialUsername 和 InitialPassword，如果为空则使用默认值
 		username := config.InitialUsername
 		if username == "" {
@@ -36,25 +39,17 @@ func EnsureCredentials(config ConfigServer) error {
 			return err
 		}
 		// 创建 Credentials 结构体
-		credentials := []Credentials{
-			{
-				Username:  username,
-				Hash:      hashresult.Hash,
-				Salt:      hashresult.Salt,
-				Algorithm: "SHA-512", // 假设使用 SHA-512 算法
-			},
+		credentials := Credentials{
+
+			Username:  username,
+			Hash:      hashresult.Hash,
+			Salt:      hashresult.Salt,
+			Algorithm: "SHA-512", // 假设使用 SHA-512 算法
+
 		}
 
 		// 将认证信息保存到文件中
-		file, err := os.Create(credentialFile)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-
-		encoder := json.NewEncoder(file)
-		encoder.SetIndent("", "  ")
-		return encoder.Encode(credentials)
+		return credentialdb.Create(&credentials).Error
 	}
 	return nil
 }
