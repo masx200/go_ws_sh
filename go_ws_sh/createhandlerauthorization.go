@@ -2,14 +2,11 @@ package go_ws_sh
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"log"
 	"net/url"
-	"slices"
 	"strings"
 
-	"github.com/akrennmair/slice"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
@@ -73,52 +70,32 @@ func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next fu
 		proto := r.Request.Header.Get("Sec-Websocket-Protocol")
 		if proto != "" {
 			for _, str := range strings.Split(proto, ",") {
-
-				decoded, err := url.QueryUnescape(str)
+				postData, err := url.ParseQuery(str)
 				if err != nil {
-					log.Println("proto", str)
-					fmt.Printf("Error parsing input: %v\n", err)
-					r.SetStatusCode(consts.StatusUnauthorized)
-					r.WriteString(err.Error())
+					log.Println(err)
+					r.SetStatusCode(consts.StatusBadRequest)
+					r.WriteString("Bad Request")
 					return
 				}
-				parsed, err := parseKeyValuePairs(decoded)
-				if err != nil {
-					fmt.Printf("Error parsing input: %v\n", err)
-					r.SetStatusCode(consts.StatusUnauthorized)
-					r.WriteString(err.Error())
+				log.Println(postData)
+				var req CredentialsClient
+				req.Token = postData.Get("token")
+				req.Type = postData.Get("type")
+				req.Username = postData.Get("username")
+				req.Identifier = postData.Get("identifier")
+				req.Password = postData.Get("password")
+				shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+				if shouldReturn {
+					log.Println("用户登录失败:")
 					return
 				}
-				var username, ok1 = parsed["username"]
-				var password, ok2 = parsed["password"]
-				if ok1 && ok2 {
-					var rawcredential = username + ":" + password
-					if _, ok := credentialsmap[string(rawcredential)]; !ok {
-						log.Println("Invalid credential", username+":"+password)
-						r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-						r.SetStatusCode(consts.StatusUnauthorized)
-						r.WriteString("Invalid credential Unauthorized")
-						// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
-						return
-					} else {
-						log.Println("用户登录成功:" + username + ":" + password)
-						next(w, r)
-						return
-					}
-				}
-				var token, ok3 = parsed["token"]
-				if ok, result := ValidateToken(token, store); !ok3 || !ok {
-					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
-
-					return
-				} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
-					log.Println("用户登录成功:" + result["username"] + ":" + token)
+				var ok = !shouldReturn
+				if ok {
+					log.Println("用户登录成功:")
 					next(w, r)
 					return
-				} else {
-					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
-					return
 				}
+
 			}
 		} else {
 
