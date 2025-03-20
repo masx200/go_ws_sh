@@ -197,7 +197,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		CredentialsClient
 		Username    string `json:"username"`
-		Password    string `json:"old_password"`
+		Password    string `json:"password"`
 		NewPassword string `json:"new_password"`
 	}
 
@@ -238,7 +238,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	cred.Hash = newHashresult.Hash
 	cred.Salt = newHashresult.Salt
 	cred.Algorithm = "SHA-512" // 假设使用 SHA-512 算法
-	if err := tokendb.Save(&cred).Error; err != nil {
+	if err := credentialdb.Save(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
