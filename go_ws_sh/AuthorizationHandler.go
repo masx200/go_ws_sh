@@ -253,16 +253,22 @@ func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	//检查Identifier不为空
-	if req.Identifier == "" {
-		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
-	}
+
 	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
 	if shouldReturn {
 		return
 	}
+	var data map[string]interface{}
+	if err := r.BindJSON(&data); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	//检查Identifier不为空
+	if data["delete_identifier"].(string) == "" {
+		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+	}
 	var token Tokens
-	if err := tokendb.Where(&Tokens{Identifier: req.Identifier, Username: req.Username}).First(&token).Error; err != nil {
+	if err := tokendb.Where(&Tokens{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
 		r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
 		return
 	}
