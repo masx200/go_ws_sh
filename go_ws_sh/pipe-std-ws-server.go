@@ -90,6 +90,14 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	for _, serverconfig := range config.Servers {
 		tasks = append(tasks, createTaskServer(serverconfig, func(w context.Context, r *app.RequestContext) {
 
+			fmt.Println("Request FullURI:", string(r.URI().FullURI()))
+			fmt.Println("Request Method:", string(r.Method()))
+			fmt.Println("Request Headers:")
+			fmt.Println("{")
+			r.Request.Header.VisitAll(func(key, value []byte) {
+				fmt.Println(string(key), ":", string(value))
+			})
+			fmt.Println("}")
 			//routes
 			for _, route := range routes {
 				if route.Path == string(r.Path()) && route.Method == string(r.Method()) {
