@@ -264,8 +264,14 @@ func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB
 		return
 	}
 	//检查Identifier不为空
+
+	if data["delete_identifier"] == nil {
+		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+		return
+	}
 	if data["delete_identifier"].(string) == "" {
 		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+		return
 	}
 	var token Tokens
 	if err := tokendb.Where(&Tokens{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
