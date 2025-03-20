@@ -1,0 +1,19 @@
+{
+  "credentials": {
+    "type": "token",
+    "username": "admin",
+    "identifier": "1902726791175249920",
+    "token": "9088bfdc984cb7c3a399903dd460abfd1c5ef8fb5cb191470a4eca88cc6e647be9a981a60173e3f2981fd0020ea3d105812f939fde69760f31a0fb604fc6aca3a8f47f90a6295bfbc3c37e0ec1753c09c1fc8556fb65497c55327b09db6d2325596e5e5ab0facf39110bd9054a4b6b9ac3b1615c2b538058"
+  },
+  "sessions": {
+    "username": "admin",
+    "path": "pwsh"
+  },
+  "servers": {
+    "port": "28080",
+    "protocol": "http",
+    "ca": null,
+    "host": "localhost",
+    "ip": "127.0.0.1"
+  }
+}

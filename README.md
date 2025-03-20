@@ -11,7 +11,7 @@ WebSocket
 
 # 支持的身份认证方式
 
-1.http basic 身份验证
+<!-- 1.http basic 身份验证
 
 ```http
 Authorization : Basic YWRtaW46cGFzcw==
@@ -19,16 +19,16 @@ Authorization : Basic YWRtaW46cGFzcw==
 
 ```http
 Authorization : Bearer b6e915c46
-```
+``` -->
 
-2.websocket protocol 身份验证
-
-```http
-sec-websocket-protocol:token%3Db6e915c46
-```
+## websocket protocol 身份验证
 
 ```http
-sec-websocket-protocol:username%3Dadmin%3Bpassword%3Dpass
+sec-websocket-protocol:type=token&token=b6e915c46&identifier=123456789&username=admin
+```
+
+```http
+sec-websocket-protocol:username=admin&password=pass&type=password
 ```
 
 # 用法
@@ -39,8 +39,6 @@ Usage of main.exe:
         the configuration file
   -mode string
         server or client mode
-  -serverip string
-        server ip
 ```
 
 ```
@@ -184,15 +182,13 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 
 ```json
 {
-  "token_folder": "token_folder",
-  "credentials": [
-    {
-      "username": "admin",
-      "password": "pass"
-    }
-  ],
+  "token_file": "token_store.db",
+  "credential_file": "credential_store.db",
+  "initial_username": "admin",
+  "initial_password": "pass",
   "sessions": [
     {
+      "username": "admin",
       "path": "pwsh",
       "cmd": "pwsh",
       "args": ["-noProfile"],
@@ -222,15 +218,13 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 
 ```json
 {
-  "token_folder": "token_folder",
-  "credentials": [
-    {
-      "username": "admin",
-      "password": "password"
-    }
-  ],
+  "token_file": "token_store.db",
+  "credential_file": "credential_store.db",
+  "initial_username": "admin",
+  "initial_password": "pass",
   "sessions": [
     {
+      "username": "admin",
       "path": "bash",
       "cmd": "bash",
       "args": ["-i"],
@@ -242,15 +236,15 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
       "alpn": "h2",
       "port": "28443",
       "protocol": "https",
-      "cert": "/root/opt/go_ws_sh/server/localhost.crt",
-      "key": "/root/opt/go_ws_sh/server/localhost.key"
+      "cert": "localhost.crt",
+      "key": "localhost.key"
     },
     {
       "alpn": "h3",
       "port": "28443",
       "protocol": "https",
-      "cert": "/root/opt/go_ws_sh/server/localhost.crt",
-      "key": "/root/opt/go_ws_sh/server/localhost.key"
+      "cert": "localhost.crt",
+      "key": "localhost.key"
     }
   ]
 }
@@ -262,8 +256,6 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 Linux。配置文件使用 JSON 格式，定义了服务启动所需的各种参数。以下是具体解释：
 
 #### 公共字段
-
-- **token_folder**: 存储 token 的文件夹路径，值为 `"token_folder"`。
 
 #### credentials（凭证）
 
@@ -290,6 +282,55 @@ Linux。配置文件使用 JSON 格式，定义了服务启动所需的各种参
 - **port**: 监听端口，均为 `"28443"`.
 - **protocol**: 使用的传输协议，均为 `"https"`.
 - **cert** 和 **key**: SSL/TLS 证书和私钥路径，在 Windows 中位于当前目录，而在
-  Linux 中则有绝对路径 `/root/opt/go_ws_sh/server/`.
+  Linux 中位于当前目录.
 
 这些配置项确保了服务在不同操作系统上能够正确初始化并运行。
+
+#### 客户端配置文件举例
+
+```json
+{
+  "credentials": {
+    "type": "password",
+    "username": "admin",
+    "password": "pass"
+  },
+  "sessions": {
+    "username": "admin",
+    "path": "pwsh"
+  },
+  "servers": {
+    "port": "28080",
+    "protocol": "http",
+    "ca": null,
+    "host": "localhost",
+    "ip": "127.0.0.1"
+  }
+}
+```
+
+这个 JSON
+配置文件是一个客户端配置文件，用于配置与服务器建立连接所需的信息。以下是对配置文件中各个部分的详细解释：
+
+credentials 部分 这部分定义了客户端用于身份验证的凭证信息。
+
+type: 指定凭证的类型，这里是 "password"，表示使用用户名和密码进行身份验证。
+username: 用于登录的用户名，这里是 "admin"。 password:
+与用户名对应的密码，这里是 "pass"。 sessions 部分
+这部分定义了客户端会话的相关信息。
+
+username: 会话使用的用户名，这里同样是 "admin"。 path:
+会话使用的命令行程序路径，这里是 "pwsh"，表示使用 PowerShell。 servers 部分
+这部分定义了客户端要连接的服务器的相关信息。
+
+port: 服务器监听的端口号，这里是 "28080"。 protocol: 连接使用的协议，这里是
+"http"，表示使用 HTTP 协议进行通信。 ca: 用于验证服务器证书的 CA
+证书文件路径，这里为 null，表示不使用 CA 证书验证。 host: 服务器的主机名，这里是
+"localhost"，表示本地主机。 ip: 服务器的 IP 地址，这里是
+"127.0.0.1"，同样表示本地主机。 总结
+这个配置文件告诉客户端使用用户名和密码进行身份验证，连接到本地主机（localhost 或
+127.0.0.1）的 28080 端口，使用 HTTP 协议进行通信，并在会话中使用
+PowerShell。配置文件中没有指定 CA 证书，因此不进行证书验证。
+
+在当前工程中，这个配置文件可能用于 pipe-std-ws-client.go 中的 Client_start
+函数，该函数会读取配置文件并根据其中的信息建立与服务器的连接。

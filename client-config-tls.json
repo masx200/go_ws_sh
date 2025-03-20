@@ -1,9 +1,11 @@
 {
   "credentials": {
+    "type": "password",
     "username": "admin",
     "password": "pass"
   },
   "sessions": {
+    "username": "admin",
     "path": "pwsh"
   },
   "servers": {
@@ -11,6 +13,7 @@
     "protocol": "https",
     "ca": "localhost.crt",
     "insecure": false,
-    "host": "localhost"
+    "host": "localhost",
+    "ip": "127.0.0.1"
   }
 }

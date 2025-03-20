@@ -1,18 +1,14 @@
 {
-  "token_folder": "token_folder",
-  "credentials": [
-    {
-      "username": "admin",
-      "password": "pass"
-    }
-  ],
+  "token_file": "token_store.db",
+  "credential_file": "credential_store.db",
+  "initial_username": "admin",
+  "initial_password": "pass",
   "sessions": [
     {
+      "username": "admin",
       "path": "pwsh",
       "cmd": "pwsh",
-      "args": [
-        "-noProfile"
-      ],
+      "args": ["-noProfile"],
       "dir": "C:\\Users\\Public"
     }
   ],
