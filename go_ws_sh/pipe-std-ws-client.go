@@ -4,12 +4,12 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -80,7 +80,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	if !ok {
 		log.Fatal("unknown protocol:", configdata.Servers.Protocol)
 	}
-	url := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Sessions.Path
+	urlws := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Sessions.Path
 
 	x := websocket.DefaultDialer
 	var tlscfg = &tls.Config{}
@@ -146,17 +146,39 @@ func pipe_std_ws_client(configdata ConfigClient) {
 
 	x.EnableCompression = true
 	header := http.Header{}
-	username := configdata.Credentials.Username
-	password := configdata.Credentials.Password
 
-	authStr := username + ":" + password
-	authBytes := []byte(authStr)
-	encodedAuth := base64.StdEncoding.EncodeToString(authBytes)
+	if configdata.Credentials.Type == "token" {
+		username := configdata.Credentials.Username
+		token := configdata.Credentials.Token
+		identifier := configdata.Credentials.Identifier
+		postData := url.Values{}
+		postData.Add("username", username)
+		postData.Add("type", "token")
+		postData.Add("token", token)
+		postData.Add("identifier", identifier)
+		encodedData := postData.Encode()
+		authHeader := encodedData
+		header.Set("Sec-WebSocket-Protocol", authHeader)
+	} else {
+		username := configdata.Credentials.Username
+		password := configdata.Credentials.Password
+		postData := url.Values{}
+		postData.Add("username", username)
+		postData.Add("type", "password")
+		postData.Add("password", password)
+		encodedData := postData.Encode()
+		authHeader := encodedData
+		header.Set("Sec-WebSocket-Protocol", authHeader)
+	}
 
-	authHeader := "Basic " + encodedAuth
+	// authStr := username + ":" + password
+	// authBytes := []byte(authStr)
+	// encodedAuth := base64.StdEncoding.EncodeToString(authBytes)
 
-	header.Set("Authorization", authHeader)
-	conn, response, err := x.Dial(url, header)
+	// authHeader := "Basic " + encodedAuth
+
+	// header.Set("Authorization", authHeader)
+	conn, response, err := x.Dial(urlws, header)
 	if err != nil {
 		log.Println("Dial error:", err)
 		if response != nil {

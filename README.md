@@ -11,7 +11,7 @@ WebSocket
 
 # 支持的身份认证方式
 
-1.http basic 身份验证
+<!-- 1.http basic 身份验证
 
 ```http
 Authorization : Basic YWRtaW46cGFzcw==
@@ -19,16 +19,16 @@ Authorization : Basic YWRtaW46cGFzcw==
 
 ```http
 Authorization : Bearer b6e915c46
-```
+``` -->
 
-2.websocket protocol 身份验证
-
-```http
-sec-websocket-protocol:token=b6e915c46
-```
+## websocket protocol 身份验证
 
 ```http
-sec-websocket-protocol:username=admin;password=pass
+sec-websocket-protocol:type=token&token=b6e915c46&identifier=123456789&username=admin
+```
+
+```http
+sec-websocket-protocol:username=admin&password=pass&type=password
 ```
 
 # 用法
