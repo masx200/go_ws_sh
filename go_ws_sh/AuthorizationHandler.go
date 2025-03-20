@@ -155,7 +155,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		CredentialsClient
 		Username    string `json:"username"`
-		OldPassword string `json:"old_password"`
+		Password    string `json:"old_password"`
 		NewPassword string `json:"new_password"`
 	}
 
@@ -175,7 +175,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	}
 	var reqcre CredentialsClient = CredentialsClient{
 		Username:   req.Username,
-		Password:   req.OldPassword,
+		Password:   req.Password,
 		Type:       req.Type,
 		Token:      req.Token,
 		Identifier: req.Identifier,
