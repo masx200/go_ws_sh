@@ -2,7 +2,6 @@ package go_ws_sh
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/url"
 	"strings"
