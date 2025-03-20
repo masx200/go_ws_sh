@@ -187,7 +187,7 @@ func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
 	}
 	var hash = hashresult.Hash
 	if hash != Hash {
-		return false, fmt.Errorf("token is invalid")
+		return false, fmt.Errorf("password is invalid")
 	}
 	return true, nil
 }
