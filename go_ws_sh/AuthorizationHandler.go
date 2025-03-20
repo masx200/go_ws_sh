@@ -277,5 +277,8 @@ func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	r.JSON(consts.StatusOK, map[string]string{"message": "Token deleted successfully"})
+	r.JSON(consts.StatusOK, map[string]string{"message": "Token deleted successfully",
+		"username":          req.Username,
+		"delete_identifier": data["delete_identifier"].(string),
+	})
 }

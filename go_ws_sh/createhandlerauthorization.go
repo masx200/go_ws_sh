@@ -36,13 +36,13 @@ func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next fu
 		//			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		//			return
 		//		}
-		fmt.Println("Request Method:", string(r.Method()))
-		fmt.Println("Request Headers:")
-		fmt.Println("{")
-		r.Request.Header.VisitAll(func(key, value []byte) {
-			fmt.Println(string(key), ":", string(value))
-		})
-		fmt.Println("}")
+		// fmt.Println("Request Method:", string(r.Method()))
+		// fmt.Println("Request Headers:")
+		// fmt.Println("{")
+		// r.Request.Header.VisitAll(func(key, value []byte) {
+		// 	fmt.Println(string(key), ":", string(value))
+		// })
+		// fmt.Println("}")
 
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
 		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
