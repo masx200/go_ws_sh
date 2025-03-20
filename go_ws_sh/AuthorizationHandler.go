@@ -74,21 +74,24 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 		}
 	}
 }
-func ValidateToken(req CredentialsClient, tokendb *gorm.DB) (bool, error) {
+func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, error) {
 	var token Tokens
-	if err := tokendb.Where(&Tokens{Identifier: req.Identifier,
-		Username: req.Username,
+	if err := tokendb.Where(&Tokens{Identifier: reqcredential.Identifier,
+		Username: reqcredential.Username,
 	}).First(&token).Error; err != nil {
 
 		return false, err
 	}
 
-	var hashresult, err = password_hashed.HashPasswordWithSalt(req.Token, password_hashed.Options{Algorithm: token.Algorithm,
+	var hashresult, err = password_hashed.HashPasswordWithSalt(reqcredential.Token, password_hashed.Options{Algorithm: token.Algorithm,
 		SaltHex: token.Salt,
 	})
 	if err != nil {
 		return false, err
 	}
+	log.Println("hashresult", hashresult)
+	log.Println("token", token)
+	log.Println("credential", reqcredential)
 	var hash = hashresult.Hash
 	if hash != token.Hash {
 		return false, fmt.Errorf("token is invalid")
@@ -158,6 +161,7 @@ func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, token
 			r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 			return true
 		}
+		return false
 	}
 
 	// 用户名密码认证

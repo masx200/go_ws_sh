@@ -147,7 +147,10 @@ type Credentials struct {
 	Salt      string `json:"salt" gorm:"index;not null"`
 	Algorithm string `json:"algorithm" gorm:"index;not null"`
 }
-
+func (c Credentials) String() string {
+	return fmt.Sprintf("Credentials{ID: %d, CreatedAt: %v, UpdatedAt: %v, DeletedAt: %v, Username: %s, Hash: %s, Salt: %s, Algorithm: %s}",
+		c.ID, c.CreatedAt, c.UpdatedAt, c.DeletedAt, c.Username, c.Hash, c.Salt, c.Algorithm)
+}
 func (Credentials) TableName() string {
 	return "credentials"
 }
@@ -162,6 +165,10 @@ type Tokens struct {
 	Username   string `json:"username" gorm:"index;not null"`
 }
 
+func (t Tokens) String() string {
+	return fmt.Sprintf("Tokens{ID: %d, CreatedAt: %v, UpdatedAt: %v, DeletedAt: %v, Hash: %s, Salt: %s, Algorithm: %s, Identifier: %s, Username: %s}",
+		t.ID, t.CreatedAt, t.UpdatedAt, t.DeletedAt, t.Hash, t.Salt, t.Algorithm, t.Identifier, t.Username)
+}
 func (Tokens) TableName() string {
 	return "tokens"
 }

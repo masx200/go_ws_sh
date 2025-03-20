@@ -29,6 +29,12 @@ type CredentialsClient struct {
 	Type       string `json:"type"`
 	Identifier string `json:"identifier"`
 }
+
+
+func (c CredentialsClient) String() string {
+	return fmt.Sprintf("Credentials{Username: %s, Password: %s, Token: %s, Type: %s, Identifier: %s}",
+		c.Username, c.Password, c.Token, c.Type, c.Identifier)
+}
 type ConfigClient struct {
 	Credentials CredentialsClient      `json:"credentials"`
 	Sessions    ClientSession          `json:"sessions"`
