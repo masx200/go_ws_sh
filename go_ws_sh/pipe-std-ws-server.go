@@ -27,7 +27,7 @@ type RouteConfig struct {
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
 func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB) {
-
+	var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
 	authHandler := AuthorizationHandler(credentialdb, tokendb)
 	var routes = []RouteConfig{
 
@@ -35,6 +35,12 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 			Path:    "/authorization",
 			Method:  "POST",
 			Handler: authHandler,
+		},
+
+		{
+			Path:    "/tokens",
+			Method:  "POST",
+			Handler: listtokensHandler,
 		},
 		{
 			Path:    "/authorization",
@@ -48,7 +54,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		},
 	}
 
-	err := EnsureCredentials(config,credentialdb)
+	err := EnsureCredentials(config, credentialdb)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -57,7 +63,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	for _, session := range config.Sessions {
 		handlermap[session.Path] = createhandleWebSocket(session)
 	}
-	handlerGet := createhandlerauthorization(config.TokenFile, config.CredentialFile /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
@@ -74,7 +80,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 	// }
 	tasks := []func() (interface{}, error){}
-	handlerPost := createhandlerloginlogout(config.Sessions, config.TokenFile, config.CredentialFile /* config */ /* httpServeMux */, func(w context.Context, r *app.RequestContext) {
+	handlerPost := createhandlerloginlogout(config.Sessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
 		r.AbortWithMsg("Not Found", consts.StatusNotFound)
 		// return

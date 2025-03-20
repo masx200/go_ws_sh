@@ -39,7 +39,7 @@ func createhandlerloginlogout(Sessions []Session, credentialdb *gorm.DB, tokendb
 			return
 		}
 		// 如果请求参数为list，则处理列表请求
-		if name == "list" {
+		if name == "sessions" {
 			// 创建一个TokenInfo结构体
 			var credential TokenInfo = TokenInfo{}
 			// 将请求参数绑定到TokenInfo结构体中

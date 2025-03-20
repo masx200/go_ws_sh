@@ -14,6 +14,48 @@ import (
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 )
 
+// ListTokensHandler 列出所有令牌
+func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.Context, r *app.RequestContext) {
+	return func(w context.Context, r *app.RequestContext) {
+		var req CredentialsClient
+
+		if err := r.BindJSON(&req); err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+
+		shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+		if shouldReturn {
+			return
+		}
+
+		// 查询所有令牌
+		var tokens []Tokens
+		if err := tokendb.Find(&tokens).Error; err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+
+		// 构建响应数据
+		var tokenList []map[string]string
+		for _, token := range tokens {
+			tokenList = append(tokenList, map[string]string{
+				"identifier": token.Identifier,
+				"username":   token.Username,
+				"algorithm":  token.Algorithm,
+				// 注意：不建议返回哈希和盐值，这里仅为示例
+				// "hash": token.Hash,
+				// "salt": token.Salt,
+			})
+		}
+
+		r.JSON(consts.StatusOK, map[string]interface{}{
+			"tokens":  tokenList,
+			"message": "Tokens listed successfully",
+		})
+	}
+}
+
 // AuthorizationHandler 处理授权相关的请求
 func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
