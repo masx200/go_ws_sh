@@ -1,0 +1,1046 @@
+{
+  "apifoxProject": "1.0.0",
+  "$schema": {
+    "app": "apifox",
+    "type": "project",
+    "version": "1.2.0"
+  },
+  "info": {
+    "name": "go_ws_sh",
+    "description": "",
+    "mockRule": {
+      "rules": [],
+      "enableSystemRule": true
+    }
+  },
+  "apiCollection": [
+    {
+      "name": "根目录",
+      "id": 48328862,
+      "auth": {},
+      "parentId": 0,
+      "serverId": "",
+      "description": "",
+      "identityPattern": {
+        "httpApi": {
+          "type": "methodAndPath",
+          "bodyType": "",
+          "fields": []
+        }
+      },
+      "shareSettings": {},
+      "visibility": "SHARED",
+      "preProcessors": [
+        {
+          "id": "inheritProcessors",
+          "type": "inheritProcessors",
+          "data": {}
+        }
+      ],
+      "postProcessors": [
+        {
+          "id": "inheritProcessors",
+          "type": "inheritProcessors",
+          "data": {}
+        }
+      ],
+      "inheritPostProcessors": {},
+      "inheritPreProcessors": {},
+      "items": [
+        {
+          "name": "login",
+          "api": {
+            "id": "250643094",
+            "method": "post",
+            "path": "http://127.0.0.1:28080/login",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "596117687",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "identifier": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "identifier",
+                    "message",
+                    "token",
+                    "type",
+                    "username"
+                  ]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"identifier\": \"1902643855700320256\",\r\n    \"message\": \"Login successful\",\r\n    \"token\": \"4638c8f8fc3674d1dc4a09cc181fe2d51f10da59fa5f4839f005b028f87ac943a8ea81f66fed4aebddb8b0f2abfbd0ab3134dde1fbf83ce9abc5c1bc73105b6b6e812f65a67628ef4c6f9bf5afa925b76a08067e04448a6cdc813e320ba861ec264c54181921669734046e07d0bf08326cbdc4f87eea2c30\",\r\n    \"type\": \"token\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 596117687,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["type", "username", "password"]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"pass\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 10,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.596117687"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "logout",
+          "api": {
+            "id": "250655438",
+            "method": "post",
+            "path": "http://127.0.0.1:28080/logout",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "596141984",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "delete_identifier": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["delete_identifier", "message", "username"]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"delete_identifier\": \"1902645977486147584\",\r\n    \"message\": \"Token deleted successfully\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 596141984,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "delete_identifier": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "username",
+                  "password",
+                  "delete_identifier"
+                ]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"pass\",\n    \"delete_identifier\": \"1902645977486147584\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 16,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.596141984"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "sessions",
+          "api": {
+            "id": "250659538",
+            "method": "post",
+            "path": "http://127.0.0.1:28080/sessions",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "596144738",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["list", "message", "username"]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"list\": [\r\n        \"pwsh\"\r\n    ],\r\n    \"message\": \"List of Sessions ok\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 596144738,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["type", "username", "password"]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"pass\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 22,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.596144738"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "tokens",
+          "api": {
+            "id": "274369260",
+            "method": "post",
+            "path": "http://127.0.0.1:28080/tokens",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "638110606",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "tokens": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "algorithm": {
+                            "type": "string"
+                          },
+                          "identifier": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["algorithm", "identifier", "username"]
+                      }
+                    }
+                  },
+                  "required": ["message", "tokens"]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"message\": \"Tokens listed successfully\",\r\n    \"tokens\": [\r\n        {\r\n            \"algorithm\": \"SHA-512\",\r\n            \"identifier\": \"1902643855700320256\",\r\n            \"username\": \"admin\"\r\n        },\r\n        {\r\n            \"algorithm\": \"SHA-512\",\r\n            \"identifier\": \"1902645196076429312\",\r\n            \"username\": \"admin\"\r\n        },\r\n        {\r\n            \"algorithm\": \"SHA-512\",\r\n            \"identifier\": \"1902645977486147584\",\r\n            \"username\": \"admin\"\r\n        }\r\n    ]\r\n}",
+                "responseId": 638110606,
+                "ordering": 1,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["type", "username", "password"]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 1",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"pass\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 32,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.638110606"],
+            "visibility": "INHERITED",
+            "oasExtensions": "",
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "创建令牌",
+          "api": {
+            "id": "274376204",
+            "method": "post",
+            "path": "http://127.0.0.1:28080/authorization",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "638122600",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "identifier": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "identifier",
+                    "message",
+                    "token",
+                    "type",
+                    "username"
+                  ]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"identifier\": \"1902643855700320256\",\r\n    \"message\": \"Login successful\",\r\n    \"token\": \"4638c8f8fc3674d1dc4a09cc181fe2d51f10da59fa5f4839f005b028f87ac943a8ea81f66fed4aebddb8b0f2abfbd0ab3134dde1fbf83ce9abc5c1bc73105b6b6e812f65a67628ef4c6f9bf5afa925b76a08067e04448a6cdc813e320ba861ec264c54181921669734046e07d0bf08326cbdc4f87eea2c30\",\r\n    \"type\": \"token\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 638122600,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["type", "username", "password"]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"pass\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 13,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.638122600"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "删除令牌",
+          "api": {
+            "id": "274376376",
+            "method": "delete",
+            "path": "http://127.0.0.1:28080/authorization",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "638122095",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "delete_identifier": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["delete_identifier", "message", "username"]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"delete_identifier\": \"1902645977486147584\",\r\n    \"message\": \"Token deleted successfully\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 638122095,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "delete_identifier": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "username",
+                  "password",
+                  "delete_identifier"
+                ]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"pass\",\n    \"delete_identifier\": \"1902645977486147584\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 19,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.638122095"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "修改密码",
+          "api": {
+            "id": "274376804",
+            "method": "put",
+            "path": "http://127.0.0.1:28080/authorization",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "638121106",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message", "username"]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"message\": \"Password updated successfully\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 638121106,
+                "ordering": 2,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["type", "username", "password", "new_password"]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"password\",\n    \"username\": \"admin\",\n    \"password\": \"1234\",\n    \"new_password\": \"pass\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 14,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.638121106"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "令牌登录",
+          "api": {
+            "id": "274379346",
+            "method": "post",
+            "path": "http://127.0.0.1:28080/login",
+            "parameters": {},
+            "auth": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "638128033",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "identifier": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "identifier",
+                    "message",
+                    "token",
+                    "type",
+                    "username"
+                  ]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\r\n    \"identifier\": \"1902732550770151424\",\r\n    \"message\": \"Login successful\",\r\n    \"token\": \"16d32bcec738a673d02b3340f8eb356190f331eccb52ff0397ec4a12fa96602e0b059817b73e83638050368f7b35339bb4b6ff25588d90965f6d0195ce24c6b3d497d9591362ac0f8a2991a26c6584aa86a9ba980cd949a42e8b2c58a44469cb79454a337bb9810810ec8c70b87314f0a23454fc0357e27c\",\r\n    \"type\": \"token\",\r\n    \"username\": \"admin\"\r\n}",
+                "responseId": 638128033,
+                "ordering": 2,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "identifier": {
+                    "type": "string"
+                  },
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": ["type", "username", "identifier", "token"]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"type\": \"token\",\n    \"username\": \"admin\",\n    \"identifier\": \"1902726791175249920\",\n    \"token\": \"9088bfdc984cb7c3a399903dd460abfd1c5ef8fb5cb191470a4eca88cc6e647be9a981a60173e3f2981fd0020ea3d105812f939fde69760f31a0fb604fc6aca3a8f47f90a6295bfbc3c37e0ec1753c09c1fc8556fb65497c55327b09db6d2325596e5e5ab0facf39110bd9054a4b6b9ac3b1615c2b538058\"\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 11,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": ["BLANK.638128033"],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        }
+      ]
+    }
+  ],
+  "socketCollection": [],
+  "docCollection": [],
+  "webSocketCollection": [],
+  "socketIOCollection": [],
+  "responseCollection": [
+    {
+      "_databaseId": 5956326,
+      "updatedAt": "2025-01-02T08:46:10.000Z",
+      "name": "根目录",
+      "type": "root",
+      "children": [],
+      "parentId": 0,
+      "id": 5956326,
+      "ordering": [],
+      "items": []
+    }
+  ],
+  "schemaCollection": [
+    {
+      "id": 12453190,
+      "name": "根目录",
+      "visibility": "SHARED",
+      "items": [],
+      "ordering": []
+    }
+  ],
+  "requestCollection": [
+    {
+      "name": "根目录",
+      "children": [],
+      "ordering": ["requestFolder.6002933"],
+      "items": []
+    }
+  ],
+  "apiTestCaseCollection": [
+    {
+      "name": "根目录",
+      "children": [],
+      "items": []
+    }
+  ],
+  "testCaseReferences": [],
+  "environments": [],
+  "commonScripts": [],
+  "databaseConnections": [],
+  "globalVariables": [],
+  "commonParameters": null,
+  "projectSetting": {
+    "id": "5732344",
+    "auth": {},
+    "servers": [
+      {
+        "id": "default",
+        "name": "默认服务"
+      }
+    ],
+    "gateway": [],
+    "language": "zh-CN",
+    "apiStatuses": ["developing", "testing", "released", "deprecated"],
+    "mockSettings": {},
+    "preProcessors": [],
+    "postProcessors": [],
+    "advancedSettings": {
+      "enableJsonc": false,
+      "enableBigint": false,
+      "responseValidate": true,
+      "enableTestScenarioSetting": false,
+      "enableYAPICompatScript": false,
+      "isDefaultUrlEncoding": 2,
+      "publishedDocUrlRules": {
+        "defaultRule": "RESOURCE_KEY_ONLY",
+        "resourceKeyStandard": "NEW"
+      }
+    },
+    "initialDisabledMockIds": [],
+    "cloudMock": {
+      "security": "free",
+      "enable": false,
+      "tokenKey": "apifoxToken"
+    }
+  },
+  "customFunctions": [],
+  "projectAssociations": []
+}

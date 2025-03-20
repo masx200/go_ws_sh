@@ -2,6 +2,7 @@
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
 *.db
+node_modules
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -24,3 +25,4 @@ node_modules
 go.work
 *.log
 /main
+*.db

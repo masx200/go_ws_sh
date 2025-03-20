@@ -1,15 +1,18 @@
 {
   "credentials": {
+    "type": "password",
     "username": "admin",
     "password": "pass"
   },
   "sessions": {
+    "username": "admin",
     "path": "pwsh"
   },
   "servers": {
     "port": "28080",
     "protocol": "http",
     "ca": null,
-    "host": "localhost"
+    "host": "localhost",
+    "ip": "127.0.0.1"
   }
 }
