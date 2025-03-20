@@ -29,16 +29,16 @@ import (
 func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
 	return func(w context.Context, r *app.RequestContext) {
-		if TokenFile == "" {
-			log.Println("Error: " + "TokenFile is empty")
-			r.AbortWithMsg("Error:  "+"TokenFile is empty", consts.StatusInternalServerError)
-			return
-		}
-		if err != nil {
-			log.Println("Error: " + err.Error())
-			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-			return
-		}
+		//		if TokenFile == "" {
+		//			log.Println("Error: " + "TokenFile is empty")
+		//			r.AbortWithMsg("Error:  "+"TokenFile is empty", consts.StatusInternalServerError)
+		//			return
+		//		}
+		//		if err != nil {
+		//			log.Println("Error: " + err.Error())
+		//			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		//			return
+		//		}
 		fmt.Println("Request Method:", string(r.Method()))
 		fmt.Println("Request Headers:")
 		fmt.Println("{")
@@ -46,6 +46,28 @@ func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next fu
 			fmt.Println(string(key), ":", string(value))
 		})
 		fmt.Println("}")
+
+		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
+		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
+		//if !tokenListContainsValue(r.Request.Header, "Connection", "upgrade") {
+		if !strings.Contains(Connection, "upgrade") {
+			log.Println("Not a upgrade request")
+			r.NotFound() //http.NotFound(w, r)
+			return
+		}
+		if !strings.Contains(Upgrade, "websocket") {
+			log.Println("Not a websocket request")
+			// if !tokenListContainsValue(r.Header, "Upgrade", "websocket") {
+			r.NotFound() //http.NotFound(w, r)
+			return
+		}
+		//
+		if !r.IsGet() /* != http.MethodGet */ {
+			log.Println("Not a get request")
+			r.NotFound()
+			//http.NotFound(w, r)
+			return
+		}
 		//check crediential
 		//Sec-Websocket-Protocol
 		proto := r.Request.Header.Get("Sec-Websocket-Protocol")
@@ -100,85 +122,65 @@ func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next fu
 			}
 		} else {
 
-			auth := r.Request.Header.Get("Authorization")
-			if auth == "" {
-				log.Println("No Authorization header")
-				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-				r.SetStatusCode(consts.StatusUnauthorized)
-				// r.AbortWithMsg("No Authorization header", consts.StatusUnauthorized)
-				r.WriteString("No Authorization header")
-				return
-			}
-			if strings.HasPrefix(auth, "Bearer ") {
-				token := strings.TrimPrefix(auth, "Bearer ")
-				if token == "" {
-					r.AbortWithMsg("Error: Unauthorized token is empty", consts.StatusUnauthorized)
-					return
-				}
-				if ok, result := ValidateToken(token, store); !ok {
-					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
-					return
-				} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
-					log.Println("用户登录成功:" + result["username"] + ":" + token)
-					next(w, r)
-					return
-				} else {
-					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
-					return
-				}
-			}
-			if !strings.HasPrefix(auth, "Basic ") {
-				log.Println("No Basic auth")
-				r.SetStatusCode(consts.StatusUnauthorized)
-				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-				r.WriteString("No Basic auth Unauthorized")
-				return
-			}
+			//			auth := r.Request.Header.Get("Authorization")
+			//			if auth == "" {
+			//				log.Println("No Authorization header")
+			//				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
+			//				r.SetStatusCode(consts.StatusUnauthorized)
+			//				// r.AbortWithMsg("No Authorization header", consts.StatusUnauthorized)
+			//				r.WriteString("No Authorization header")
+			//				return
+			//			}
+			//			if strings.HasPrefix(auth, "Bearer ") {
+			//				token := strings.TrimPrefix(auth, "Bearer ")
+			//				if token == "" {
+			//					r.AbortWithMsg("Error: Unauthorized token is empty", consts.StatusUnauthorized)
+			//					return
+			//				}
+			//				if ok, result := ValidateToken(token, store); !ok {
+			//					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+			//					return
+			//				} else if slices.Contains(slice.Map(credentials, func(credential Credentials) string { return credential.Username }), result["username"]) {
+			//					log.Println("用户登录成功:" + result["username"] + ":" + token)
+			//					next(w, r)
+			//					return
+			//				} else {
+			//					r.AbortWithMsg("Error: Unauthorized token is invalid", consts.StatusUnauthorized)
+			//					return
+			//				}
+			//			}
+			//			if !strings.HasPrefix(auth, "Basic ") {
+			//				log.Println("No Basic auth")
+			//				r.SetStatusCode(consts.StatusUnauthorized)
+			//				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
+			//				r.WriteString("No Basic auth Unauthorized")
+			//				return
+			//			}
+			//
+			//			credential := strings.TrimPrefix(auth, "Basic ")
+			//			var rawcredential []byte
+			//			if rawcredential2, err := base64.StdEncoding.DecodeString(credential); err != nil {
+			//				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
+			//				r.SetStatusCode(consts.StatusUnauthorized)
+			//				r.WriteString(err.Error())
+			//				return
+			//			} else {
+			//				rawcredential = rawcredential2
+			//			}
+			//			// fmt.Printf("credential: %v\n", string(rawcredential))
+			//			if _, ok := credentialsmap[string(rawcredential)]; !ok {
+			//				log.Println("Invalid credential", credential)
+			r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
+			r.SetStatusCode(consts.StatusUnauthorized)
+			r.WriteString("Invalid credential Unauthorized")
+			// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
+			return
+			//			}
+			//
 
-			credential := strings.TrimPrefix(auth, "Basic ")
-			var rawcredential []byte
-			if rawcredential2, err := base64.StdEncoding.DecodeString(credential); err != nil {
-				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-				r.SetStatusCode(consts.StatusUnauthorized)
-				r.WriteString(err.Error())
-				return
-			} else {
-				rawcredential = rawcredential2
-			}
-			// fmt.Printf("credential: %v\n", string(rawcredential))
-			if _, ok := credentialsmap[string(rawcredential)]; !ok {
-				log.Println("Invalid credential", credential)
-				r.Response.Header.Set("WWW-Authenticate", "Basic realm=\"go_ws_sh\"")
-				r.SetStatusCode(consts.StatusUnauthorized)
-				r.WriteString("Invalid credential Unauthorized")
-				// r.AbortWithMsg("Invalid credential", consts.StatusUnauthorized)
-				return
-			}
-
-			Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
-			Connection := strings.ToLower(r.Request.Header.Get("Connection"))
-			//if !tokenListContainsValue(r.Request.Header, "Connection", "upgrade") {
-			if !strings.Contains(Connection, "upgrade") {
-				log.Println("Not a upgrade request")
-				r.NotFound() //http.NotFound(w, r)
-				return
-			}
-			if !strings.Contains(Upgrade, "websocket") {
-				log.Println("Not a websocket request")
-				// if !tokenListContainsValue(r.Header, "Upgrade", "websocket") {
-				r.NotFound() //http.NotFound(w, r)
-				return
-			}
-
-			if !r.IsGet() /* != http.MethodGet */ {
-				log.Println("Not a get request")
-				r.NotFound()
-				//http.NotFound(w, r)
-				return
-			}
-			//httpServeMux.ServeHTTP(w, r)
-			log.Println("用户登录成功:" + string(rawcredential))
-			next(w, r)
+			//			//httpServeMux.ServeHTTP(w, r)
+			//			log.Println("用户登录成功:" + string(rawcredential))
+			//			next(w, r)
 		}
 	}
 }
