@@ -275,7 +275,13 @@ func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB
 	}
 	var token Tokens
 	if err := tokendb.Where(&Tokens{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
-		r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
+		r.JSON(consts.StatusOK, map[string]string{
+			"message":           "Error: Token not found",
+			"username":          req.Username,
+			"delete_identifier": data["delete_identifier"].(string),
+		})
+
+		//r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
 		return
 	}
 
