@@ -147,6 +147,7 @@ type Credentials struct {
 	Salt      string `json:"salt" gorm:"index;not null"`
 	Algorithm string `json:"algorithm" gorm:"index;not null"`
 }
+
 func (c Credentials) String() string {
 	return fmt.Sprintf("Credentials{ID: %d, CreatedAt: %v, UpdatedAt: %v, DeletedAt: %v, Username: %s, Hash: %s, Salt: %s, Algorithm: %s}",
 		c.ID, c.CreatedAt, c.UpdatedAt, c.DeletedAt, c.Username, c.Hash, c.Salt, c.Algorithm)

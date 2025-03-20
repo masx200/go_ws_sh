@@ -1,0 +1,22 @@
+{
+  "name": "go_ws_sh",
+  "version": "1.0.0",
+  "description": "go_ws_sh",
+  "main": "index.js",
+  "scripts": {
+    "format": " npx prettier -w *.html *.md *.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "directories": {},
+  "repository": {
+    "type": "git",
+    "url": "\turl =https://ghm.078465.xyz/https://github.com/masx200/go_ws_sh"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}

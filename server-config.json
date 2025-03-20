@@ -8,9 +8,7 @@
       "username": "admin",
       "path": "pwsh",
       "cmd": "pwsh",
-      "args": [
-        "-noProfile"
-      ],
+      "args": ["-noProfile"],
       "dir": "C:\\Users\\Public"
     }
   ],
