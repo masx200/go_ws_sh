@@ -123,7 +123,7 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 	}
 	var Identifier string
 
-	node, err := snowflake.NewNode(randv2.Int64())
+	node, err := snowflake.NewNode(randv2.Int64() % 1024)
 	if err != nil {
 		fmt.Println(err)
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
