@@ -164,7 +164,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		postData.Add("identifier", identifier)
 		encodedData := postData.Encode()
 		authHeader := encodedData
-		header.Set("Sec-WebSocket-Protocol", authHeader)
+		header.Set("Sec-WebSocket-Protocol", url.QueryEscape(authHeader))
 	} else {
 		username := configdata.Credentials.Username
 		password := configdata.Credentials.Password
@@ -174,7 +174,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 		postData.Add("password", password)
 		encodedData := postData.Encode()
 		authHeader := encodedData
-		header.Set("Sec-WebSocket-Protocol", authHeader)
+		header.Set("Sec-WebSocket-Protocol", url.QueryEscape(authHeader))
 	}
 
 	// authStr := username + ":" + password

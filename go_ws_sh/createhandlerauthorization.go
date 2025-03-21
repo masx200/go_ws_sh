@@ -2,6 +2,7 @@ package go_ws_sh
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/url"
 	"strings"
@@ -40,7 +41,15 @@ func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next fu
 		proto := r.Request.Header.Get("Sec-Websocket-Protocol")
 		if proto != "" {
 			for _, str := range strings.Split(proto, ",") {
-				postData, err := url.ParseQuery(str)
+				decoded, err := url.QueryUnescape(str)
+				if err != nil {
+					log.Println("proto", str)
+					fmt.Printf("Error parsing input: %v\n", err)
+					r.SetStatusCode(consts.StatusUnauthorized)
+					r.WriteString(err.Error())
+					return
+				}
+				postData, err := url.ParseQuery(decoded)
 				if err != nil {
 					log.Println(err)
 					r.SetStatusCode(consts.StatusBadRequest)

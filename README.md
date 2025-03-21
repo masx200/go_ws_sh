@@ -11,24 +11,14 @@ WebSocket
 
 # 支持的身份认证方式
 
-<!-- 1.http basic 身份验证
-
-```http
-Authorization : Basic YWRtaW46cGFzcw==
-```
-
-```http
-Authorization : Bearer b6e915c46
-``` -->
-
 ## websocket protocol 身份验证
 
 ```http
-sec-websocket-protocol:type=token&token=b6e915c46&identifier=123456789&username=admin
+sec-websocket-protocol:type%3Dtoken%26token%3Db6e915c46%26identifier%3D123456789%26username%3Dadmin
 ```
 
 ```http
-sec-websocket-protocol:username=admin&password=pass&type=password
+sec-websocket-protocol:username%3Dadmin%26password%3Dpass%26type%3Dpassword
 ```
 
 # 用法
@@ -316,38 +306,37 @@ credentials 部分 这部分定义了客户端用于身份验证的凭证信息�
 
 type: 指定凭证的类型，这里是 "password"，表示使用用户名和密码进行身份验证。
 
-username: 用于登录的用户名，这里是 "admin"。 
+username: 用于登录的用户名，这里是 "admin"。
 
 password:
-与用户名对应的密码，这里是 "pass"。 
+与用户名对应的密码，这里是 "pass"。
 
 sessions 部分
 这部分定义了客户端会话的相关信息。
 
 username: 会话使用的用户名，这里同样是 "admin"。
 
- path:
-会话使用的命令行程序路径，这里是 "pwsh"，表示使用 PowerShell。 
+path:
+会话使用的命令行程序路径，这里是 "pwsh"，表示使用 PowerShell。
 
 servers 部分
 这部分定义了客户端要连接的服务器的相关信息。
 
-port: 服务器监听的端口号，这里是 "28080"。 
+port: 服务器监听的端口号，这里是 "28080"。
 
 protocol: 连接使用的协议，这里是
-"http"，表示使用 HTTP 协议进行通信。 
+"http"，表示使用 HTTP 协议进行通信。
 
 ca: 用于验证服务器证书的 CA
-证书文件路径，这里为 null，表示不使用 CA 证书验证。 
+证书文件路径，这里为 null，表示不使用 CA 证书验证。
 
 host: 服务器的主机名，这里是
 "localhost"，表示本地主机。
 
- ip: 服务器的 IP 地址，这里是
-"127.0.0.1"，同样表示本地主机。 
+ip: 服务器的 IP 地址，这里是
+"127.0.0.1"，同样表示本地主机。
 
 总结
-
 
 这个配置文件告诉客户端使用用户名和密码进行身份验证，连接到本地主机（localhost 或
 127.0.0.1）的 28080 端口，使用 HTTP 协议进行通信，并在会话中使用
