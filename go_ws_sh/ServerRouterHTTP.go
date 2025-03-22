@@ -48,8 +48,9 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		},
 		// /tokens GET
 		{
-			Path:   "/tokens",
-			Method: "GET",
+			Headers: map[string]string{"x-HTTP-method-override": "GET"},
+			Path:    "/tokens",
+			Method:  "GET",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示令牌的逻辑
 				GetTokensHandler(credentialdb, tokendb, c, r)
@@ -66,6 +67,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		},
 		// /credentials GET
 		{
+			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:   "/credentials",
 			Method: "GET",
 			Handler: func(c context.Context, r *app.RequestContext) {
@@ -121,6 +123,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		},
 		// /sessions GET
 		{
+			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:   "/sessions",
 			Method: "GET",
 			Handler: func(c context.Context, r *app.RequestContext) {
