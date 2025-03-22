@@ -22,11 +22,11 @@ import (
 	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
 )
 
-func InitHertzApp(h *server.Hertz) {
-
-	h.Use(RequestLoggerMiddleware())
-	h.Use(gzip.Gzip(gzip.DefaultCompression))
-	h.Use(cors.New(cors.Config{
+func InitHertzApp(hertzapp *server.Hertz) {
+	hertzapp.Use(accesslog.New())
+	hertzapp.Use(RequestLoggerMiddleware())
+	hertzapp.Use(gzip.Gzip(gzip.DefaultCompression))
+	hertzapp.Use(cors.New(cors.Config{
 		AllowAllOrigins: true,
 		//准许跨域请求网站,多个使用,分开,限制使用*
 		// AllowOrigins: []string{
@@ -57,6 +57,21 @@ func InitHertzApp(h *server.Hertz) {
 		MaxAge: 24 * time.Hour,
 		// AllowBrowserExtensions: true,
 	}))
+
+
+	hertzapp.Use(func(c context.Context, ctx *app.RequestContext) {
+        // 检查请求方法是否为 POST
+        if string(ctx.Method()) == "POST" {
+            // 检查请求头中是否存在 x-HTTP-method-override 且值为 GET
+            if string(ctx.GetHeader("x-HTTP-method-override")) == "GET" {
+                // 将请求方法改为 GET
+                ctx.Request.SetMethod("GET")
+				log.Println("POST请求转换为GET请求")
+            }
+        }
+        // 继续处理请求
+        ctx.Next(c)
+    })
 }
 func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
 	if serverconfig.Alpn == "h2" {
@@ -90,7 +105,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			hertzapp.AddProtocol("h2", factoryh2.NewServerFactory(config.WithDisableKeepAlive(false)))
 			// config.WithReadTimeout(time.Minute),
 			// config.WithDisableKeepAlive(false)))
-			hertzapp.Use(accesslog.New())
+			
 			InitHertzApp(hertzapp)
 			// hertzapp.AddProtocol(suite.HTTP3, factoryh3.NewServerFactory(&http3.Option{}))
 			log.Println("Alpn == h2")
@@ -147,7 +162,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// hertzapp.AddProtocol("h2", factoryh2.NewServerFactory(config.WithDisableKeepAlive(false)))
 			// config.WithReadTimeout(time.Minute),
 			// config.WithDisableKeepAlive(false)))
-			hertzapp.Use(accesslog.New())
+			// hertzapp.Use(accesslog.New())
 			hertzapp.AddProtocol(suite.HTTP3, factoryh3.NewServerFactory(&http3.Option{}))
 			log.Println("Alpn == h3")
 			log.Println("TLS enabled and " + "WebSocket server started at :" + serverconfig.Port)
@@ -174,7 +189,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 		return func() (interface{}, error) {
 			hertzapp := server.Default(server.WithHostPorts(":" + serverconfig.Port))
 			InitHertzApp(hertzapp)
-			hertzapp.Use(accesslog.New())
+			// hertzapp.Use(accesslog.New())
 			log.Println("TLS disabled and " + "WebSocket server started at :" + serverconfig.Port)
 			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
