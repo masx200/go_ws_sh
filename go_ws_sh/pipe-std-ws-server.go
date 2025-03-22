@@ -14,11 +14,7 @@ import (
 	// "github.com/hertz-contrib/websocket"
 )
 
-type RouteConfig struct {
-	Path    string
-	Method  string
-	Handler func(context.Context, *app.RequestContext)
-}
+
 
 // handleWebSocket 处理WebSocket请求
 
@@ -83,39 +79,42 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 		// handlermap[name](w, r)
 	})
+	handler := func(w context.Context, r *app.RequestContext) {
+		
+		fmt.Println("Request FullURI:", string(r.URI().FullURI()))
+		fmt.Println("Request Method:", string(r.Method()))
+		fmt.Println("Request Headers:")
+		fmt.Println("{")
+		r.Request.Header.VisitAll(func(key, value []byte) {
+			fmt.Println(string(key), ":", string(value))
+		})
+		fmt.Println("}")
+	
+		for _, route := range routes {
+			if route.Path == string(r.Path()) && route.Method == string(r.Method()) {
+				route.Handler(w, r,)
+				return
+			}
+		}
+	
+		if string(r.Method()) == consts.MethodGet {
+			handlerGet(w, r)
+			return
+		}
+		if string(r.Method()) == consts.MethodPost {
+			handlerPost(w, r)
+			return
+		}
+		r.AbortWithMsg(
+			"Method Not Allowed",
+	
+			consts.StatusMethodNotAllowed)
+	
+	}
 	for _, serverconfig := range config.Servers {
-		tasks = append(tasks, createTaskServer(serverconfig, func(w context.Context, r *app.RequestContext) {
-
-			fmt.Println("Request FullURI:", string(r.URI().FullURI()))
-			fmt.Println("Request Method:", string(r.Method()))
-			fmt.Println("Request Headers:")
-			fmt.Println("{")
-			r.Request.Header.VisitAll(func(key, value []byte) {
-				fmt.Println(string(key), ":", string(value))
-			})
-			fmt.Println("}")
-			//routes
-			for _, route := range routes {
-				if route.Path == string(r.Path()) && route.Method == string(r.Method()) {
-					route.Handler(w, r)
-					return
-				}
-			}
-
-			if string(r.Method()) == consts.MethodGet {
-				handlerGet(w, r)
-				return
-			}
-			if string(r.Method()) == consts.MethodPost {
-				handlerPost(w, r)
-				return
-			}
-			r.AbortWithMsg(
-				"Method Not Allowed",
-
-				consts.StatusMethodNotAllowed)
-			// return
-		}))
+	
+		tasks = append(tasks, createTaskServer(serverconfig, 
+			handler))
 	}
 	// 启动服务器
 	result, ok := PromiseAll(tasks).Receive()
