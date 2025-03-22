@@ -102,7 +102,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// 	Addr:    ":" + serverconfig.Port,
 			// 	Handler: h2c.NewHandler(http.HandlerFunc(handler), h2s),
 			// }
-			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {
+			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
 			x := hertzapp.Run()
