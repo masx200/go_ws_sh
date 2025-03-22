@@ -13,7 +13,18 @@
         "deprecated": false,
         "description": "",
         "tags": [],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-HTTP-method-override",
+            "in": "header",
+            "description": "POST",
+            "required": false,
+            "example": "POST",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -739,7 +750,18 @@
         "deprecated": false,
         "description": "",
         "tags": [],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-HTTP-method-override",
+            "in": "header",
+            "description": "POST",
+            "required": false,
+            "example": "POST",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1165,7 +1187,18 @@
         "deprecated": false,
         "description": "",
         "tags": [],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "x-HTTP-method-override",
+            "in": "header",
+            "description": "POST",
+            "required": false,
+            "example": "POST",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {

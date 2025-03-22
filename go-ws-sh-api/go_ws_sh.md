@@ -55,6 +55,7 @@ POST /tokens
 
 |名称|位置|类型|必选|说明|
 |---|---|---|---|---|
+|x-HTTP-method-override|header|string| 否 |POST|
 |body|body|object| 否 |none|
 |» authorization|body|[authorization](#schemaauthorization)| 是 |none|
 |»» identifer|body|string| 是 |none|
@@ -572,6 +573,7 @@ POST /credentials
 
 |名称|位置|类型|必选|说明|
 |---|---|---|---|---|
+|x-HTTP-method-override|header|string| 否 |POST|
 |body|body|object| 否 |none|
 |» authorization|body|[authorization](#schemaauthorization)| 是 |none|
 |»» identifer|body|string| 是 |none|
@@ -901,6 +903,7 @@ POST /sessions
 
 |名称|位置|类型|必选|说明|
 |---|---|---|---|---|
+|x-HTTP-method-override|header|string| 否 |POST|
 |body|body|object| 否 |none|
 |» authorization|body|[authorization](#schemaauthorization)| 是 |none|
 |»» identifer|body|string| 是 |none|

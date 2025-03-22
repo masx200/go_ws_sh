@@ -19,6 +19,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 	routes := []RouteConfig{
 		// /tokens POST
 		{
+			Headers: map[string]string{"x-HTTP-method-override": "POST"},
 			Path:   "/tokens",
 			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
@@ -77,6 +78,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		},
 		// /credentials POST
 		{
+			Headers: map[string]string{"x-HTTP-method-override": "POST"},
 			Path:   "/credentials",
 			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
@@ -96,6 +98,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		// 可以根据 openapi 文件添加更多接口的路由配置
 		// /sessions POST
 		{
+			Headers: map[string]string{"x-HTTP-method-override": "POST"},
 			Path:   "/sessions",
 			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
