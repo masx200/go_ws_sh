@@ -67,8 +67,7 @@ func Client_start(config string /* , serverip string */) {
 }
 
 func pipe_std_ws_client(configdata ConfigClient) {
-	var serverip string
-	serverip = configdata.Servers.IP
+	var serverip string = configdata.Servers.IP
 	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
 	defer (binaryandtextchannel).Close()
 

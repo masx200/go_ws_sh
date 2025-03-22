@@ -165,7 +165,7 @@ func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, token
 	}
 
 	// 用户名密码认证
-	var cred Credentials
+	var cred CredentialStore
 	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return true
@@ -214,7 +214,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 
 		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
 	}
-	var cred Credentials
+	var cred CredentialStore
 	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return

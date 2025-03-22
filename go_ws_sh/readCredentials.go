@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-type CredentialsStore []Credentials
+type CredentialsStore []CredentialStore
 
 // readTokens 函数读取指定路径的 JSON 文件，并将其解析为 CredentialsStore 类型的数组，同时返回可能出现的错误
 func readCredentials(getfilepath func() (string, error)) (CredentialsStore, error) {

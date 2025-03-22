@@ -139,24 +139,6 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 }
 
-// 定义结构体以匹配JSON结构
-type Credentials struct {
-	gorm.Model
-	Username  string `json:"username" gorm:"index;unique;not null"`
-	Hash      string `json:"hash" gorm:"index;not null"`
-	Salt      string `json:"salt" gorm:"index;not null"`
-	Algorithm string `json:"algorithm" gorm:"index;not null"`
-}
-
-func (c Credentials) String() string {
-	return fmt.Sprintf("Credentials{ID: %d, CreatedAt: %v, UpdatedAt: %v, DeletedAt: %v, Username: %s, Hash: %s, Salt: %s, Algorithm: %s}",
-		c.ID, c.CreatedAt, c.UpdatedAt, c.DeletedAt, c.Username, c.Hash, c.Salt, c.Algorithm)
-}
-func (Credentials) TableName() string {
-	return "credentials"
-}
-
-
 type Session struct {
 	Username string   `json:"username"`
 	Path     string   `json:"path"`
@@ -219,7 +201,7 @@ func Server_start(config string) {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	credentialdb.AutoMigrate(&Credentials{})
+	credentialdb.AutoMigrate(&CredentialStore{})
 	tokendb.AutoMigrate(&TokenStore{})
 	pipe_std_ws_server(configdata, credentialdb, tokendb)
 }

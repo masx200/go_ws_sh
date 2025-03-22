@@ -17,7 +17,7 @@ func EnsureCredentials(config ConfigServer, credentialdb *gorm.DB) error {
 	}
 	// 检查数据库中是否存在记录
 	var count int64
-	credentialdb.Model(&Credentials{}).Count(&count)
+	credentialdb.Model(&CredentialStore{}).Count(&count)
 	// 检查文件是否存在
 	if _, err := os.Stat(credentialFile); os.IsNotExist(err) || count == 0 {
 		// 获取 InitialUsername 和 InitialPassword，如果为空则使用默认值
@@ -39,7 +39,7 @@ func EnsureCredentials(config ConfigServer, credentialdb *gorm.DB) error {
 			return err
 		}
 		// 创建 Credentials 结构体
-		credentials := Credentials{
+		credentials := CredentialStore{
 
 			Username:  username,
 			Hash:      hashresult.Hash,
