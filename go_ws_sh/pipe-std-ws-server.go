@@ -66,16 +66,17 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		// },
 	}
 
-	sessions, err := ReadAllSessions(sessiondb)
-	if err != nil {
-		return
-	}
-
-	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
-	for _, session := range sessions {
-		handlermap[session.Name] = createhandleWebSocket(session)
-	}
 	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
+
+		sessions, err := ReadAllSessions(sessiondb)
+		if err != nil {
+			r.AbortWithMsg("Internal Server Error"+"\n"+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+		var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
+		for _, session := range sessions {
+			handlermap[session.Name] = createhandleWebSocket(session)
+		}
 		var name = r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
