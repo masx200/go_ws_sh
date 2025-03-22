@@ -101,8 +101,8 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	// 	// handlermap[name](w, r)
 	// })
 
-	gr := GenerateRoutes(credentialdb, tokendb, sessiondb)
-	routes = append(gr, routes...)
+	routes = GenerateRoutes(credentialdb, tokendb, sessiondb)
+	// routes = append(gr, routes...)
 	handler := func(w context.Context, r *app.RequestContext) {
 
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
