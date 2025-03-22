@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -99,9 +100,10 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	})
 	handler := func(w context.Context, r *app.RequestContext) {
 
-		
+		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
+		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
 
-		if string(r.Method()) == consts.MethodGet {
+		if string(r.Method()) == consts.MethodGet && Connection== "upgrade" && Upgrade== "websocket"{
 			handlerGet(w, r)
 			return
 		}
