@@ -130,7 +130,7 @@ func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocke
 		//recover
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Println("Recovered in panic", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		for {

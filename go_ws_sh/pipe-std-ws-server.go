@@ -17,14 +17,14 @@ import (
 // RequestLoggerMiddleware 是一个 Hertz 中间件，用于记录请求的完整 URI、方法和头信息
 func RequestLoggerMiddleware() app.HandlerFunc {
 	return func(c context.Context, ctx *app.RequestContext) {
-		fmt.Println("Request FullURI:", string(ctx.URI().FullURI()))
-		fmt.Println("Request Method:", string(ctx.Method()))
-		fmt.Println("Request Headers:")
-		fmt.Println("{")
+		log.Println("Request FullURI:", string(ctx.URI().FullURI()))
+		log.Println("Request Method:", string(ctx.Method()))
+		log.Println("Request Headers:")
+		log.Println("{")
 		ctx.Request.Header.VisitAll(func(key, value []byte) {
-			fmt.Println(string(key), ":", string(value))
+			log.Println(string(key), ":", string(value))
 		})
-		fmt.Println("}")
+		log.Println("}")
 		// 继续处理请求
 		ctx.Next(c)
 	}
@@ -130,12 +130,12 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		case error:
 			fmt.Printf("Error: %v\n", v)
 		case []interface{}:
-			fmt.Println("All tasks completed successfully. Results:")
+			log.Println("All tasks completed successfully. Results:")
 			for _, res := range v {
 				fmt.Printf("%v\n", res)
 			}
 		default:
-			fmt.Println("Unexpected result type")
+			log.Println("Unexpected result type")
 		}
 	}
 

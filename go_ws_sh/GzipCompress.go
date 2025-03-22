@@ -2,8 +2,8 @@ package go_ws_sh
 
 import (
 	"bytes"
+	"log"
 
-	"fmt"
 	"io"
 
 	"github.com/klauspost/pgzip"
@@ -17,7 +17,7 @@ func GzipCompress(data []byte) ([]byte, error) {
 	defer func() {
 		err := gzWriter.Close()
 		if err != nil {
-			fmt.Println("Error closing gzip writer:", err)
+			log.Println("Error closing gzip writer:", err)
 			return
 		}
 	}()
@@ -25,7 +25,7 @@ func GzipCompress(data []byte) ([]byte, error) {
 	_, err :=
 		io.Copy(gzWriter, bytes.NewBuffer(data))
 		// if err != nil && err != io.EOF {
-		// 	fmt.Println("Error compressing data:", err)
+		// 	log.Println("Error compressing data:", err)
 		// 	return nil, true, err
 		// }
 

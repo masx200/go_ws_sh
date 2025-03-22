@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -324,17 +323,17 @@ func printHttpResponseDetails(response *http.Response) {
 		log.Println("Response Status:", response.Status)
 
 		// 打印响应头部信息的开始。
-		fmt.Println("Response Headers:")
-		fmt.Println("{")
+		log.Println("Response Headers:")
+		log.Println("{")
 
 		// 遍历 response.Header，打印每个头部信息的键值对。
 		for k, v := range response.Header {
 			// 使用 strings.Join 将每个头部信息的多个值以逗号连接。
-			fmt.Println(k, ":", strings.Join(v, ","))
+			log.Println(k, ":", strings.Join(v, ","))
 		}
 
 		// 打印响应头部信息的结束。
-		fmt.Println("}")
+		log.Println("}")
 	}
 }
 

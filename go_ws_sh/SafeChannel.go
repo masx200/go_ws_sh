@@ -1,7 +1,7 @@
 package go_ws_sh
 
 import (
-	"fmt"
+	"log"
 	"sync"
 )
 
@@ -38,7 +38,7 @@ func (sc *SafeChannel[T]) Send(v T) bool {
 	//recover
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("Recovered in panic", r)
+			log.Println("Recovered in panic", r)
 		}
 	}()
 	sc.mu.Lock()

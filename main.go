@@ -34,7 +34,7 @@ func main() {
 	if mode == "server" {
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Println("Recovered in panic", r)
+				log.Println("Recovered in panic", r)
 			}
 		}()
 		go_ws_sh.Server_start(config)
@@ -46,7 +46,7 @@ func main() {
 			//recover from panic
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Println("Recovered in panic", r)
+					log.Println("Recovered in panic", r)
 				}
 			}()
 			go_ws_sh.Client_start(config /* , serverip */)

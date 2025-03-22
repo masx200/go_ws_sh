@@ -3,7 +3,6 @@ package go_ws_sh
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"log"
 	"time"
 
@@ -58,20 +57,19 @@ func InitHertzApp(hertzapp *server.Hertz) {
 		// AllowBrowserExtensions: true,
 	}))
 
-
 	hertzapp.Use(func(c context.Context, ctx *app.RequestContext) {
-        // 检查请求方法是否为 POST
-        if string(ctx.Method()) == "POST" {
-            // 检查请求头中是否存在 x-HTTP-method-override 且值为 GET
-            if string(ctx.GetHeader("x-HTTP-method-override")) == "GET" {
-                // 将请求方法改为 GET
-                ctx.Request.SetMethod("GET")
+		// 检查请求方法是否为 POST
+		if string(ctx.Method()) == "POST" {
+			// 检查请求头中是否存在 x-HTTP-method-override 且值为 GET
+			if string(ctx.GetHeader("x-HTTP-method-override")) == "GET" {
+				// 将请求方法改为 GET
+				ctx.Request.SetMethod("GET")
 				log.Println("POST请求转换为GET请求")
-            }
-        }
-        // 继续处理请求
-        ctx.Next(c)
-    })
+			}
+		}
+		// 继续处理请求
+		ctx.Next(c)
+	})
 }
 func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
 	if serverconfig.Alpn == "h2" {
@@ -79,7 +77,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 		return func() (interface{}, error) {
 			cert, err := tls.LoadX509KeyPair(serverconfig.Cert, serverconfig.Key)
 			if err != nil {
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				return nil, err
 			}
 			cfg := &tls.Config{
@@ -105,7 +103,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			hertzapp.AddProtocol("h2", factoryh2.NewServerFactory(config.WithDisableKeepAlive(false)))
 			// config.WithReadTimeout(time.Minute),
 			// config.WithDisableKeepAlive(false)))
-			
+
 			InitHertzApp(hertzapp)
 			// hertzapp.AddProtocol(suite.HTTP3, factoryh3.NewServerFactory(&http3.Option{}))
 			log.Println("Alpn == h2")
@@ -136,7 +134,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 		return func() (interface{}, error) {
 			cert, err := tls.LoadX509KeyPair(serverconfig.Cert, serverconfig.Key)
 			if err != nil {
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 				return nil, err
 			}
 			cfg := &tls.Config{

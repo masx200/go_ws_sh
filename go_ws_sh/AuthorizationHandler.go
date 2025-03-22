@@ -128,7 +128,7 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 
 	node, err := snowflake.NewNode(randv2.Int64() % 1024)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}

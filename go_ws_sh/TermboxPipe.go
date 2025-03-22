@@ -36,7 +36,7 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					writable([]byte{'\t'})
 				// https://learn.microsoft.com/zh-cn/windows/console/console-virtual-terminal-sequences
 				case termbox.KeySpace:
-					// fmt.Println("Space key pressed")
+					// log.Println("Space key pressed")
 					writable([]byte{' '})
 				case termbox.KeyArrowUp:
 					writable([]byte{0x1B, '[', 'A'})
@@ -49,20 +49,20 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 				case termbox.KeyF1:
 					writable([]byte{ESCCH, 'O', 'P'})
 				case termbox.KeyEnter:
-					// fmt.Println("Enter key pressed")
+					// log.Println("Enter key pressed")
 					writable([]byte{'\r'})
 				case termbox.KeyBackspace:
 					writable([]byte{'\b'})
-				// 	fmt.Println("Backspace key pressed")
+				// 	log.Println("Backspace key pressed")
 				case termbox.KeyDelete:
 					writable([]byte{0x1B, '[', '3', '~'})
-				// 	fmt.Println("Delete key pressed")
+				// 	log.Println("Delete key pressed")
 				case termbox.KeyHome:
 					writable([]byte{0x1B, '[', 'H'})
-				// 	fmt.Println("Home key pressed")
+				// 	log.Println("Home key pressed")
 				case termbox.KeyEnd:
 					writable([]byte{0x1B, '[', 'F'})
-				// 	fmt.Println("End key pressed")
+				// 	log.Println("End key pressed")
 				case termbox.KeyEsc:
 					writable([]byte{0x1B})
 				case termbox.KeyInsert:
@@ -73,15 +73,15 @@ func TermboxPipe(writable func(p []byte) (n int, err error), closable func() err
 					writable([]byte{0x1B, '[', '6', '~'})
 				case termbox.KeyCtrlC:
 					writable([]byte{0x03})
-				// 	fmt.Println("CtrlC key pressed exit")
+				// 	log.Println("CtrlC key pressed exit")
 				// 	go closable()
 				// 	return // 退出程序
 				case termbox.KeyCtrlD:
-					fmt.Println("CtrlD key pressed exit")
+					log.Println("CtrlD key pressed exit")
 					go closable()
 					return // 退出程序
 				case termbox.KeyCtrlZ:
-					fmt.Println("CtrlZ key pressed exit")
+					log.Println("CtrlZ key pressed exit")
 					go closable()
 					return // 退出程序
 				case termbox.KeyF2:
