@@ -57,19 +57,19 @@ func InitHertzApp(hertzapp *server.Hertz) {
 		// AllowBrowserExtensions: true,
 	}))
 
-	hertzapp.Use(func(c context.Context, ctx *app.RequestContext) {
-		// 检查请求方法是否为 POST
-		if string(ctx.Method()) == "POST" {
-			// 检查请求头中是否存在 x-HTTP-method-override 且值为 GET
-			if string(ctx.GetHeader("x-HTTP-method-override")) == "GET" {
-				// 将请求方法改为 GET
-				ctx.Request.SetMethod("GET")
-				log.Println("POST请求转换为GET请求")
-			}
-		}
-		// 继续处理请求
-		ctx.Next(c)
-	})
+	// hertzapp.Use(func(c context.Context, ctx *app.RequestContext) {
+	// 	// 检查请求方法是否为 POST
+	// 	if string(ctx.Method()) == "POST" {
+	// 		// 检查请求头中是否存在 x-HTTP-method-override 且值为 GET
+	// 		if string(ctx.GetHeader("x-HTTP-method-override")) == "GET" {
+	// 			// 将请求方法改为 GET
+	// 			ctx.Request.SetMethod("GET")
+	// 			log.Println("POST请求转换为GET请求")
+	// 		}
+	// 	}
+	// 	// 继续处理请求
+	// 	ctx.Next(c)
+	// })
 }
 func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
 	if serverconfig.Alpn == "h2" {

@@ -25,7 +25,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 				// 处理创建令牌的逻辑
 				// 可以在这里添加从数据库查询、插入等操作
 				// 示例：调用处理创建令牌的函数
-				CreateTokenHandler(credentialdb, tokendb, c, r)
+				CreateTokenHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /tokens PUT
@@ -34,7 +34,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "PUT",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理修改令牌的逻辑
-				UpdateTokenHandler(credentialdb, tokendb, c, r)
+				UpdateTokenHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /tokens DELETE
@@ -43,17 +43,17 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "DELETE",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理删除令牌的逻辑
-				DeleteTokenHandler(credentialdb, tokendb, c, r)
+				DeleteTokenHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /tokens GET
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:    "/tokens",
-			Method:  "GET",
+			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示令牌的逻辑
-				GetTokensHandler(credentialdb, tokendb, c, r)
+				GetTokensHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /credentials PUT
@@ -62,17 +62,17 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "PUT",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理修改密码的逻辑
-				UpdateCredentialHandler(credentialdb, tokendb, c, r)
+				UpdateCredentialHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /credentials GET
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:   "/credentials",
-			Method: "GET",
+			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示用户的逻辑
-				GetCredentialsHandler(credentialdb, tokendb, c, r)
+				GetCredentialsHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /credentials POST
@@ -81,7 +81,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理创建用户的逻辑
-				CreateCredentialHandler(credentialdb, tokendb, c, r)
+				CreateCredentialHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /credentials DELETE
@@ -90,7 +90,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "DELETE",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理删除用户的逻辑
-				DeleteCredentialHandler(credentialdb, tokendb, c, r)
+				DeleteCredentialHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// 可以根据 openapi 文件添加更多接口的路由配置
@@ -100,7 +100,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理创建会话的逻辑
-				CreateSessionHandler(sessiondb, c, r)
+				CreateSessionHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /sessions PUT
@@ -109,7 +109,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "PUT",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理修改会话的逻辑
-				UpdateSessionHandler(sessiondb, c, r)
+				UpdateSessionHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /sessions DELETE
@@ -118,17 +118,17 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "DELETE",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理删除会话的逻辑
-				DeleteSessionHandler(sessiondb, c, r)
+				DeleteSessionHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 		// /sessions GET
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:   "/sessions",
-			Method: "GET",
+			Method: "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示会话的逻辑
-				GetSessionsHandler(sessiondb, c, r)
+				GetSessionsHandler(credentialdb, tokendb,sessiondb, c, r)
 			},
 		},
 	}
@@ -137,51 +137,51 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 }
 
 // 新增删除用户处理函数声明
-func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现删除用户的具体逻辑
 }
 
 // 以下是示例处理函数，需要根据实际业务逻辑实现
-func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现创建令牌的具体逻辑
 }
 
-func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现修改令牌的具体逻辑
 }
 
-func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现删除令牌的具体逻辑
 }
 
-func GetTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func GetTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现显示令牌的具体逻辑
 }
 
-func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现修改密码的具体逻辑
 }
 
-func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现显示用户的具体逻辑
 }
 
-func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, c context.Context, r *app.RequestContext) {
+func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现创建用户的具体逻辑
 }
 
-func CreateSessionHandler(sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
+func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现创建会话的具体逻辑
 }
 
-func UpdateSessionHandler(sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
+func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现修改会话的具体逻辑
 }
 
-func DeleteSessionHandler(sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
+func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现删除会话的具体逻辑
 }
 
-func GetSessionsHandler(sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
+func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现显示会话的具体逻辑
 }
