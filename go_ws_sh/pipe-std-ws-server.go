@@ -60,8 +60,8 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		return
 	}
 	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
-	for _, session := range config.Sessions {
-		handlermap[session.Path] = createhandleWebSocket(session)
+	for _, session := range config.InitialSessions {
+		handlermap[session.Name] = createhandleWebSocket(session)
 	}
 	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 		var name = r.Param("name")
@@ -80,7 +80,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 	// }
 	tasks := []func() (interface{}, error){}
-	handlerPost := createhandlerloginlogout(config.Sessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
+	handlerPost := createhandlerloginlogout(config.InitialSessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
 		r.AbortWithMsg("Not Found", consts.StatusNotFound)
 		// return
@@ -139,34 +139,6 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 }
 
-type Session struct {
-	Username string   `json:"username"`
-	Path     string   `json:"path"`
-	Cmd      string   `json:"cmd"`
-	Args     []string `json:"args"`
-	Dir      string   `json:"dir"`
-}
-
-type ServerConfig struct {
-	Alpn     string `json:"alpn"`
-	Port     string `json:"port"`
-	Protocol string `json:"protocol"`
-	Cert     string `json:"cert"`
-	Key      string `json:"key"`
-}
-
-type ConfigServer struct {
-	CredentialFile string         `json:"credential_file"`
-	Sessions       []Session      `json:"sessions"`
-	Servers        []ServerConfig `json:"servers"`
-
-	TokenFile string `json:"token_file"`
-
-	// 添加初始化用户名和初始密码字段
-	InitialUsername string `json:"initial_username"`
-	InitialPassword string `json:"initial_password"`
-}
-
 func Server_start(config string) {
 	configFile, err := os.Open(config)
 	if err != nil {
@@ -182,6 +154,10 @@ func Server_start(config string) {
 		return
 	}
 
+	sessionFile := configdata.SessionFile
+	if sessionFile == "" {
+		sessionFile = "session_store.db"
+	}
 	credentialFile := configdata.CredentialFile
 	if credentialFile == "" {
 		credentialFile = "credential_store.db"
@@ -200,7 +176,12 @@ func Server_start(config string) {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+	sessiondb, err := gorm.Open(sqlite.Open(sessionFile), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
 
+	sessiondb.AutoMigrate(&SessionStore{})
 	credentialdb.AutoMigrate(&CredentialStore{})
 	tokendb.AutoMigrate(&TokenStore{})
 	pipe_std_ws_server(configdata, credentialdb, tokendb)

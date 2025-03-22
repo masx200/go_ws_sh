@@ -3,6 +3,7 @@ package go_ws_sh
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -49,5 +50,5 @@ func (s SessionStore) String() string {
 
 // TableName 方法用于指定 SessionStore 结构体对应的数据库表名
 func (SessionStore) TableName() string {
-	return "SessionStore"
+	return strings.ToLower("SessionStore") 
 }

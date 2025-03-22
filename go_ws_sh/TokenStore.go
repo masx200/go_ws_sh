@@ -2,6 +2,7 @@ package go_ws_sh
 
 import (
 	"fmt"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -22,5 +23,5 @@ func (t TokenStore) String() string {
 		t.ID, t.CreatedAt, t.UpdatedAt, t.DeletedAt, t.Hash, t.Salt, t.Algorithm, t.Identifier, t.Username)
 }
 func (TokenStore) TableName() string {
-	return "TokenStore"
+	return  strings.ToLower("TokenStore")
 }
