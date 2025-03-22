@@ -19,7 +19,7 @@ type TokenStore struct {
 	Algorithm string `json:"algorithm" gorm:"index;not null"`
 
 	Username    string `json:"username" gorm:"index;not null"`
-	Description string `json:"description" gorm:"index"`
+	Description string `json:"description" gorm:"index;not null"`
 }
 
 // Token 定义 Token 结构体
