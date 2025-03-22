@@ -3,12 +3,13 @@
   "credential_file": "credential_store.db",
   "initial_username": "admin",
   "initial_password": "pass",
-  "sessions": [
+  "initial_sessions": [
     {
-      "username": "admin",
-      "path": "pwsh",
+      "name": "pwsh",
       "cmd": "pwsh",
-      "args": ["-noProfile"],
+      "args": [
+        "-noProfile"
+      ],
       "dir": "C:\\Users\\Public"
     }
   ],

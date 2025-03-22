@@ -3,10 +3,9 @@
   "credential_file": "credential_store.db",
   "initial_username": "admin",
   "initial_password": "pass",
-  "sessions": [
+  "initial_sessions": [
     {
-      "username": "admin",
-      "path": "bash",
+      "name": "bash",
       "cmd": "bash",
       "args": [
         "-i"
