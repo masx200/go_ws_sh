@@ -6,11 +6,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-
-
-
 type RouteConfig struct {
 	Path    string
 	Method  string
-	Handler func(c context.Context,r *app.RequestContext)
+	Handler func(c context.Context, r *app.RequestContext)
+	Headers map[string]string
 }
