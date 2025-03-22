@@ -12,17 +12,18 @@ import (
 	"github.com/cloudwego/hertz/pkg/network/standard"
 	"github.com/cloudwego/hertz/pkg/protocol/suite"
 	"github.com/hertz-contrib/cors"
+	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/http2"
 	"github.com/hertz-contrib/http2/config"
 	factoryh2 "github.com/hertz-contrib/http2/factory"
 	"github.com/hertz-contrib/logger/accesslog"
-
 	quic "github.com/masx200/go_ws_sh/network/quic-go"
 	http3 "github.com/masx200/go_ws_sh/server/quic-go"
 	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
 )
 
 func InitHertzApp(h *server.Hertz) {
+	h.Use(gzip.Gzip(gzip.DefaultCompression))
 	h.Use(cors.New(cors.Config{
 		AllowAllOrigins: true,
 		//准许跨域请求网站,多个使用,分开,限制使用*
