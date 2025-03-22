@@ -73,6 +73,7 @@ require (
 require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/glebarez/sqlite v1.11.0
+	github.com/hertz-contrib/gzip v0.0.3
 )
 
 require (

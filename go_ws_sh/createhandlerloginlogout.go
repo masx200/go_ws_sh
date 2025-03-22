@@ -47,8 +47,8 @@ func createhandlerloginlogout(Sessions []Session, credentialdb *gorm.DB, tokendb
 				consts.StatusOK,
 				map[string]interface{}{
 					"message": "List of Sessions ok",
-					"list": slice.Map(filterSessionsByUsername(Sessions, credential.Username), func(session Session) string {
-						return session.Path
+					"list": slice.Map(Sessions, func(session Session) string {
+						return session.Name
 					}),
 					"username": credential.Username,
 				},
@@ -90,13 +90,13 @@ func generateHexKey(length int) (string, error) {
 	return hexString, nil
 }
 
-// filterSessionsByUsername 根据输入的 username 过滤 Sessions 数组
-func filterSessionsByUsername(Sessions []Session, username string) []Session {
-	var filteredSessions []Session
-	for _, session := range Sessions {
-		if session.Username == username {
-			filteredSessions = append(filteredSessions, session)
-		}
-	}
-	return filteredSessions
-}
+// // filterSessionsByUsername 根据输入的 username 过滤 Sessions 数组
+// func filterSessionsByUsername(Sessions []Session, username string) []Session {
+// 	var filteredSessions []Session
+// 	for _, session := range Sessions {
+// 		if session.Username == username {
+// 			filteredSessions = append(filteredSessions, session)
+// 		}
+// 	}
+// 	return filteredSessions
+// }

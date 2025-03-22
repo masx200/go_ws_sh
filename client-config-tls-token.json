@@ -6,8 +6,8 @@
     "identifier": "1"
   },
   "sessions": {
-    "username": "admin",
-    "path": "pwsh"
+    
+    "name": "pwsh"
   },
   "servers": {
     "port": "28443",

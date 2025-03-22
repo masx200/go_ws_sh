@@ -18,37 +18,6 @@ import (
 	"github.com/linkedin/goavro/v2"
 )
 
-type ClientSession struct {
-	Username string `json:"username"`
-	Path     string `json:"path"`
-}
-type CredentialsClient struct {
-	Username   string `json:"username"`
-	Password   string `json:"password"`
-	Token      string `json:"token"`
-	Type       string `json:"type"`
-	Identifier string `json:"identifier"`
-}
-
-func (c CredentialsClient) String() string {
-	return fmt.Sprintf("Credentials{Username: %s, Password: %s, Token: %s, Type: %s, Identifier: %s}",
-		c.Username, c.Password, c.Token, c.Type, c.Identifier)
-}
-
-type ConfigClient struct {
-	Credentials CredentialsClient      `json:"credentials"`
-	Sessions    ClientSession          `json:"sessions"`
-	Servers     ClientConfigConnection `json:"servers"`
-}
-type ClientConfigConnection struct {
-	Port     string `json:"port"`
-	Protocol string `json:"protocol"`
-	Ca       string `json:"ca"`
-	Insecure bool   `json:"insecure"`
-	Host     string `json:"host"`
-	IP       string `json:"ip"`
-}
-
 func Client_start(config string /* , serverip string */) {
 	configFile, err := os.Open(config)
 	if err != nil {
@@ -67,8 +36,7 @@ func Client_start(config string /* , serverip string */) {
 }
 
 func pipe_std_ws_client(configdata ConfigClient) {
-	var serverip string
-	serverip = configdata.Servers.IP
+	var serverip string = configdata.Servers.IP
 	var binaryandtextchannel = NewSafeChannel[WebsocketMessage]()
 	defer (binaryandtextchannel).Close()
 
@@ -86,7 +54,7 @@ func pipe_std_ws_client(configdata ConfigClient) {
 	if !ok {
 		log.Fatal("unknown protocol:", configdata.Servers.Protocol)
 	}
-	urlws := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Sessions.Path
+	urlws := x1 + "://" + configdata.Servers.Host + ":" + configdata.Servers.Port + "/" + configdata.Sessions.Name
 
 	x := websocket.DefaultDialer
 	var tlscfg = &tls.Config{}

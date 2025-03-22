@@ -12,17 +12,20 @@ import (
 	"github.com/cloudwego/hertz/pkg/network/standard"
 	"github.com/cloudwego/hertz/pkg/protocol/suite"
 	"github.com/hertz-contrib/cors"
+	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/http2"
 	"github.com/hertz-contrib/http2/config"
 	factoryh2 "github.com/hertz-contrib/http2/factory"
 	"github.com/hertz-contrib/logger/accesslog"
-
 	quic "github.com/masx200/go_ws_sh/network/quic-go"
 	http3 "github.com/masx200/go_ws_sh/server/quic-go"
 	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
 )
 
 func InitHertzApp(h *server.Hertz) {
+
+	h.Use(RequestLoggerMiddleware())
+	h.Use(gzip.Gzip(gzip.DefaultCompression))
 	h.Use(cors.New(cors.Config{
 		AllowAllOrigins: true,
 		//准许跨域请求网站,多个使用,分开,限制使用*
@@ -99,7 +102,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// 	Addr:    ":" + serverconfig.Port,
 			// 	Handler: h2c.NewHandler(http.HandlerFunc(handler), h2s),
 			// }
-			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {
+			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
 			x := hertzapp.Run()
