@@ -27,11 +27,16 @@ func EnsureSessions(config ConfigServer, sessiondb *gorm.DB) error {
 	if _, err := os.Stat(SessionFile); os.IsNotExist(err) || count == 0 {
 		// 遍历初始会话列表
 		for _, initialSession := range config.InitialSessions {
+			args, err := StringSlice(initialSession.Args).Value()
+			if err != nil {
+				return err
+			}
+
 			// 创建 SessionStore 结构体实例
 			session := SessionStore{
 				Name: initialSession.Name,
 				Cmd:  initialSession.Cmd,
-				Args: StringSlice(initialSession.Args),
+				Args: string(args),
 				Dir:  initialSession.Dir,
 			}
 			// 将会话信息保存到数据库中
