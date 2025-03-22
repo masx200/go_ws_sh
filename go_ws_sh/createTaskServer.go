@@ -23,6 +23,8 @@ import (
 )
 
 func InitHertzApp(h *server.Hertz) {
+
+	h.Use(RequestLoggerMiddleware())
 	h.Use(gzip.Gzip(gzip.DefaultCompression))
 	h.Use(cors.New(cors.Config{
 		AllowAllOrigins: true,

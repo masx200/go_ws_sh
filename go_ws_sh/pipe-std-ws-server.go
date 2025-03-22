@@ -14,7 +14,21 @@ import (
 	// "github.com/hertz-contrib/websocket"
 )
 
-
+// RequestLoggerMiddleware 是一个 Hertz 中间件，用于记录请求的完整 URI、方法和头信息
+func RequestLoggerMiddleware() app.HandlerFunc {
+	return func(c context.Context, ctx *app.RequestContext) {
+		fmt.Println("Request FullURI:", string(ctx.URI().FullURI()))
+		fmt.Println("Request Method:", string(ctx.Method()))
+		fmt.Println("Request Headers:")
+		fmt.Println("{")
+		ctx.Request.Header.VisitAll(func(key, value []byte) {
+			fmt.Println(string(key), ":", string(value))
+		})
+		fmt.Println("}")
+		// 继续处理请求
+		ctx.Next(c)
+	}
+}
 
 // handleWebSocket 处理WebSocket请求
 
@@ -22,7 +36,7 @@ import (
 // 每个函数应该没有参数并且返回一个接口和一个错误。
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
-func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB,sessiondb *gorm.DB) {
+func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) {
 	var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
 	authHandler := AuthorizationHandler(credentialdb, tokendb)
 	var routes = []RouteConfig{
@@ -50,11 +64,11 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		},
 	}
 
-	sessions,err  := ReadAllSessions(sessiondb)
+	sessions, err := ReadAllSessions(sessiondb)
 	if err != nil {
-		return 
+		return
 	}
-	
+
 	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
 	for _, session := range sessions {
 		handlermap[session.Name] = createhandleWebSocket(session)
@@ -84,21 +98,12 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		// handlermap[name](w, r)
 	})
 	handler := func(w context.Context, r *app.RequestContext) {
-		
-		fmt.Println("Request FullURI:", string(r.URI().FullURI()))
-		fmt.Println("Request Method:", string(r.Method()))
-		fmt.Println("Request Headers:")
-		fmt.Println("{")
-		r.Request.Header.VisitAll(func(key, value []byte) {
-			fmt.Println(string(key), ":", string(value))
-		})
-		fmt.Println("}")
-	
+
 		shouldReturn := MatchAndHandleRoute(w, routes, r)
 		if shouldReturn {
 			return
 		}
-	
+
 		if string(r.Method()) == consts.MethodGet {
 			handlerGet(w, r)
 			return
@@ -109,13 +114,13 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		}
 		r.AbortWithMsg(
 			"Method Not Allowed",
-	
+
 			consts.StatusMethodNotAllowed)
-	
+
 	}
 	for _, serverconfig := range config.Servers {
-	
-		tasks = append(tasks, createTaskServer(serverconfig, 
+
+		tasks = append(tasks, createTaskServer(serverconfig,
 			handler))
 	}
 	// 启动服务器
@@ -218,5 +223,5 @@ func Server_start(config string) {
 		log.Fatal(err)
 		return
 	}
-	pipe_std_ws_server(configdata, credentialdb, tokendb,sessiondb)
+	pipe_std_ws_server(configdata, credentialdb, tokendb, sessiondb)
 }

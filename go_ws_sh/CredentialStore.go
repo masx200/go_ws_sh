@@ -21,5 +21,5 @@ func (c CredentialStore) String() string {
 		c.ID, c.CreatedAt, c.UpdatedAt, c.DeletedAt, c.Username, c.Hash, c.Salt, c.Algorithm)
 }
 func (CredentialStore) TableName() string {
-	return  strings.ToLower("CredentialStore")
+	return strings.ToLower("CredentialStore")
 }

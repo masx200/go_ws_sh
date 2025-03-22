@@ -1,10 +1,10 @@
 package go_ws_sh
 
 type ConfigServer struct {
-	SessionFile string         `json:"session_file"`
-	CredentialFile string         `json:"credential_file"`
-	InitialSessions       []Session      `json:"initial_sessions"`
-	Servers        []ServerConfig `json:"servers"`
+	SessionFile     string         `json:"session_file"`
+	CredentialFile  string         `json:"credential_file"`
+	InitialSessions []Session      `json:"initial_sessions"`
+	Servers         []ServerConfig `json:"servers"`
 
 	TokenFile string `json:"token_file"`
 
@@ -13,13 +13,12 @@ type ConfigServer struct {
 	InitialPassword string `json:"initial_password"`
 }
 
-
 type Session struct {
-	Name string   `json:"name"`
-	
-	Cmd      string   `json:"cmd"`
-	Args     []string `json:"args"`
-	Dir      string   `json:"dir"`
+	Name string `json:"name"`
+
+	Cmd  string   `json:"cmd"`
+	Args []string `json:"args"`
+	Dir  string   `json:"dir"`
 }
 
 type ServerConfig struct {
