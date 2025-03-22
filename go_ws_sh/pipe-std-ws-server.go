@@ -54,11 +54,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		},
 	}
 
-	err := EnsureCredentials(config, credentialdb)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	
 	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
 	for _, session := range config.InitialSessions {
 		handlermap[session.Name] = createhandleWebSocket(session)
@@ -184,5 +180,15 @@ func Server_start(config string) {
 	sessiondb.AutoMigrate(&SessionStore{})
 	credentialdb.AutoMigrate(&CredentialStore{})
 	tokendb.AutoMigrate(&TokenStore{})
+	err = EnsureSessions(configdata, sessiondb)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	err = EnsureCredentials(configdata, credentialdb)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 	pipe_std_ws_server(configdata, credentialdb, tokendb)
 }
