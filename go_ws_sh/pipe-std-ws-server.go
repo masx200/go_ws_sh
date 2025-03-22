@@ -43,7 +43,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	var routes = []RouteConfig{
 
 		{
-			Path:    "/authorization",
+			Path:    "/tokens",
 			Method:  "POST",
 			Handler: authHandler,
 		},
@@ -51,15 +51,16 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		{
 			Path:    "/tokens",
 			Method:  "POST",
+			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Handler: listtokensHandler,
 		},
 		{
-			Path:    "/authorization",
+			Path:    "/tokens",
 			Method:  "PUT",
 			Handler: authHandler,
 		},
 		{
-			Path:    "/authorization",
+			Path:    "/tokens",
 			Method:  "DELETE",
 			Handler: authHandler,
 		},
