@@ -142,11 +142,15 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 // 新增删除用户处理函数声明
 func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现删除用户的具体逻辑
+	authHandler := AuthorizationHandler(credentialdb, tokendb)
+	authHandler(c, r)
 }
 
 // 以下是示例处理函数，需要根据实际业务逻辑实现
 func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现创建令牌的具体逻辑
+	authHandler := AuthorizationHandler(credentialdb, tokendb)
+	authHandler(c, r)
 }
 
 func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
@@ -159,10 +163,14 @@ func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 
 func GetTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现显示令牌的具体逻辑
+	var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
+	listtokensHandler(c, r)
 }
 
 func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现修改密码的具体逻辑
+	authHandler := AuthorizationHandler(credentialdb, tokendb)
+	authHandler(c, r)
 }
 
 func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {

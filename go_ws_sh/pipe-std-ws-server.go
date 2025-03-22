@@ -38,32 +38,32 @@ func RequestLoggerMiddleware() app.HandlerFunc {
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
 func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) {
-	var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
-	authHandler := AuthorizationHandler(credentialdb, tokendb)
+	// var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
+	// authHandler := AuthorizationHandler(credentialdb, tokendb)
 	var routes = []RouteConfig{
 
-		{
-			Path:    "/tokens",
-			Method:  "POST",
-			Handler: authHandler,
-		},
+		// {
+		// 	Path:    "/tokens",
+		// 	Method:  "POST",
+		// 	Handler: authHandler,
+		// },
 
-		{
-			Path:    "/tokens",
-			Method:  "POST",
-			Headers: map[string]string{"x-HTTP-method-override": "GET"},
-			Handler: listtokensHandler,
-		},
-		{
-			Path:    "/tokens",
-			Method:  "PUT",
-			Handler: authHandler,
-		},
-		{
-			Path:    "/tokens",
-			Method:  "DELETE",
-			Handler: authHandler,
-		},
+		// {
+		// 	Path:    "/tokens",
+		// 	Method:  "POST",
+		// 	Headers: map[string]string{"x-HTTP-method-override": "GET"},
+		// 	Handler: listtokensHandler,
+		// },
+		// {
+		// 	Path:    "/tokens",
+		// 	Method:  "PUT",
+		// 	Handler: authHandler,
+		// },
+		// {
+		// 	Path:    "/tokens",
+		// 	Method:  "DELETE",
+		// 	Handler: authHandler,
+		// },
 	}
 
 	sessions, err := ReadAllSessions(sessiondb)
