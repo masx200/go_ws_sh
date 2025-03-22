@@ -112,19 +112,20 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 			handlerGet(w, r)
 			return
 		}
+		HertzCompose(MatchAndRouteMiddleware(routes))(w, r, func(c context.Context, r *app.RequestContext) {
+			r.AbortWithMsg(
+				"Method Not Allowed",
 
-		shouldReturn := MatchAndHandleRoute(w, routes, r)
-		if shouldReturn {
-			return
-		}
+				consts.StatusMethodNotAllowed)
+		})
+		// shouldReturn := MatchAndHandleRoute(w, routes, r)
+		// if shouldReturn {
+		// 	return
+		// }
 		// if string(r.Method()) == consts.MethodPost {
 		// 	handlerPost(w, r)
 		// 	return
 		// }
-		r.AbortWithMsg(
-			"Method Not Allowed",
-
-			consts.StatusMethodNotAllowed)
 
 	}
 	for _, serverconfig := range config.Servers {
