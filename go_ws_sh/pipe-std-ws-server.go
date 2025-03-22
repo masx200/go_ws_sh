@@ -40,31 +40,31 @@ func RequestLoggerMiddleware() app.HandlerFunc {
 func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) {
 	// var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
 	// authHandler := AuthorizationHandler(credentialdb, tokendb)
-	var routes = []RouteConfig{
+	var routes []RouteConfig //{
 
-		// {
-		// 	Path:    "/tokens",
-		// 	Method:  "POST",
-		// 	Handler: authHandler,
-		// },
+	// {
+	// 	Path:    "/tokens",
+	// 	Method:  "POST",
+	// 	Handler: authHandler,
+	// },
 
-		// {
-		// 	Path:    "/tokens",
-		// 	Method:  "POST",
-		// 	Headers: map[string]string{"x-HTTP-method-override": "GET"},
-		// 	Handler: listtokensHandler,
-		// },
-		// {
-		// 	Path:    "/tokens",
-		// 	Method:  "PUT",
-		// 	Handler: authHandler,
-		// },
-		// {
-		// 	Path:    "/tokens",
-		// 	Method:  "DELETE",
-		// 	Handler: authHandler,
-		// },
-	}
+	// {
+	// 	Path:    "/tokens",
+	// 	Method:  "POST",
+	// 	Headers: map[string]string{"x-HTTP-method-override": "GET"},
+	// 	Handler: listtokensHandler,
+	// },
+	// {
+	// 	Path:    "/tokens",
+	// 	Method:  "PUT",
+	// 	Handler: authHandler,
+	// },
+	// {
+	// 	Path:    "/tokens",
+	// 	Method:  "DELETE",
+	// 	Handler: authHandler,
+	// },
+	//	}
 
 	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
@@ -103,6 +103,26 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 	routes = GenerateRoutes(credentialdb, tokendb, sessiondb)
 	// routes = append(gr, routes...)
+	composedMiddleware := HertzCompose(
+		MatchAndRouteMiddleware([]RouteConfig{
+			{
+				Path: "/tokens",
+
+				MiddleWare: AuthorizationMiddleware(credentialdb, tokendb, sessiondb),
+			},
+			{
+				Path: "/sessions",
+
+				MiddleWare: AuthorizationMiddleware(credentialdb, tokendb, sessiondb),
+			},
+			{
+				Path: "/credentials",
+
+				MiddleWare: AuthorizationMiddleware(credentialdb, tokendb, sessiondb),
+			},
+		}),
+
+		MatchAndRouteMiddleware(routes))
 	handler := func(w context.Context, r *app.RequestContext) {
 
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
@@ -112,7 +132,8 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 			handlerGet(w, r)
 			return
 		}
-		HertzCompose(MatchAndRouteMiddleware(routes))(w, r, func(c context.Context, r *app.RequestContext) {
+
+		composedMiddleware(w, r, func(c context.Context, r *app.RequestContext) {
 			r.AbortWithMsg(
 				"Method Not Allowed",
 

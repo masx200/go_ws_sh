@@ -5,16 +5,17 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
+
 func MatchAndRouteMiddleware(routes []RouteConfig) HertzMiddleWare {
 	return func(c context.Context, r *app.RequestContext, next HertzNext) {
-		if MatchAndHandleRoute(c, routes, r) {
+		if MatchAndHandleRoute(c, routes, r,next) {
 			return
 		}
 		next(c, r)
 	}
-	
+
 }
-func MatchAndHandleRoute(w context.Context, routes []RouteConfig, r *app.RequestContext) bool {
+func MatchAndHandleRoute(w context.Context, routes []RouteConfig, r *app.RequestContext,next HertzNext) bool {
 	for _, route := range routes {
 		// 检查 Path 是否为空，若不为空则进行匹配
 		pathMatch := route.Path == "" || route.Path == string(r.Path())
@@ -34,7 +35,7 @@ func MatchAndHandleRoute(w context.Context, routes []RouteConfig, r *app.Request
 
 		// 如果 Path、Method 和 Headers 都匹配，则执行处理函数
 		if pathMatch && methodMatch && headersMatch {
-			route.Handler(w, r)
+			route.MiddleWare(w, r,next)
 			return true
 		}
 	}

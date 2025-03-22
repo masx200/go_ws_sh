@@ -10,13 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type RouteConfig struct {
-	Path    string
-	Method  string
-	Handler func(c context.Context, r *app.RequestContext)
-	Headers map[string]string
-}
-
 // GenerateRoutes 根据 openapi 文件生成路由配置
 func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) []RouteConfig {
 	routes := []RouteConfig{
@@ -25,7 +18,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
 			Path:    "/tokens",
 			Method:  "POST",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理创建令牌的逻辑
 				// 可以在这里添加从数据库查询、插入等操作
 				// 示例：调用处理创建令牌的函数
@@ -36,7 +29,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		{
 			Path:   "/tokens",
 			Method: "PUT",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理修改令牌的逻辑
 				UpdateTokenHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -45,7 +38,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		{
 			Path:   "/tokens",
 			Method: "DELETE",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理删除令牌的逻辑
 				DeleteTokenHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -55,7 +48,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:    "/tokens",
 			Method:  "POST",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理显示令牌的逻辑
 				GetTokensHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -64,7 +57,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		{
 			Path:   "/credentials",
 			Method: "PUT",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理修改密码的逻辑
 				UpdateCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -74,7 +67,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:    "/credentials",
 			Method:  "POST",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理显示用户的逻辑
 				GetCredentialsHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -84,7 +77,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
 			Path:    "/credentials",
 			Method:  "POST",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理创建用户的逻辑
 				CreateCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -93,7 +86,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		{
 			Path:   "/credentials",
 			Method: "DELETE",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理删除用户的逻辑
 				DeleteCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -104,7 +97,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
 			Path:    "/sessions",
 			Method:  "POST",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理创建会话的逻辑
 				CreateSessionHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -113,7 +106,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		{
 			Path:   "/sessions",
 			Method: "PUT",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理修改会话的逻辑
 				UpdateSessionHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -122,7 +115,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		{
 			Path:   "/sessions",
 			Method: "DELETE",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理删除会话的逻辑
 				DeleteSessionHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -132,7 +125,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
 			Path:    "/sessions",
 			Method:  "POST",
-			Handler: func(c context.Context, r *app.RequestContext) {
+			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理显示会话的逻辑
 				GetSessionsHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
@@ -231,4 +224,19 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		},
 	)
 	// return
+
+
+}
+// RouteConfig 定义了路由的配置信息，包含路径、方法、中间件和头部信息。
+// 
+// 字段说明：
+// - Path: 表示路由的路径，例如 "/api/v1/resource"。
+// - Method: 表示 HTTP 请求方法，例如 "GET"、"POST" 等。
+// - MiddleWare: 表示与该路由关联的中间件，类型为 HertzMiddleWare。
+// - Headers: 表示与该路由关联的 HTTP 头部信息，以键值对的形式存储。
+type RouteConfig struct {
+	Path       string
+	Method     string
+	MiddleWare HertzMiddleWare
+	Headers    map[string]string
 }
