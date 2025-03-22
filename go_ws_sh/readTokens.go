@@ -6,10 +6,10 @@ import (
 )
 
 // TokenStore 定义 Token 存储的结构体
-type TokenStore []Tokens
+type TokenStoreList []TokenStore
 
 // readTokens 函数读取指定路径的 JSON 文件，并将其解析为 TokenStore 类型的数组，同时返回可能出现的错误
-func readTokens(getfilepath func() (string, error)) (TokenStore, error) {
+func readTokens(getfilepath func() (string, error)) (TokenStoreList, error) {
 	// 获取文件路径
 	filePath, err := getfilepath()
 	if err != nil {
@@ -28,7 +28,7 @@ func readTokens(getfilepath func() (string, error)) (TokenStore, error) {
 	defer file.Close()
 
 	// 创建 JSON 解码器
-	var tokenStore TokenStore
+	var tokenStore TokenStoreList
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&tokenStore)
 	if err != nil {

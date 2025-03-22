@@ -156,23 +156,6 @@ func (Credentials) TableName() string {
 	return "credentials"
 }
 
-// Token 定义 Token 结构体
-type Tokens struct {
-	gorm.Model
-	Hash       string `json:"hash" gorm:"index;not null"`
-	Salt       string `json:"salt" gorm:"index;not null"`
-	Algorithm  string `json:"algorithm" gorm:"index;not null"`
-	Identifier string `json:"identifier" gorm:"unique;index;not null"`
-	Username   string `json:"username" gorm:"index;not null"`
-}
-
-func (t Tokens) String() string {
-	return fmt.Sprintf("Tokens{ID: %d, CreatedAt: %v, UpdatedAt: %v, DeletedAt: %v, Hash: %s, Salt: %s, Algorithm: %s, Identifier: %s, Username: %s}",
-		t.ID, t.CreatedAt, t.UpdatedAt, t.DeletedAt, t.Hash, t.Salt, t.Algorithm, t.Identifier, t.Username)
-}
-func (Tokens) TableName() string {
-	return "tokens"
-}
 
 type Session struct {
 	Username string   `json:"username"`
@@ -237,6 +220,6 @@ func Server_start(config string) {
 	}
 
 	credentialdb.AutoMigrate(&Credentials{})
-	tokendb.AutoMigrate(&Tokens{})
+	tokendb.AutoMigrate(&TokenStore{})
 	pipe_std_ws_server(configdata, credentialdb, tokendb)
 }

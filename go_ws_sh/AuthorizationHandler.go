@@ -30,7 +30,7 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 		}
 
 		// 查询所有令牌
-		var tokens []Tokens
+		var tokens []TokenStore
 		if err := tokendb.Find(&tokens).Error; err != nil {
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
@@ -75,8 +75,8 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 	}
 }
 func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, error) {
-	var token Tokens
-	if err := tokendb.Where(&Tokens{Identifier: reqcredential.Identifier,
+	var token TokenStore
+	if err := tokendb.Where(&TokenStore{Identifier: reqcredential.Identifier,
 		Username: reqcredential.Username,
 	}).First(&token).Error; err != nil {
 
@@ -136,7 +136,7 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 	// Generate a snowflake ID.
 	id := node.Generate()
 	Identifier = id.String()
-	newToken := Tokens{
+	newToken := TokenStore{
 		Hash:       hashresult.Hash,
 		Salt:       hashresult.Salt,
 		Algorithm:  "SHA-512", // 假设使用 SHA-512 算法
@@ -277,8 +277,8 @@ func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB
 		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
 		return
 	}
-	var token Tokens
-	if err := tokendb.Where(&Tokens{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
+	var token TokenStore
+	if err := tokendb.Where(&TokenStore{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
 		r.JSON(consts.StatusOK, map[string]string{
 			"message":           "Error: Token not found",
 			"username":          req.Username,
