@@ -22,7 +22,7 @@ import (
 // 每个函数应该没有参数并且返回一个接口和一个错误。
 // 它返回一个通道，该通道将发送一个包含所有结果的切片或第一个错误。
 
-func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB) {
+func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB,sessiondb *gorm.DB) {
 	var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
 	authHandler := AuthorizationHandler(credentialdb, tokendb)
 	var routes = []RouteConfig{
@@ -50,9 +50,13 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		},
 	}
 
+	sessions,err  := ReadAllSessions(sessiondb)
+	if err != nil {
+		return 
+	}
 	
 	var handlermap = map[string]func(w context.Context, r *app.RequestContext){}
-	for _, session := range config.InitialSessions {
+	for _, session := range sessions {
 		handlermap[session.Name] = createhandleWebSocket(session)
 	}
 	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
@@ -72,7 +76,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 	// }
 	tasks := []func() (interface{}, error){}
-	handlerPost := createhandlerloginlogout(config.InitialSessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
+	handlerPost := createhandlerloginlogout(sessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
 		r.AbortWithMsg("Not Found", consts.StatusNotFound)
 		// return
@@ -189,5 +193,5 @@ func Server_start(config string) {
 		log.Fatal(err)
 		return
 	}
-	pipe_std_ws_server(configdata, credentialdb, tokendb)
+	pipe_std_ws_server(configdata, credentialdb, tokendb,sessiondb)
 }
