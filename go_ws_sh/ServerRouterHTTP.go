@@ -2,8 +2,11 @@ package go_ws_sh
 
 import (
 	"context"
+	"log"
 
+	"github.com/akrennmair/slice"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
 )
 
@@ -20,13 +23,13 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 		// /tokens POST
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
-			Path:   "/tokens",
-			Method: "POST",
+			Path:    "/tokens",
+			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理创建令牌的逻辑
 				// 可以在这里添加从数据库查询、插入等操作
 				// 示例：调用处理创建令牌的函数
-				CreateTokenHandler(credentialdb, tokendb,sessiondb, c, r)
+				CreateTokenHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /tokens PUT
@@ -35,7 +38,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "PUT",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理修改令牌的逻辑
-				UpdateTokenHandler(credentialdb, tokendb,sessiondb, c, r)
+				UpdateTokenHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /tokens DELETE
@@ -44,7 +47,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "DELETE",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理删除令牌的逻辑
-				DeleteTokenHandler(credentialdb, tokendb,sessiondb, c, r)
+				DeleteTokenHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /tokens GET
@@ -54,7 +57,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示令牌的逻辑
-				GetTokensHandler(credentialdb, tokendb,sessiondb, c, r)
+				GetTokensHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /credentials PUT
@@ -63,27 +66,27 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "PUT",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理修改密码的逻辑
-				UpdateCredentialHandler(credentialdb, tokendb,sessiondb, c, r)
+				UpdateCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /credentials GET
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
-			Path:   "/credentials",
-			Method: "POST",
+			Path:    "/credentials",
+			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示用户的逻辑
-				GetCredentialsHandler(credentialdb, tokendb,sessiondb, c, r)
+				GetCredentialsHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /credentials POST
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
-			Path:   "/credentials",
-			Method: "POST",
+			Path:    "/credentials",
+			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理创建用户的逻辑
-				CreateCredentialHandler(credentialdb, tokendb,sessiondb, c, r)
+				CreateCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /credentials DELETE
@@ -92,18 +95,18 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "DELETE",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理删除用户的逻辑
-				DeleteCredentialHandler(credentialdb, tokendb,sessiondb, c, r)
+				DeleteCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// 可以根据 openapi 文件添加更多接口的路由配置
 		// /sessions POST
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
-			Path:   "/sessions",
-			Method: "POST",
+			Path:    "/sessions",
+			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理创建会话的逻辑
-				CreateSessionHandler(credentialdb, tokendb,sessiondb, c, r)
+				CreateSessionHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /sessions PUT
@@ -112,7 +115,7 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "PUT",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理修改会话的逻辑
-				UpdateSessionHandler(credentialdb, tokendb,sessiondb, c, r)
+				UpdateSessionHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /sessions DELETE
@@ -121,17 +124,17 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 			Method: "DELETE",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理删除会话的逻辑
-				DeleteSessionHandler(credentialdb, tokendb,sessiondb, c, r)
+				DeleteSessionHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 		// /sessions GET
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "GET"},
-			Path:   "/sessions",
-			Method: "POST",
+			Path:    "/sessions",
+			Method:  "POST",
 			Handler: func(c context.Context, r *app.RequestContext) {
 				// 处理显示会话的逻辑
-				GetSessionsHandler(credentialdb, tokendb,sessiondb, c, r)
+				GetSessionsHandler(credentialdb, tokendb, sessiondb, c, r)
 			},
 		},
 	}
@@ -194,5 +197,38 @@ func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 }
 
 func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
+
+	sessions, err := ReadAllSessions(sessiondb)
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
 	// 实现显示会话的具体逻辑
+	// 创建一个TokenInfo结构体
+	var credential TokenInfo = TokenInfo{}
+
+	// 将请求参数绑定到TokenInfo结构体中
+	err = r.BindJSON(&credential)
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	log.Println(credential)
+	shouldReturn := Validatepasswordortoken(credential, credentialdb, tokendb, r)
+	if shouldReturn {
+		log.Println("用户登录失败:")
+		return
+	}
+	log.Println("用户登录成功:")
+	r.JSON(
+		consts.StatusOK,
+		map[string]interface{}{
+			"message": "List of Sessions ok",
+			"list": slice.Map(sessions, func(session Session) string {
+				return session.Name
+			}),
+			"username": credential.Username,
+		},
+	)
+	// return
 }

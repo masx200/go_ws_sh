@@ -92,14 +92,13 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 	// }
 	tasks := []func() (interface{}, error){}
-	handlerPost := createhandlerloginlogout(sessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
+	// handlerPost := createhandlerloginlogout(sessions, credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
-		r.AbortWithMsg("Not Found", consts.StatusNotFound)
-		// return
+	// 	r.AbortWithMsg("Not Found", consts.StatusNotFound)
+	// 	// return
 
-		// handlermap[name](w, r)
-	})
-
+	// 	// handlermap[name](w, r)
+	// })
 
 	gr := GenerateRoutes(credentialdb, tokendb, sessiondb)
 	routes = append(gr, routes...)
@@ -108,7 +107,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
 		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
 
-		if string(r.Method()) == consts.MethodGet && Connection== "upgrade" && Upgrade== "websocket"{
+		if string(r.Method()) == consts.MethodGet && Connection == "upgrade" && Upgrade == "websocket" {
 			handlerGet(w, r)
 			return
 		}
@@ -117,10 +116,10 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		if shouldReturn {
 			return
 		}
-		if string(r.Method()) == consts.MethodPost {
-			handlerPost(w, r)
-			return
-		}
+		// if string(r.Method()) == consts.MethodPost {
+		// 	handlerPost(w, r)
+		// 	return
+		// }
 		r.AbortWithMsg(
 			"Method Not Allowed",
 

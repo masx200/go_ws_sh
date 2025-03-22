@@ -1,76 +1,69 @@
 package go_ws_sh
 
 import (
-	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"log"
-
-	"github.com/akrennmair/slice"
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"gorm.io/gorm"
 	// "github.com/philippgille/gokv/file"
 )
 
 type TokenInfo = CredentialsClient
 
 // 创建一个登录登出处理函数
-func createhandlerloginlogout(Sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
+// func createhandlerloginlogout(Sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
-	// 返回一个处理函数
-	return func(w context.Context, r *app.RequestContext) {
-		// 获取请求参数
-		var name = r.Param("name")
-		// 如果TokenFile为空，则返回错误
+// 	// 返回一个处理函数
+// 	return func(w context.Context, r *app.RequestContext) {
+// 		// 获取请求参数
+// 		var name = r.Param("name")
+// 		// 如果TokenFile为空，则返回错误
 
-		// 如果请求参数为list，则处理列表请求
-		if name == "sessions" {
-			// 创建一个TokenInfo结构体
-			var credential TokenInfo = TokenInfo{}
+// 		// 如果请求参数为list，则处理列表请求
+// 		if name == "sessions" {
+// 			// 创建一个TokenInfo结构体
+// 			var credential TokenInfo = TokenInfo{}
 
-			// 将请求参数绑定到TokenInfo结构体中
-			var err = r.BindJSON(&credential)
-			if err != nil {
-				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-				return
-			}
-			log.Println(credential)
-			shouldReturn := Validatepasswordortoken(credential, credentialdb, tokendb, r)
-			if shouldReturn {
-				log.Println("用户登录失败:")
-				return
-			}
-			log.Println("用户登录成功:")
-			r.JSON(
-				consts.StatusOK,
-				map[string]interface{}{
-					"message": "List of Sessions ok",
-					"list": slice.Map(Sessions, func(session Session) string {
-						return session.Name
-					}),
-					"username": credential.Username,
-				},
-			)
-			return
+// 			// 将请求参数绑定到TokenInfo结构体中
+// 			var err = r.BindJSON(&credential)
+// 			if err != nil {
+// 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+// 				return
+// 			}
+// 			log.Println(credential)
+// 			shouldReturn := Validatepasswordortoken(credential, credentialdb, tokendb, r)
+// 			if shouldReturn {
+// 				log.Println("用户登录失败:")
+// 				return
+// 			}
+// 			log.Println("用户登录成功:")
+// 			r.JSON(
+// 				consts.StatusOK,
+// 				map[string]interface{}{
+// 					"message": "List of Sessions ok",
+// 					"list": slice.Map(Sessions, func(session Session) string {
+// 						return session.Name
+// 					}),
+// 					"username": credential.Username,
+// 				},
+// 			)
+// 			return
 
-			// return
-		}
-		if name == "login" {
-			handlePost(r, credentialdb, tokendb)
-			return
+// 			// return
+// 		}
+// 		if name == "login" {
+// 			handlePost(r, credentialdb, tokendb)
+// 			return
 
-		} else if name == "logout" {
-			handleDelete(r, credentialdb, tokendb)
-			return
-		}
+// 		} else if name == "logout" {
+// 			handleDelete(r, credentialdb, tokendb)
+// 			return
+// 		}
 
-		next(w, r)
-		// return
+// 		next(w, r)
+// 		// return
 
-	}
-}
+// 	}
+// }
 
 func generateHexKey(length int) (string, error) {
 	// 创建一个字节数组来保存随机字节
