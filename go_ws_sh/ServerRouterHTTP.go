@@ -137,8 +137,8 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 // 新增删除用户处理函数声明
 func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现删除用户的具体逻辑
-	authHandler := AuthorizationHandler(credentialdb, tokendb)
-	authHandler(c, r)
+	// authHandler := AuthorizationHandler(credentialdb, tokendb)
+	// authHandler(c, r)
 }
 
 // 以下是示例处理函数，需要根据实际业务逻辑实现
@@ -153,7 +153,62 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 }
 
 func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现删除令牌的具体逻辑
+	// 定义请求体结构体
+	var req struct {
+		Token struct {
+			Identifier string `json:"identifier"`
+			Username   string `json:"username"`
+		} `json:"token"`
+		Authorization CredentialsClient `json:"authorization"`
+	}
+
+	// 绑定请求体
+	if err := r.BindJSON(&req); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 验证身份
+	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
+	// log.Println(req)
+	// 检查 Identifier 是否为空
+	if req.Token.Identifier == "" {
+		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+		return
+	}
+
+	// 查询要删除的令牌
+	var token TokenStore
+	if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier, Username: req.Token.Username}).First(&token).Error; err != nil {
+		r.JSON(consts.StatusOK, map[string]any{
+			"message":  "Error: Token not found",
+			"username": req.Authorization.Username,
+			"token": map[string]string{
+				"identifier": req.Token.Identifier,
+				"username":   req.Token.Username,
+			},
+		})
+		return
+	}
+
+	// 删除令牌
+	if err := tokendb.Delete(&token).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 返回成功响应
+	r.JSON(consts.StatusOK, map[string]any{
+		"message":  "Token deleted successfully",
+		"username": req.Authorization.Username,
+		"token": map[string]string{
+			"identifier": req.Token.Identifier,
+			"username":   req.Token.Username,
+		},
+	})
 }
 
 func GetTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
@@ -164,8 +219,10 @@ func GetTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.D
 
 func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现修改密码的具体逻辑
-	authHandler := AuthorizationHandler(credentialdb, tokendb)
-	authHandler(c, r)
+	// authHandler := AuthorizationHandler(credentialdb, tokendb)
+	// authHandler(c, r)
+
+	handlePut(r, credentialdb, tokendb)
 }
 
 func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
@@ -217,7 +274,7 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	r.JSON(
 		consts.StatusOK,
 		map[string]interface{}{
-			"message": "List of Sessions ok",
+			"message":  "List of Sessions ok",
 			"sessions": (sessions),
 			"username": credential.Authorization.Username,
 		},

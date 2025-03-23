@@ -64,10 +64,10 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 		switch string(method) {
 		case consts.MethodPost:
 			handlePost(r, credentialdb, tokendb)
-		case consts.MethodPut:
-			handlePut(r, credentialdb, tokendb)
-		case consts.MethodDelete:
-			handleDelete(r, credentialdb, tokendb)
+		// case consts.MethodPut:
+		// 	handlePut(r, credentialdb, tokendb)
+		// case consts.MethodDelete:
+		// 	handleDelete(r, credentialdb, tokendb)
 		default:
 			r.AbortWithMsg("Method Not Allowed", consts.StatusMethodNotAllowed)
 		}
@@ -264,52 +264,52 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	r.JSON(consts.StatusOK, map[string]string{"message": "Password updated successfully", "username": req.Username})
 }
 
-// handleDelete 处理 DELETE 请求，删除某个 Token
-func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
-	var req CredentialsClient
+// // handleDelete 处理 DELETE 请求，删除某个 Token
+// func handleDelete(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
+// 	var req CredentialsClient
 
-	if err := r.BindJSON(&req); err != nil {
-		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-		return
-	}
+// 	if err := r.BindJSON(&req); err != nil {
+// 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+// 		return
+// 	}
 
-	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
-	if shouldReturn {
-		return
-	}
-	var data map[string]interface{}
-	if err := r.BindJSON(&data); err != nil {
-		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-		return
-	}
-	//检查Identifier不为空
+// 	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+// 	if shouldReturn {
+// 		return
+// 	}
+// 	var data map[string]interface{}
+// 	if err := r.BindJSON(&data); err != nil {
+// 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+// 		return
+// 	}
+// 	//检查Identifier不为空
 
-	if data["delete_identifier"] == nil {
-		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
-		return
-	}
-	if data["delete_identifier"].(string) == "" {
-		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
-		return
-	}
-	var token TokenStore
-	if err := tokendb.Where(&TokenStore{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
-		r.JSON(consts.StatusOK, map[string]string{
-			"message":           "Error: Token not found",
-			"username":          req.Username,
-			"delete_identifier": data["delete_identifier"].(string),
-		})
+// 	if data["delete_identifier"] == nil {
+// 		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+// 		return
+// 	}
+// 	if data["delete_identifier"].(string) == "" {
+// 		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+// 		return
+// 	}
+// 	var token TokenStore
+// 	if err := tokendb.Where(&TokenStore{Identifier: data["delete_identifier"].(string), Username: req.Username}).First(&token).Error; err != nil {
+// 		r.JSON(consts.StatusOK, map[string]string{
+// 			"message":           "Error: Token not found",
+// 			"username":          req.Username,
+// 			"delete_identifier": data["delete_identifier"].(string),
+// 		})
 
-		//r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
-		return
-	}
+// 		//r.AbortWithMsg("Error: Token not found", consts.StatusNotFound)
+// 		return
+// 	}
 
-	if err := tokendb.Delete(&token).Error; err != nil {
-		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-		return
-	}
-	r.JSON(consts.StatusOK, map[string]string{"message": "Token deleted successfully",
-		"username":          req.Username,
-		"delete_identifier": data["delete_identifier"].(string),
-	})
-}
+// 	if err := tokendb.Delete(&token).Error; err != nil {
+// 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+// 		return
+// 	}
+// 	r.JSON(consts.StatusOK, map[string]string{"message": "Token deleted successfully",
+// 		"username":          req.Username,
+// 		"delete_identifier": data["delete_identifier"].(string),
+// 	})
+// }
