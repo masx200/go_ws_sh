@@ -127,7 +127,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			return "", nil
 		}
 	}
-	// hertzapp.GET("/:name", func(c context.Context, ctx *app.RequestContext) {
+	// hertzapp.GET("/*name", func(c context.Context, ctx *app.RequestContext) {
 
 	// })
 	if serverconfig.Protocol == "https" {
@@ -171,7 +171,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// 	Addr:    ":" + serverconfig.Port,
 			// 	Handler: h2c.NewHandler(http.HandlerFunc(handler), h2s),
 			// }
-			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {
+			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
 			x := hertzapp.Run()
@@ -189,7 +189,7 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			InitHertzApp(hertzapp)
 			// hertzapp.Use(accesslog.New())
 			log.Println("TLS disabled and " + "WebSocket server started at :" + serverconfig.Port)
-			hertzapp.Any("/:name", func(c context.Context, ctx *app.RequestContext) {
+			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
 			x := hertzapp.Run()
