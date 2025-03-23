@@ -9,9 +9,8 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"gorm.io/gorm"
-
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
+	"gorm.io/gorm"
 )
 
 // ListTokensHandler 列出所有令牌
@@ -101,14 +100,20 @@ func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, err
 
 // handlePost 处理 POST 请求，支持用户名密码认证和创建新的 Token
 func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
-	var req CredentialsClient
+	var req struct {
+		Authorization CredentialsClient `json:"authorization"`
+		Token         struct {
+			Username    string `json:"username"`
+			Description string `json:"description"`
+		} `json:"token"`
+	}
 
 	if err := r.BindJSON(&req); err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
 
-	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
 	if shouldReturn {
 		return
 	}
@@ -137,19 +142,29 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 	id := node.Generate()
 	Identifier = id.String()
 	newToken := TokenStore{
-		Hash:       hashresult.Hash,
-		Salt:       hashresult.Salt,
-		Algorithm:  "SHA-512", // 假设使用 SHA-512 算法
-		Identifier: Identifier,
-		Username:   req.Username,
+		Description: req.Token.Description,
+		Hash:        hashresult.Hash,
+		Salt:        hashresult.Salt,
+		Algorithm:   "SHA-512", // 假设使用 SHA-512 算法
+		Identifier:  Identifier,
+		Username:    req.Token.Username,
 	}
 	if err := tokendb.Create(&newToken).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	r.JSON(consts.StatusOK, map[string]string{"token": hexString, "message": "Login successful",
+	r.JSON(consts.StatusOK, map[string]any{
+		"token": map[string]string{
+			"identifier": Identifier,
+			"username":   req.Token.Username,
+			"description": req.Token.Description,
+			"token": hexString,
+		},
 
-		"identifier": Identifier, "username": req.Username, "type": "token",
+		"message": "Login successful",
+
+
+		"username": req.Token.Username,
 	})
 }
 
