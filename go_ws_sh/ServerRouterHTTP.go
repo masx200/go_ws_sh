@@ -226,7 +226,51 @@ func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 }
 
 func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现显示用户的具体逻辑
+	// 创建一个TokenInfo结构体，用于接收认证信息
+	var credential struct {
+		Authorization CredentialsClient `json:"authorization"`
+	}
+
+	// 将请求参数绑定到TokenInfo结构体中
+	err := r.BindJSON(&credential)
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 验证身份
+	shouldReturn := Validatepasswordortoken(credential.Authorization, credentialdb, tokendb, r)
+	if shouldReturn {
+		log.Println("用户登录失败:")
+		return
+	}
+
+	// 查询所有用户的认证信息
+	var credentials []CredentialStore
+	if err := credentialdb.Find(&credentials).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 构建响应数据
+	var credentialList []map[string]string
+	for _, cred := range credentials {
+		credentialList = append(credentialList, map[string]string{
+			"username":   cred.Username,
+			"created_at": cred.CreatedAt.String(), 
+			"updated_at": cred.UpdatedAt.String(),
+			// 注意：不建议返回哈希和盐值，这里仅为示例
+			// "hash": cred.Hash,
+			// "salt": cred.Salt,
+		})
+	}
+
+	// 返回成功响应
+	r.JSON(consts.StatusOK, map[string]interface{}{
+		"credentials": credentialList,
+		"username":    credential.Authorization.Username,
+		"message":     "Credentials listed successfully",
+	})
 }
 
 func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {

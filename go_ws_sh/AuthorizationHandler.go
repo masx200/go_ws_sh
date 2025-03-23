@@ -16,14 +16,16 @@ import (
 // ListTokensHandler 列出所有令牌
 func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
-		var req CredentialsClient
-
-		if err := r.BindJSON(&req); err != nil {
+		var credential struct {
+			Authorization CredentialsClient `json:"authorization"`
+		}
+	
+		if err := r.BindJSON(&credential); err != nil {
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
 		}
 
-		shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
+		shouldReturn := Validatepasswordortoken(credential.Authorization, credentialdb, tokendb, r)
 		if shouldReturn {
 			return
 		}
@@ -41,7 +43,10 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 			tokenList = append(tokenList, map[string]string{
 				"identifier": token.Identifier,
 				"username":   token.Username,
-				"algorithm":  token.Algorithm,
+				// "algorithm":  token.Algorithm,
+				"created_at": token.CreatedAt.String(),
+				"updated_at": token.UpdatedAt.String(),
+				"description": token.Description,
 				// 注意：不建议返回哈希和盐值，这里仅为示例
 				// "hash": token.Hash,
 				// "salt": token.Salt,
@@ -50,6 +55,7 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 
 		r.JSON(consts.StatusOK, map[string]interface{}{
 			"tokens":  tokenList,
+			"username": credential.Authorization.Username,
 			"message": "Tokens listed successfully",
 		})
 	}
