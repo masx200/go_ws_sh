@@ -9,6 +9,7 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/golang-module/carbon/v2"
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 	"gorm.io/gorm"
 )
@@ -19,7 +20,7 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 		var credential struct {
 			Authorization CredentialsClient `json:"authorization"`
 		}
-	
+
 		if err := r.BindJSON(&credential); err != nil {
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
@@ -44,8 +45,8 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 				"identifier": token.Identifier,
 				"username":   token.Username,
 				// "algorithm":  token.Algorithm,
-				"created_at": token.CreatedAt.String(),
-				"updated_at": token.UpdatedAt.String(),
+				"created_at":  FormatTimeWithCarbon(carbon.CreateFromStdTime((token.CreatedAt))),
+				"updated_at":  FormatTimeWithCarbon(carbon.CreateFromStdTime(token.UpdatedAt)),
 				"description": token.Description,
 				// 注意：不建议返回哈希和盐值，这里仅为示例
 				// "hash": token.Hash,
@@ -54,9 +55,9 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 		}
 
 		r.JSON(consts.StatusOK, map[string]interface{}{
-			"tokens":  tokenList,
+			"tokens":   tokenList,
 			"username": credential.Authorization.Username,
-			"message": "Tokens listed successfully",
+			"message":  "Tokens listed successfully",
 		})
 	}
 }
@@ -161,14 +162,13 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 	}
 	r.JSON(consts.StatusOK, map[string]any{
 		"token": map[string]string{
-			"identifier": Identifier,
-			"username":   req.Token.Username,
+			"identifier":  Identifier,
+			"username":    req.Token.Username,
 			"description": req.Token.Description,
-			"token": hexString,
+			"token":       hexString,
 		},
 
 		"message": "Login successful",
-
 
 		"username": req.Token.Username,
 	})

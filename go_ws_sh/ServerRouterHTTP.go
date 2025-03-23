@@ -6,8 +6,13 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
 )
+
+func FormatTimeWithCarbon(t carbon.Carbon) string {
+	return t.Format("Y年m月d日+H时i分s秒T时区")
+}
 
 // GenerateRoutes 根据 openapi 文件生成路由配置
 func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) []RouteConfig {
@@ -257,8 +262,8 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 	for _, cred := range credentials {
 		credentialList = append(credentialList, map[string]string{
 			"username":   cred.Username,
-			"created_at": cred.CreatedAt.String(), 
-			"updated_at": cred.UpdatedAt.String(),
+			"created_at": FormatTimeWithCarbon(carbon.CreateFromStdTime(cred.CreatedAt)),
+			"updated_at": FormatTimeWithCarbon(carbon.CreateFromStdTime(cred.UpdatedAt)),
 			// 注意：不建议返回哈希和盐值，这里仅为示例
 			// "hash": cred.Hash,
 			// "salt": cred.Salt,
@@ -319,7 +324,7 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		consts.StatusOK,
 		map[string]interface{}{
 			"message":  "List of Sessions ok",
-			"sessions": (sessions),
+			"sessions": SessionsToMapSlice(sessions),
 			"username": credential.Authorization.Username,
 		},
 	)

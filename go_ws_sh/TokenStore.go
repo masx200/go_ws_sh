@@ -9,9 +9,9 @@ import (
 )
 
 type TokenStore struct {
-	Identifier string `json:"identifier" gorm:"primarykey;unique;index;not null"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	Identifier string         `json:"identifier" gorm:"primarykey;unique;index;not null"`
+	CreatedAt  time.Time      `json:"created_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"index"`
 
 	Hash      string `json:"hash" gorm:"index;not null"`

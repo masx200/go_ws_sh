@@ -38,7 +38,7 @@ func InitHertzApp(hertzapp *server.Hertz) {
 		//准许使用的请求表头
 		AllowHeaders: []string{
 
-			"Origin", "Authorization", "Content-Type","x-http-method-override"},
+			"Origin", "Authorization", "Content-Type", "x-http-method-override"},
 		//显示的请求表头
 		ExposeHeaders: []string{
 

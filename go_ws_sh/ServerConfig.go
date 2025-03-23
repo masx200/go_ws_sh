@@ -18,9 +18,9 @@ type ConfigServer struct {
 type Session struct {
 	Name string `json:"name"`
 
-	Cmd  string   `json:"cmd"`
-	Args []string `json:"args"`
-	Dir  string   `json:"dir"`
+	Cmd       string    `json:"cmd"`
+	Args      []string  `json:"args"`
+	Dir       string    `json:"dir"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -4,6 +4,7 @@ go 1.23.2
 
 require (
 	github.com/cloudwego/hertz v0.9.6
+	github.com/golang-module/carbon/v2 v2.4.1
 	//github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
 	github.com/linkedin/goavro/v2 v2.13.1
