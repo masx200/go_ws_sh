@@ -414,20 +414,16 @@
                   "x-apifox-ignore-properties": []
                 },
                 "example": {
-                  "message": "qui",
-                  "username": "马超栋",
+                  "message": "aliquip magna laborum",
+                  "username": "市熙成",
                   "tokens": [
                     {
-                      "description": "支起天器步管同日处。上单两率利元对学。队加议广及我效光标。类看进。门展科不写义县次该她。次斗变。人火车立己进。手机验类重百然。",
-                      "username": "龙家豪",
-                      "identifer": "68",
-                      "token": "officia deserunt in est enim"
-                    },
-                    {
-                      "description": "前全过过式行保。和感查。及年性成把。积五无特你及。华第也省。",
-                      "username": "步建军",
-                      "identifer": "58",
-                      "token": "proident"
+                      "description": "条物先义价级地后。中门队种导力表。只矿处。",
+                      "username": "钭苡沫",
+                      "identifer": "14",
+                      "token": "sint magna id eiusmod aliqua",
+                      "updated_at": "2025-10-04",
+                      "created_at": "2026-02-08 12:55:32"
                     }
                   ]
                 }
@@ -719,20 +715,14 @@
                 "example": {
                   "credentials": [
                     {
-                      "username": "仵晨",
-                      "password": "sEyDDGTf5uIBI3G"
-                    },
-                    {
-                      "username": "寻子豪",
-                      "password": "HCOvPlHMWA1vBU_"
-                    },
-                    {
-                      "username": "丁国华",
-                      "password": "XJ08qHeYUGFOLV5"
+                      "username": "老英",
+                      "password": "EAr9I5PnZ6ioOdk",
+                      "updated_at": "2024-08-11",
+                      "created_at": "2025-12-10 13:17:08"
                     }
                   ],
-                  "message": "sed adipisicing dolore eiusmod",
-                  "username": "敛鹏"
+                  "message": "cillum ea laboris do",
+                  "username": "荣佳琪"
                 }
               }
             },
@@ -1150,26 +1140,18 @@
                 "example": {
                   "sessions": [
                     {
-                      "name": "蓬国英",
+                      "name": "余桂英",
                       "args": [
-                        "sint reprehenderit exercitation nostrud"
+                        "Ut"
                       ],
-                      "dir": "dolore in",
-                      "cmd": "anim et"
-                    },
-                    {
-                      "name": "双馥君",
-                      "args": [
-                        "irure Duis",
-                        "labore irure",
-                        "amet velit fugiat ea"
-                      ],
-                      "dir": "ipsum",
-                      "cmd": "veniam deserunt aliqua"
+                      "dir": "enim voluptate occaecat do ipsum",
+                      "cmd": "Lorem aliquip",
+                      "created_at": "2025-09-08 16:23:31",
+                      "updated_at": "2025-09-17"
                     }
                   ],
-                  "message": "mollit id Duis magna proident",
-                  "username": "鱼浩晨"
+                  "message": "amet ut sunt",
+                  "username": "终玉梅"
                 }
               }
             },
@@ -1369,19 +1351,33 @@
           },
           "token": {
             "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "",
+            "description": ""
+          },
+          "created_at": {
+            "type": "string",
+            "title": "",
+            "description": ""
           }
         },
         "x-apifox-orders": [
           "description",
           "username",
           "identifer",
-          "token"
+          "token",
+          "updated_at",
+          "created_at"
         ],
         "required": [
           "description",
           "username",
           "identifer",
-          "token"
+          "token",
+          "updated_at",
+          "created_at"
         ],
         "x-apifox-ignore-properties": [],
         "x-apifox-folder": ""
@@ -1403,13 +1399,27 @@
           },
           "cmd": {
             "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "",
+            "description": ""
           }
         },
         "x-apifox-orders": [
           "name",
           "args",
           "dir",
-          "cmd"
+          "cmd",
+          "created_at",
+          "updated_at"
+        ],
+        "required": [
+          "created_at",
+          "updated_at"
         ],
         "x-apifox-ignore-properties": [],
         "x-apifox-folder": ""
@@ -1424,15 +1434,25 @@
             "type": "string",
             "title": "",
             "description": ""
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
           }
         },
         "x-apifox-orders": [
           "username",
-          "password"
+          "password",
+          "updated_at",
+          "created_at"
         ],
         "required": [
           "username",
-          "password"
+          "password",
+          "updated_at",
+          "created_at"
         ],
         "x-apifox-ignore-properties": [],
         "x-apifox-folder": ""
