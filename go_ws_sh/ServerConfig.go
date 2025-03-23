@@ -1,5 +1,7 @@
 package go_ws_sh
 
+import "time"
+
 type ConfigServer struct {
 	SessionFile     string         `json:"session_file"`
 	CredentialFile  string         `json:"credential_file"`
@@ -19,6 +21,8 @@ type Session struct {
 	Cmd  string   `json:"cmd"`
 	Args []string `json:"args"`
 	Dir  string   `json:"dir"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type ServerConfig struct {

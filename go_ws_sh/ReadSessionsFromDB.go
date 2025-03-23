@@ -22,10 +22,12 @@ func ReadAllSessions(sessiondb *gorm.DB) ([]Session, error) {
 			return nil, err
 		}
 		session := Session{
-			Name: store.Name,
-			Cmd:  store.Cmd,
-			Args: args,
-			Dir:  store.Dir,
+			Name:      store.Name,
+			Cmd:       store.Cmd,
+			Args:      args,
+			Dir:       store.Dir,
+			CreatedAt: store.CreatedAt,
+			UpdatedAt: store.UpdatedAt,
 		}
 		sessions = append(sessions, session)
 	}
