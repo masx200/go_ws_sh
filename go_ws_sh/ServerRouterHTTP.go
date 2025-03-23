@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/akrennmair/slice"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
@@ -198,7 +197,9 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 	// 实现显示会话的具体逻辑
 	// 创建一个TokenInfo结构体
-	var credential TokenInfo = TokenInfo{}
+	var credential struct {
+		Authorization CredentialsClient `json:"authorization"`
+	}
 
 	// 将请求参数绑定到TokenInfo结构体中
 	err = r.BindJSON(&credential)
@@ -207,7 +208,7 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		return
 	}
 	log.Println(credential)
-	shouldReturn := Validatepasswordortoken(credential, credentialdb, tokendb, r)
+	shouldReturn := Validatepasswordortoken(credential.Authorization, credentialdb, tokendb, r)
 	if shouldReturn {
 		log.Println("用户登录失败:")
 		return
@@ -217,10 +218,8 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		consts.StatusOK,
 		map[string]interface{}{
 			"message": "List of Sessions ok",
-			"list": slice.Map(sessions, func(session Session) string {
-				return session.Name
-			}),
-			"username": credential.Username,
+			"sessions": (sessions),
+			"username": credential.Authorization.Username,
 		},
 	)
 	// return
