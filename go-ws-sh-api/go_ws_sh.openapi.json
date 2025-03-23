@@ -311,13 +311,15 @@
                   "x-apifox-ignore-properties": []
                 },
                 "example": {
-                  "message": "in labore aliqua",
-                  "username": "所丽芳",
+                  "message": "tempor",
+                  "username": "公伟",
                   "token": {
-                    "description": "形争多历必去包队。正管铁记样。打必手京华从他者年这。",
-                    "username": "卞国良",
-                    "identifer": "7",
-                    "token": "et amet nostrud"
+                    "description": "边太支消二水作写山。参去类。据素队族取只维证除教。清些建石万种单常。有地开斗无点查号。美报行何。有议手已达。",
+                    "username": "邶晨阳",
+                    "identifer": "84",
+                    "token": "fugiat deserunt non ea",
+                    "updated_at": "2025-01-26",
+                    "created_at": "2025-01-19 09:31:37"
                   }
                 }
               }
@@ -1344,7 +1346,7 @@
             "title": "",
             "description": ""
           },
-          "identifer": {
+          "identifier": {
             "type": "string",
             "title": "",
             "description": ""
@@ -1366,7 +1368,7 @@
         "x-apifox-orders": [
           "description",
           "username",
-          "identifer",
+          "identifier",
           "token",
           "updated_at",
           "created_at"
@@ -1374,7 +1376,7 @@
         "required": [
           "description",
           "username",
-          "identifer",
+          "identifier",
           "token",
           "updated_at",
           "created_at"
