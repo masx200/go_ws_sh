@@ -98,7 +98,7 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 
 		switch string(method) {
 		case consts.MethodPost:
-			handlePost(r, credentialdb, tokendb)
+			CreateToken(r, credentialdb, tokendb)
 		// case consts.MethodPut:
 		// 	handlePut(r, credentialdb, tokendb)
 		// case consts.MethodDelete:
@@ -132,8 +132,8 @@ func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, err
 	return true, nil
 }
 
-// handlePost 处理 POST 请求，支持用户名密码认证和创建新的 Token
-func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
+// CreateToken 处理 POST 请求，支持用户名密码认证和创建新的 Token
+func CreateToken(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		Authorization CredentialsClient `json:"authorization"`
 		Token         struct {
@@ -323,9 +323,13 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 
 	}
 
-	r.JSON(consts.StatusOK, map[string]string{"message": "Password updated successfully",
+	r.JSON(consts.StatusOK, map[string]any{"message": "username and Password create successfully",
 
-		"username": username})
+		"username": username,
+		"credential": map[string]string{
+			"username": req.Credential.Username,
+		},
+	})
 }
 
 // // handleDelete 处理 DELETE 请求，删除某个 Token
