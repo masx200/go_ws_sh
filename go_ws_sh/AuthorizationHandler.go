@@ -54,12 +54,40 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 			})
 		}
 
+		if credential.Authorization.Username != "" {
+			username := credential.Authorization.Username
+			r.JSON(consts.StatusOK, map[string]interface{}{
+				"tokens":   tokenList,
+				"username": username,
+				"message":  "Tokens listed successfully",
+			})
+			return
+		}
+		username, err := GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
 		r.JSON(consts.StatusOK, map[string]interface{}{
 			"tokens":   tokenList,
-			"username": credential.Authorization.Username,
+			"username": username,
 			"message":  "Tokens listed successfully",
 		})
 	}
+}
+func GetUsernameByTokenIdentifier(tokendb *gorm.DB, identifier string) (string, error) {
+	var token TokenStore
+
+	// 查询指定 identifier 的条目
+	if err := tokendb.Where("identifier = ?", identifier).First(&token).Error; err != nil {
+		// 如果没有找到对应的条目，返回错误
+		return "", fmt.Errorf("token with identifier '%s' not found", identifier)
+	}
+
+	// 返回查询到的 username
+	return token.Username, nil
 }
 
 // AuthorizationHandler 处理授权相关的请求
@@ -82,9 +110,8 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 }
 func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, error) {
 	var token TokenStore
-	if err := tokendb.Where(&TokenStore{Identifier: reqcredential.Identifier,
-		Username: reqcredential.Username,
-	}).First(&token).Error; err != nil {
+	if err := tokendb.Where(&TokenStore{Identifier: reqcredential.Identifier}). // Username: reqcredential.Username,
+											First(&token).Error; err != nil {
 
 		return false, err
 	}
@@ -160,17 +187,30 @@ func handlePost(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) 
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
+
+	username := req.Authorization.Username
+	if username == "" {
+
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
+
+	}
 	r.JSON(consts.StatusOK, map[string]any{
 		"token": map[string]string{
 			"identifier":  Identifier,
-			"username":    req.Token.Username,
+			"username":    username,
 			"description": req.Token.Description,
 			"token":       hexString,
 		},
 
 		"message": "Login successful",
 
-		"username": req.Token.Username,
+		"username": username,
 	})
 }
 
@@ -220,10 +260,11 @@ func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
 // handlePut 处理 PUT 请求，修改用户名密码
 func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
-		CredentialsClient
-		Username    string `json:"username"`
-		Password    string `json:"password"`
-		NewPassword string `json:"new_password"`
+		Authorization CredentialsClient
+		Credential    struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		} `json:"credential"`
 	}
 
 	if err := r.BindJSON(&req); err != nil {
@@ -231,22 +272,16 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		return
 	}
 	//检查NewPassword不为空
-	if req.NewPassword == "" {
+	if req.Credential.Password == "" {
 
 		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
 	}
 	var cred CredentialStore
-	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
+	if err := credentialdb.Where("username = ?", req.Credential.Username).First(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return
 	}
-	var reqcre CredentialsClient = CredentialsClient{
-		Username:   req.Username,
-		Password:   req.Password,
-		Type:       req.Type,
-		Token:      req.Token,
-		Identifier: req.Identifier,
-	}
+	var reqcre CredentialsClient =req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
 	shouldReturn := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
@@ -254,7 +289,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		return
 	}
 	// 更新密码
-	newHashresult, err := password_hashed.HashPasswordWithSalt(req.NewPassword, password_hashed.Options{Algorithm: "SHA-512"})
+	newHashresult, err := password_hashed.HashPasswordWithSalt(req.Credential.Password , password_hashed.Options{Algorithm: "SHA-512"})
 
 	if err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -267,7 +302,23 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	r.JSON(consts.StatusOK, map[string]string{"message": "Password updated successfully", "username": req.Username})
+
+	username := req.Authorization.Username
+	if username == "" {
+
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
+
+	}
+
+	r.JSON(consts.StatusOK, map[string]string{"message": "Password updated successfully",
+
+		"username": username})
 }
 
 // // handleDelete 处理 DELETE 请求，删除某个 Token

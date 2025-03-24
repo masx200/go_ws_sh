@@ -184,16 +184,32 @@ func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
 		return
 	}
+	var err error
+	username := req.Authorization.Username
+	if username == "" {
 
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
+
+	}
 	// 查询要删除的令牌
 	var token TokenStore
-	if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier, Username: req.Token.Username}).First(&token).Error; err != nil {
+	if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier}).
+		// Username: req.Token.Username
+
+		First(&token).Error; err != nil {
+
 		r.JSON(consts.StatusOK, map[string]any{
 			"message":  "Error: Token not found",
-			"username": req.Authorization.Username,
+			"username": username,
 			"token": map[string]string{
 				"identifier": req.Token.Identifier,
-				"username":   req.Token.Username,
+				"username":   username,
 			},
 		})
 		return
@@ -208,10 +224,10 @@ func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	// 返回成功响应
 	r.JSON(consts.StatusOK, map[string]any{
 		"message":  "Token deleted successfully",
-		"username": req.Authorization.Username,
+		"username": username,
 		"token": map[string]string{
 			"identifier": req.Token.Identifier,
-			"username":   req.Token.Username,
+			"username":   username,
 		},
 	})
 }
@@ -270,10 +286,22 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 		})
 	}
 
+	username := credential.Authorization.Username
+	if username == "" {
+
+		username, err = GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
+
+	}
 	// 返回成功响应
 	r.JSON(consts.StatusOK, map[string]interface{}{
 		"credentials": credentialList,
-		"username":    credential.Authorization.Username,
+		"username":    username,
 		"message":     "Credentials listed successfully",
 	})
 }
