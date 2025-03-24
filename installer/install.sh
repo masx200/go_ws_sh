@@ -15,10 +15,16 @@ chmod +x /root/opt/go_ws_sh/server/loop.sh
 chmod +x /root/opt/go_ws_sh/server/loop-tls.sh
 
 
-cp -v -f ./server-config.json /root/opt/go_ws_sh/server/
+# 如果server-config.json不存在，则进行复制
+if [ ! -f /root/opt/go_ws_sh/server/server-config.json ]; then
+    cp -v -f ./server-config.json /root/opt/go_ws_sh/server/
+fi
 
 
-cp -v -f ./server-config-tls.json /root/opt/go_ws_sh/server/
+# 如果server-config-tls.json不存在，则进行复制
+if [ ! -f /root/opt/go_ws_sh/server/server-config-tls.json ]; then
+    cp -v -f ./server-config-tls.json /root/opt/go_ws_sh/server/
+fi
 
 cp -v -f ./main /root/opt/go_ws_sh/server/
 
