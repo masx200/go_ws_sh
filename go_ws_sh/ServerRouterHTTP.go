@@ -327,10 +327,10 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
 	}
 	var cred CredentialStore
-	if err := credentialdb.Where("username = ?", req.Credential.Username).First(&cred).Error; err != nil {
-		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
-		return
-	}
+	// if err := credentialdb.Where("username = ?", req.Authorization.Username).First(&cred).Error; err != nil {
+	// 	r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+	// 	return
+	// }
 	var reqcre CredentialsClient = req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
@@ -350,7 +350,7 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 	cred.Algorithm = "SHA-512" // 假设使用 SHA-512 算法
 	// credentialdb.Update()
 
-	if err := credentialdb.Model(CredentialStore{}).Create(CredentialStore{
+	if err := credentialdb.Create(&CredentialStore{
 		Username:  req.Credential.Username,
 		Hash:      cred.Hash,
 		Salt:      cred.Salt,
@@ -373,9 +373,13 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 
 	}
 
-	r.JSON(consts.StatusOK, map[string]string{"message": "username and Password create successfully",
+	r.JSON(consts.StatusOK, map[string]any{"message": "username and Password create successfully",
 
-		"username": username})
+		"username": username,
+		"credential": map[string]string{
+			"username": req.Credential.Username,
+		},
+	})
 }
 
 func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
