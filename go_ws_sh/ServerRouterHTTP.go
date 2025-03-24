@@ -7,6 +7,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/golang-module/carbon/v2"
+	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 	"gorm.io/gorm"
 )
 
@@ -308,6 +309,73 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 
 func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现创建用户的具体逻辑
+	var req struct {
+		Authorization CredentialsClient
+		Credential    struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		} `json:"credential"`
+	}
+
+	if err := r.BindJSON(&req); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	//检查NewPassword不为空
+	if req.Credential.Password == "" {
+
+		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
+	}
+	var cred CredentialStore
+	if err := credentialdb.Where("username = ?", req.Credential.Username).First(&cred).Error; err != nil {
+		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+		return
+	}
+	var reqcre CredentialsClient = req.Authorization
+	// 验证旧密码
+	// 假设已经有一个函数 ValidatePassword 用于验证密码
+	shouldReturn := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
+	// 更新密码
+	newHashresult, err := password_hashed.HashPasswordWithSalt(req.Credential.Password, password_hashed.Options{Algorithm: "SHA-512"})
+
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	cred.Hash = newHashresult.Hash
+	cred.Salt = newHashresult.Salt
+	cred.Algorithm = "SHA-512" // 假设使用 SHA-512 算法
+	// credentialdb.Update()
+
+	if err := credentialdb.Model(CredentialStore{}).Create(CredentialStore{
+		Username:  req.Credential.Username,
+		Hash:      cred.Hash,
+		Salt:      cred.Salt,
+		Algorithm: cred.Algorithm,
+	}).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	username := req.Authorization.Username
+	if username == "" {
+
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
+
+	}
+
+	r.JSON(consts.StatusOK, map[string]string{"message": "username and Password create successfully",
+
+		"username": username})
 }
 
 func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
