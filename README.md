@@ -174,8 +174,12 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 {
   "token_file": "token_store.db",
   "credential_file": "credential_store.db",
-  "initial_username": "admin",
-  "initial_password": "pass",
+  "initial_credentails": [
+    {
+      "username": "admin",
+      "password": "pass"
+    }
+  ],
   "sessions": [
     {
       "username": "admin",
@@ -308,33 +312,25 @@ type: 指定凭证的类型，这里是 "password"，表示使用用户名和密
 
 username: 用于登录的用户名，这里是 "admin"。
 
-password:
-与用户名对应的密码，这里是 "pass"。
+password: 与用户名对应的密码，这里是 "pass"。
 
-sessions 部分
-这部分定义了客户端会话的相关信息。
+sessions 部分 这部分定义了客户端会话的相关信息。
 
 username: 会话使用的用户名，这里同样是 "admin"。
 
-path:
-会话使用的命令行程序路径，这里是 "pwsh"，表示使用 PowerShell。
+path: 会话使用的命令行程序路径，这里是 "pwsh"，表示使用 PowerShell。
 
-servers 部分
-这部分定义了客户端要连接的服务器的相关信息。
+servers 部分 这部分定义了客户端要连接的服务器的相关信息。
 
 port: 服务器监听的端口号，这里是 "28080"。
 
-protocol: 连接使用的协议，这里是
-"http"，表示使用 HTTP 协议进行通信。
+protocol: 连接使用的协议，这里是 "http"，表示使用 HTTP 协议进行通信。
 
-ca: 用于验证服务器证书的 CA
-证书文件路径，这里为 null，表示不使用 CA 证书验证。
+ca: 用于验证服务器证书的 CA 证书文件路径，这里为 null，表示不使用 CA 证书验证。
 
-host: 服务器的主机名，这里是
-"localhost"，表示本地主机。
+host: 服务器的主机名，这里是 "localhost"，表示本地主机。
 
-ip: 服务器的 IP 地址，这里是
-"127.0.0.1"，同样表示本地主机。
+ip: 服务器的 IP 地址，这里是 "127.0.0.1"，同样表示本地主机。
 
 总结
 

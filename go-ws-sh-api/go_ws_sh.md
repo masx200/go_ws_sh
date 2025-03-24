@@ -16,7 +16,6 @@ code_clipboard: true
 highlight_theme: darkula
 headingLevel: 2
 generator: "@tarslib/widdershins v4.0.29"
-
 ---
 
 # go_ws_sh
@@ -53,21 +52,21 @@ POST /tokens
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|x-HTTP-method-override|header|string| 否 |POST|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
-|» token|body|[token](#schematoken)| 是 |none|
-|»» description|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» token|body|string| 是 |none|
+| 名称                   | 位置   | 类型                                  | 必选 | 说明 |
+| ---------------------- | ------ | ------------------------------------- | ---- | ---- |
+| x-HTTP-method-override | header | string                                | 否   | POST |
+| body                   | body   | object                                | 否   | none |
+| » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
+| »» type                | body   | string                                | 是   | none |
+| » token                | body   | [token](#schematoken)                 | 是   | none |
+| »» description         | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
 
 > 返回示例
 
@@ -88,23 +87,23 @@ POST /tokens
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» token|[token](#schematoken)|true|none||none|
-|»» description|string|true|none||none|
-|»» username|string|true|none||none|
-|»» identifer|string|true|none||none|
-|»» token|string|true|none||none|
-|» username|string|true|none||none|
+| 名称           | 类型                  | 必选 | 约束 | 中文名 | 说明 |
+| -------------- | --------------------- | ---- | ---- | ------ | ---- |
+| » message      | string                | true | none |        | none |
+| » token        | [token](#schematoken) | true | none |        | none |
+| »» description | string                | true | none |        | none |
+| »» username    | string                | true | none |        | none |
+| »» identifer   | string                | true | none |        | none |
+| »» token       | string                | true | none |        | none |
+| » username     | string                | true | none |        | none |
 
 ## PUT 修改令牌
 
@@ -130,18 +129,18 @@ PUT /tokens
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|body|body|object| 否 |none|
-|» token|body|object| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» description|body|string| 是 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
+| 名称            | 位置 | 类型                                  | 必选 | 说明 |
+| --------------- | ---- | ------------------------------------- | ---- | ---- |
+| body            | body | object                                | 否   | none |
+| » token         | body | object                                | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» description  | body | string                                | 是   | none |
+| » authorization | body | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
+| »» type         | body | string                                | 是   | none |
 
 > 返回示例
 
@@ -161,23 +160,23 @@ PUT /tokens
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» token|[token](#schematoken)|true|none||none|
-|»» description|string|true|none||none|
-|»» username|string|true|none||none|
-|»» identifer|string|true|none||none|
-|»» token|string|true|none||none|
+| 名称           | 类型                  | 必选 | 约束 | 中文名 | 说明 |
+| -------------- | --------------------- | ---- | ---- | ------ | ---- |
+| » message      | string                | true | none |        | none |
+| » username     | string                | true | none |        | none |
+| » token        | [token](#schematoken) | true | none |        | none |
+| »» description | string                | true | none |        | none |
+| »» username    | string                | true | none |        | none |
+| »» identifer   | string                | true | none |        | none |
+| »» token       | string                | true | none |        | none |
 
 ## DELETE 删除令牌
 
@@ -205,20 +204,20 @@ DELETE /tokens
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|body|body|object| 否 |none|
-|» token|body|[token](#schematoken)| 是 |none|
-|»» description|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
+| 名称            | 位置 | 类型                                  | 必选 | 说明 |
+| --------------- | ---- | ------------------------------------- | ---- | ---- |
+| body            | body | object                                | 否   | none |
+| » token         | body | [token](#schematoken)                 | 是   | none |
+| »» description  | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| » authorization | body | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
+| »» type         | body | string                                | 是   | none |
 
 > 返回示例
 
@@ -239,23 +238,23 @@ DELETE /tokens
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» token|[token](#schematoken)|true|none||none|
-|»» description|string|true|none||none|
-|»» username|string|true|none||none|
-|»» identifer|string|true|none||none|
-|»» token|string|true|none||none|
+| 名称           | 类型                  | 必选 | 约束 | 中文名 | 说明 |
+| -------------- | --------------------- | ---- | ---- | ------ | ---- |
+| » message      | string                | true | none |        | none |
+| » username     | string                | true | none |        | none |
+| » token        | [token](#schematoken) | true | none |        | none |
+| »» description | string                | true | none |        | none |
+| »» username    | string                | true | none |        | none |
+| »» identifer   | string                | true | none |        | none |
+| »» token       | string                | true | none |        | none |
 
 ## GET 显示令牌
 
@@ -277,16 +276,16 @@ GET /tokens
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|x-HTTP-method-override|header|string| 是 |GET|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
+| 名称                   | 位置   | 类型                                  | 必选 | 说明 |
+| ---------------------- | ------ | ------------------------------------- | ---- | ---- |
+| x-HTTP-method-override | header | string                                | 是   | GET  |
+| body                   | body   | object                                | 否   | none |
+| » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
+| »» type                | body   | string                                | 是   | none |
 
 > 返回示例
 
@@ -315,23 +314,23 @@ GET /tokens
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» tokens|[[token](#schematoken)]|true|none||none|
-|»» description|string|true|none||none|
-|»» username|string|true|none||none|
-|»» identifer|string|true|none||none|
-|»» token|string|true|none||none|
+| 名称           | 类型                    | 必选 | 约束 | 中文名 | 说明 |
+| -------------- | ----------------------- | ---- | ---- | ------ | ---- |
+| » message      | string                  | true | none |        | none |
+| » username     | string                  | true | none |        | none |
+| » tokens       | [[token](#schematoken)] | true | none |        | none |
+| »» description | string                  | true | none |        | none |
+| »» username    | string                  | true | none |        | none |
+| »» identifer   | string                  | true | none |        | none |
+| »» token       | string                  | true | none |        | none |
 
 ## PUT 修改密码
 
@@ -357,18 +356,18 @@ PUT /credentials
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
-|» credential|body|[credential](#schemacredential)| 是 |none|
-|»» username|body|string| 是 |none|
-|»» password|body|string| 是 |none|
+| 名称            | 位置 | 类型                                  | 必选 | 说明 |
+| --------------- | ---- | ------------------------------------- | ---- | ---- |
+| body            | body | object                                | 否   | none |
+| » authorization | body | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
+| »» type         | body | string                                | 是   | none |
+| » credential    | body | [credential](#schemacredential)       | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
 
 > 返回示例
 
@@ -387,21 +386,21 @@ PUT /credentials
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» credential|[credential](#schemacredential)|true|none||none|
-|»» username|string|true|none||none|
-|»» password|string|true|none||none|
+| 名称         | 类型                            | 必选 | 约束 | 中文名 | 说明 |
+| ------------ | ------------------------------- | ---- | ---- | ------ | ---- |
+| » message    | string                          | true | none |        | none |
+| » username   | string                          | true | none |        | none |
+| » credential | [credential](#schemacredential) | true | none |        | none |
+| »» username  | string                          | true | none |        | none |
+| »» password  | string                          | true | none |        | none |
 
 ## DELETE 删除用户
 
@@ -427,18 +426,18 @@ DELETE /credentials
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
-|» credential|body|[credential](#schemacredential)| 是 |none|
-|»» username|body|string| 是 |none|
-|»» password|body|string| 是 |none|
+| 名称            | 位置 | 类型                                  | 必选 | 说明 |
+| --------------- | ---- | ------------------------------------- | ---- | ---- |
+| body            | body | object                                | 否   | none |
+| » authorization | body | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
+| »» type         | body | string                                | 是   | none |
+| » credential    | body | [credential](#schemacredential)       | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
 
 > 返回示例
 
@@ -457,21 +456,21 @@ DELETE /credentials
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» credential|[credential](#schemacredential)|true|none||none|
-|»» username|string|true|none||none|
-|»» password|string|true|none||none|
+| 名称         | 类型                            | 必选 | 约束 | 中文名 | 说明 |
+| ------------ | ------------------------------- | ---- | ---- | ------ | ---- |
+| » message    | string                          | true | none |        | none |
+| » username   | string                          | true | none |        | none |
+| » credential | [credential](#schemacredential) | true | none |        | none |
+| »» username  | string                          | true | none |        | none |
+| »» password  | string                          | true | none |        | none |
 
 ## GET 显示用户
 
@@ -493,16 +492,16 @@ GET /credentials
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|x-HTTP-method-override|header|string| 是 |GET|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
+| 名称                   | 位置   | 类型                                  | 必选 | 说明 |
+| ---------------------- | ------ | ------------------------------------- | ---- | ---- |
+| x-HTTP-method-override | header | string                                | 是   | GET  |
+| body                   | body   | object                                | 否   | none |
+| » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
+| »» type                | body   | string                                | 是   | none |
 
 > 返回示例
 
@@ -531,21 +530,21 @@ GET /credentials
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» credentials|[[credential](#schemacredential)]|true|none||none|
-|»» username|string|true|none||none|
-|»» password|string|true|none||none|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
+| 名称          | 类型                              | 必选 | 约束 | 中文名 | 说明 |
+| ------------- | --------------------------------- | ---- | ---- | ------ | ---- |
+| » credentials | [[credential](#schemacredential)] | true | none |        | none |
+| »» username   | string                            | true | none |        | none |
+| »» password   | string                            | true | none |        | none |
+| » message     | string                            | true | none |        | none |
+| » username    | string                            | true | none |        | none |
 
 ## POST 创建用户
 
@@ -571,19 +570,19 @@ POST /credentials
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|x-HTTP-method-override|header|string| 否 |POST|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
-|» credential|body|[credential](#schemacredential)| 是 |none|
-|»» username|body|string| 是 |none|
-|»» password|body|string| 是 |none|
+| 名称                   | 位置   | 类型                                  | 必选 | 说明 |
+| ---------------------- | ------ | ------------------------------------- | ---- | ---- |
+| x-HTTP-method-override | header | string                                | 否   | POST |
+| body                   | body   | object                                | 否   | none |
+| » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
+| »» type                | body   | string                                | 是   | none |
+| » credential           | body   | [credential](#schemacredential)       | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
 
 > 返回示例
 
@@ -602,21 +601,21 @@ POST /credentials
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» credential|[credential](#schemacredential)|true|none||none|
-|»» username|string|true|none||none|
-|»» password|string|true|none||none|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
+| 名称         | 类型                            | 必选 | 约束 | 中文名 | 说明 |
+| ------------ | ------------------------------- | ---- | ---- | ------ | ---- |
+| » credential | [credential](#schemacredential) | true | none |        | none |
+| »» username  | string                          | true | none |        | none |
+| »» password  | string                          | true | none |        | none |
+| » message    | string                          | true | none |        | none |
+| » username   | string                          | true | none |        | none |
 
 ## PUT 修改会话
 
@@ -648,20 +647,20 @@ PUT /sessions
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
-|» session|body|[session](#schemasession)| 是 |none|
-|»» name|body|string| 否 |none|
-|»» args|body|[string]| 否 |none|
-|»» dir|body|string| 否 |none|
-|»» cmd|body|string| 否 |none|
+| 名称            | 位置 | 类型                                  | 必选 | 说明 |
+| --------------- | ---- | ------------------------------------- | ---- | ---- |
+| body            | body | object                                | 否   | none |
+| » authorization | body | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
+| »» type         | body | string                                | 是   | none |
+| » session       | body | [session](#schemasession)             | 是   | none |
+| »» name         | body | string                                | 否   | none |
+| »» args         | body | [string]                              | 否   | none |
+| »» dir          | body | string                                | 否   | none |
+| »» cmd          | body | string                                | 否   | none |
 
 > 返回示例
 
@@ -685,23 +684,23 @@ PUT /sessions
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» session|[session](#schemasession)|true|none||none|
-|»» name|string|false|none||none|
-|»» args|[string]|false|none||none|
-|»» dir|string|false|none||none|
-|»» cmd|string|false|none||none|
+| 名称       | 类型                      | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------------------------- | ----- | ---- | ------ | ---- |
+| » message  | string                    | true  | none |        | none |
+| » username | string                    | true  | none |        | none |
+| » session  | [session](#schemasession) | true  | none |        | none |
+| »» name    | string                    | false | none |        | none |
+| »» args    | [string]                  | false | none |        | none |
+| »» dir     | string                    | false | none |        | none |
+| »» cmd     | string                    | false | none |        | none |
 
 ## DELETE 删除会话
 
@@ -733,20 +732,20 @@ DELETE /sessions
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|body|body|object| 否 |none|
-|» session|body|[session](#schemasession)| 是 |none|
-|»» name|body|string| 否 |none|
-|»» args|body|[string]| 否 |none|
-|»» dir|body|string| 否 |none|
-|»» cmd|body|string| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
+| 名称            | 位置 | 类型                                  | 必选 | 说明 |
+| --------------- | ---- | ------------------------------------- | ---- | ---- |
+| body            | body | object                                | 否   | none |
+| » session       | body | [session](#schemasession)             | 是   | none |
+| »» name         | body | string                                | 否   | none |
+| »» args         | body | [string]                              | 否   | none |
+| »» dir          | body | string                                | 否   | none |
+| »» cmd          | body | string                                | 否   | none |
+| » authorization | body | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer    | body | string                                | 是   | none |
+| »» username     | body | string                                | 是   | none |
+| »» token        | body | string                                | 是   | none |
+| »» password     | body | string                                | 是   | none |
+| »» type         | body | string                                | 是   | none |
 
 > 返回示例
 
@@ -771,23 +770,23 @@ DELETE /sessions
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
-|» session|[session](#schemasession)|true|none||none|
-|»» name|string|false|none||none|
-|»» args|[string]|false|none||none|
-|»» dir|string|false|none||none|
-|»» cmd|string|false|none||none|
+| 名称       | 类型                      | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------------------------- | ----- | ---- | ------ | ---- |
+| » message  | string                    | true  | none |        | none |
+| » username | string                    | true  | none |        | none |
+| » session  | [session](#schemasession) | true  | none |        | none |
+| »» name    | string                    | false | none |        | none |
+| »» args    | [string]                  | false | none |        | none |
+| »» dir     | string                    | false | none |        | none |
+| »» cmd     | string                    | false | none |        | none |
 
 ## GET 显示会话
 
@@ -809,16 +808,16 @@ GET /sessions
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|x-HTTP-method-override|header|string| 是 |GET|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
+| 名称                   | 位置   | 类型                                  | 必选 | 说明 |
+| ---------------------- | ------ | ------------------------------------- | ---- | ---- |
+| x-HTTP-method-override | header | string                                | 是   | GET  |
+| body                   | body   | object                                | 否   | none |
+| » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
+| »» type                | body   | string                                | 是   | none |
 
 > 返回示例
 
@@ -853,23 +852,23 @@ GET /sessions
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» sessions|[[session](#schemasession)]|true|none||none|
-|»» name|string|false|none||none|
-|»» args|[string]|false|none||none|
-|»» dir|string|false|none||none|
-|»» cmd|string|false|none||none|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
+| 名称       | 类型                        | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | --------------------------- | ----- | ---- | ------ | ---- |
+| » sessions | [[session](#schemasession)] | true  | none |        | none |
+| »» name    | string                      | false | none |        | none |
+| »» args    | [string]                    | false | none |        | none |
+| »» dir     | string                      | false | none |        | none |
+| »» cmd     | string                      | false | none |        | none |
+| » message  | string                      | true  | none |        | none |
+| » username | string                      | true  | none |        | none |
 
 ## POST 创建会话
 
@@ -901,21 +900,21 @@ POST /sessions
 
 ### 请求参数
 
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|x-HTTP-method-override|header|string| 否 |POST|
-|body|body|object| 否 |none|
-|» authorization|body|[authorization](#schemaauthorization)| 是 |none|
-|»» identifer|body|string| 是 |none|
-|»» username|body|string| 是 |none|
-|»» token|body|string| 是 |none|
-|»» password|body|string| 是 |none|
-|»» type|body|string| 是 |none|
-|» session|body|[session](#schemasession)| 是 |none|
-|»» name|body|string| 否 |none|
-|»» args|body|[string]| 否 |none|
-|»» dir|body|string| 否 |none|
-|»» cmd|body|string| 否 |none|
+| 名称                   | 位置   | 类型                                  | 必选 | 说明 |
+| ---------------------- | ------ | ------------------------------------- | ---- | ---- |
+| x-HTTP-method-override | header | string                                | 否   | POST |
+| body                   | body   | object                                | 否   | none |
+| » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
+| »» identifer           | body   | string                                | 是   | none |
+| »» username            | body   | string                                | 是   | none |
+| »» token               | body   | string                                | 是   | none |
+| »» password            | body   | string                                | 是   | none |
+| »» type                | body   | string                                | 是   | none |
+| » session              | body   | [session](#schemasession)             | 是   | none |
+| »» name                | body   | string                                | 否   | none |
+| »» args                | body   | [string]                              | 否   | none |
+| »» dir                 | body   | string                                | 否   | none |
+| »» cmd                 | body   | string                                | 否   | none |
 
 > 返回示例
 
@@ -936,23 +935,23 @@ POST /sessions
 
 ### 返回结果
 
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
 ### 返回数据结构
 
 状态码 **200**
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|» session|[token](#schematoken)|true|none||none|
-|»» description|string|true|none||none|
-|»» username|string|true|none||none|
-|»» identifer|string|true|none||none|
-|»» token|string|true|none||none|
-|» message|string|true|none||none|
-|» username|string|true|none||none|
+| 名称           | 类型                  | 必选 | 约束 | 中文名 | 说明 |
+| -------------- | --------------------- | ---- | ---- | ------ | ---- |
+| » session      | [token](#schematoken) | true | none |        | none |
+| »» description | string                | true | none |        | none |
+| »» username    | string                | true | none |        | none |
+| »» identifer   | string                | true | none |        | none |
+| »» token       | string                | true | none |        | none |
+| » message      | string                | true | none |        | none |
+| » username     | string                | true | none |        | none |
 
 # 数据模型
 
@@ -971,18 +970,17 @@ POST /sessions
   "password": "string",
   "type": "string"
 }
-
 ```
 
 ### 属性
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|identifer|string|true|none||none|
-|username|string|true|none||none|
-|token|string|true|none||none|
-|password|string|true|none||none|
-|type|string|true|none||none|
+| 名称      | 类型   | 必选 | 约束 | 中文名 | 说明 |
+| --------- | ------ | ---- | ---- | ------ | ---- |
+| identifer | string | true | none |        | none |
+| username  | string | true | none |        | none |
+| token     | string | true | none |        | none |
+| password  | string | true | none |        | none |
+| type      | string | true | none |        | none |
 
 <h2 id="tocS_token">token</h2>
 
@@ -998,17 +996,16 @@ POST /sessions
   "identifer": "string",
   "token": "string"
 }
-
 ```
 
 ### 属性
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|description|string|true|none||none|
-|username|string|true|none||none|
-|identifer|string|true|none||none|
-|token|string|true|none||none|
+| 名称        | 类型   | 必选 | 约束 | 中文名 | 说明 |
+| ----------- | ------ | ---- | ---- | ------ | ---- |
+| description | string | true | none |        | none |
+| username    | string | true | none |        | none |
+| identifer   | string | true | none |        | none |
+| token       | string | true | none |        | none |
 
 <h2 id="tocS_session">session</h2>
 
@@ -1026,17 +1023,16 @@ POST /sessions
   "dir": "string",
   "cmd": "string"
 }
-
 ```
 
 ### 属性
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|name|string|false|none||none|
-|args|[string]|false|none||none|
-|dir|string|false|none||none|
-|cmd|string|false|none||none|
+| 名称 | 类型     | 必选  | 约束 | 中文名 | 说明 |
+| ---- | -------- | ----- | ---- | ------ | ---- |
+| name | string   | false | none |        | none |
+| args | [string] | false | none |        | none |
+| dir  | string   | false | none |        | none |
+| cmd  | string   | false | none |        | none |
 
 <h2 id="tocS_credential">credential</h2>
 
@@ -1050,13 +1046,11 @@ POST /sessions
   "username": "string",
   "password": "string"
 }
-
 ```
 
 ### 属性
 
-|名称|类型|必选|约束|中文名|说明|
-|---|---|---|---|---|---|
-|username|string|true|none||none|
-|password|string|true|none||none|
-
+| 名称     | 类型   | 必选 | 约束 | 中文名 | 说明 |
+| -------- | ------ | ---- | ---- | ------ | ---- |
+| username | string | true | none |        | none |
+| password | string | true | none |        | none |

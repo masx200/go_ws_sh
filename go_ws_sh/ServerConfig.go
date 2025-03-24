@@ -8,11 +8,13 @@ type ConfigServer struct {
 	InitialSessions []Session      `json:"initial_sessions"`
 	Servers         []ServerConfig `json:"servers"`
 
-	TokenFile string `json:"token_file"`
-
+	TokenFile          string `json:"token_file"`
+	InitialCredentials []struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	} `json:"initial_credentials"`
 	// 添加初始化用户名和初始密码字段
-	InitialUsername string `json:"initial_username"`
-	InitialPassword string `json:"initial_password"`
+
 }
 
 type Session struct {

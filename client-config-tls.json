@@ -5,7 +5,7 @@
     "password": "pass"
   },
   "sessions": {
-     "name": "pwsh"
+    "name": "pwsh"
   },
   "servers": {
     "port": "28443",
