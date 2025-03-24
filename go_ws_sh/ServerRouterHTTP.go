@@ -243,7 +243,7 @@ func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 	// authHandler := AuthorizationHandler(credentialdb, tokendb)
 	// authHandler(c, r)
 
-	handlePut(r, credentialdb, tokendb)
+	ModifyPassword(r, credentialdb, tokendb)
 }
 
 func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {

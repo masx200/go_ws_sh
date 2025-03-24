@@ -257,8 +257,8 @@ func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
 	return true, nil
 }
 
-// handlePut 处理 PUT 请求，修改用户名密码
-func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
+// ModifyPassword 处理 PUT 请求，修改用户名密码
+func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
 		Authorization CredentialsClient
 		Credential    struct {
@@ -281,7 +281,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return
 	}
-	var reqcre CredentialsClient =req.Authorization
+	var reqcre CredentialsClient = req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
 	shouldReturn := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
@@ -289,7 +289,7 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 		return
 	}
 	// 更新密码
-	newHashresult, err := password_hashed.HashPasswordWithSalt(req.Credential.Password , password_hashed.Options{Algorithm: "SHA-512"})
+	newHashresult, err := password_hashed.HashPasswordWithSalt(req.Credential.Password, password_hashed.Options{Algorithm: "SHA-512"})
 
 	if err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -298,7 +298,14 @@ func handlePut(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	cred.Hash = newHashresult.Hash
 	cred.Salt = newHashresult.Salt
 	cred.Algorithm = "SHA-512" // 假设使用 SHA-512 算法
-	if err := credentialdb.Save(&cred).Error; err != nil {
+	// credentialdb.Update()
+
+	if err := credentialdb.Model(CredentialStore{}).Where("username = ?", req.Credential.Username).Updates(CredentialStore{
+
+		Hash:      cred.Hash,
+		Salt:      cred.Salt,
+		Algorithm: cred.Algorithm,
+	}).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
