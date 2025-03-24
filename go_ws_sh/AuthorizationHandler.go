@@ -300,7 +300,7 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 	cred.Algorithm = "SHA-512" // 假设使用 SHA-512 算法
 	// credentialdb.Update()
 
-	if err := credentialdb.Model(CredentialStore{}).Where("username = ?", req.Credential.Username).Updates(CredentialStore{
+	if err := credentialdb.Model(&CredentialStore{}).Where("username = ?", req.Credential.Username).Updates(CredentialStore{
 
 		Hash:      cred.Hash,
 		Salt:      cred.Salt,
