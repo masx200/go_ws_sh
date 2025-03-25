@@ -216,22 +216,29 @@ func CreateToken(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB)
 
 func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, tokendb *gorm.DB, r *app.RequestContext) bool {
 	if req.Type == "token" && req.Token != "" && req.Identifier != "" {
+		log.Println("开始Token 认证")
 		// Token 认证
 		if ok, err := ValidateToken(req, tokendb); !ok {
 			log.Println(err)
 			r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
+			log.Println("Error: Invalid credentials")
 			return true
 		}
+		log.Println("success: success credentials")
 		return false
 	}
-
+	log.Println("开始password 认证")
 	// 用户名密码认证
 	var cred CredentialStore
 	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return true
 	}
-
+//用户名和密码都不为空
+	if req.Username == "" || req.Password == "" {
+		r.AbortWithMsg("Error: Username or password is empty", consts.StatusBadRequest)
+		return true
+	}
 	// 验证密码
 	// 这里需要实现具体的密码验证逻辑
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
@@ -272,7 +279,7 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 		return
 	}
 	//检查NewPassword不为空
-	if req.Credential.Password == "" {
+	if req.Credential.Password == "" ||req.Credential.Username == "" {
 
 		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
 	}

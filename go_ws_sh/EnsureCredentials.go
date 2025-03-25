@@ -19,7 +19,17 @@ func EnsureCredentials(config ConfigServer, credentialdb *gorm.DB) error {
 	credentialdb.Model(&CredentialStore{}).Count(&count)
 	// 检查文件是否存在
 	if _, err := os.Stat(credentialFile); os.IsNotExist(err) || count == 0 {
-
+		if len(config.InitialCredentials) == 0 {
+			// 生成初始化认证信息
+			username := "admin"
+			password := "pass"
+			config.InitialCredentials = InitialCredentials{
+				{
+					Username: username,
+					Password: password,
+				},
+			}
+		}
 		for _, ic := range config.InitialCredentials {
 			// 获取 InitialUsername 和 InitialPassword，如果为空则使用默认值
 			username := ic.Username

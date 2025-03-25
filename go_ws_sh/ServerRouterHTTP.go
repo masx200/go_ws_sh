@@ -142,9 +142,66 @@ func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB)
 
 // 新增删除用户处理函数声明
 func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现删除用户的具体逻辑
-	// authHandler := AuthorizationHandler(credentialdb, tokendb)
-	// authHandler(c, r)
+    // 定义请求体结构体
+    var req struct {
+        Authorization CredentialsClient `json:"authorization"`
+        Credential struct {
+            Username string `json:"username"`
+            Password string `json:"password"`
+        } `json:"credential"`
+    }
+
+    // 绑定请求体
+    if err := r.BindJSON(&req); err != nil {
+        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+        return
+    }
+
+    // 验证身份
+    shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+    if shouldReturn {
+        return
+    }
+	var err error
+	username := req.Authorization.Username
+	if username == "" {
+
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		} else {
+			log.Println("Username:", username)
+		}
+
+	}
+    // 检查要删除的用户是否存在
+    var cred CredentialStore
+    if err := credentialdb.Where("username = ?", req.Credential.Username).First(&cred).Error; err != nil {
+        r.JSON(consts.StatusOK, map[string]any{
+            "message":  "Error: User not found",
+            "username":username,
+            "credential": map[string]string{
+                "username": req.Credential.Username,
+            },
+        })
+        return
+    }
+
+    // 删除用户
+    if err := credentialdb.Delete(&cred).Error; err != nil {
+        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+        return
+    }
+
+    // 返回成功响应
+    r.JSON(consts.StatusOK, map[string]any{
+        "message":  "User deleted successfully",
+        "username": username,
+        "credential": map[string]string{
+            "username": req.Credential.Username,
+        },
+    })
 }
 
 // 以下是示例处理函数，需要根据实际业务逻辑实现
@@ -322,9 +379,10 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		return
 	}
 	//检查NewPassword不为空
-	if req.Credential.Password == "" {
+	if req.Credential.Password == "" || req.Credential.Username == "" {
 
 		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
+		return
 	}
 	var cred CredentialStore
 	// if err := credentialdb.Where("username = ?", req.Authorization.Username).First(&cred).Error; err != nil {
