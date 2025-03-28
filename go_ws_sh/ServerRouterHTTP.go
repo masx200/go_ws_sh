@@ -562,12 +562,24 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		return
 	}
 	log.Println("用户登录成功:")
+
+	
+    username := credential.Authorization.Username
+    if username == "" {
+        username, err = GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+        if err != nil {
+            log.Println("Error:", err)
+            r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+            return
+        }
+        log.Println("Username:", username)
+    }
 	r.JSON(
 		consts.StatusOK,
 		map[string]interface{}{
 			"message":  "List of Sessions ok",
 			"sessions": SessionsToMapSlice(sessions),
-			"username": credential.Authorization.Username,
+			"username": username,
 		},
 	)
 	// return
