@@ -227,7 +227,76 @@ func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 }
 
 func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现修改令牌的具体逻辑
+    // 定义请求体结构体
+    var req struct {
+        Token struct {
+            Identifier string `json:"identifer"`
+            Description string `json:"description"`
+        } `json:"token"`
+        Authorization CredentialsClient `json:"authorization"`
+    }
+
+    // 绑定请求体
+    if err := r.BindJSON(&req); err != nil {
+        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+        return
+    }
+
+    // 验证身份
+    shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+    if shouldReturn {
+        return
+    }
+
+    // 检查 Identifier 是否为空
+    if req.Token.Identifier == "" {
+        r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+        return
+    }
+
+    var err error
+    username := req.Authorization.Username
+    if username == "" {
+        username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+        if err != nil {
+            log.Println("Error:", err)
+            r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+            return
+        }
+        log.Println("Username:", username)
+    }
+
+    // 查询要更新的令牌
+    var token TokenStore
+    if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier}).First(&token).Error; err != nil {
+        r.JSON(consts.StatusNotFound, map[string]any{
+            "message":  "Error: Token not found",
+            "username": username,
+            "token": map[string]string{
+                "identifier": req.Token.Identifier,
+                "username":   username,
+            },
+        })
+        return
+    }
+
+    // 更新令牌信息
+    token.Description = req.Token.Description
+    if err := tokendb.Save(&token).Error; err != nil {
+        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+        return
+    }
+
+    // 返回成功响应
+    r.JSON(consts.StatusOK, map[string]any{
+        "message":  "Token updated successfully",
+        "username": username,
+        "token": map[string]string{
+            "identifier": req.Token.Identifier,
+            "description": req.Token.Description,
+            "username":   username,
+        },
+    })
 }
 
 func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
