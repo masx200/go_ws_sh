@@ -525,7 +525,95 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 }
 
 func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现创建会话的具体逻辑
+	// 定义请求体结构体
+	var req struct {
+		Session struct {
+			Name string   `json:"name"`
+			Cmd  string   `json:"cmd"`
+			Args []string `json:"args"`
+			Dir  string   `json:"dir"`
+		} `json:"session"`
+		Authorization CredentialsClient `json:"authorization"`
+	}
+
+	// 绑定请求体
+	if err := r.BindJSON(&req); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 验证身份
+	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
+
+	// 检查 Name 是否为空
+	if req.Session.Name == "" {
+		r.AbortWithMsg("Error: Name is empty", consts.StatusBadRequest)
+		return
+	}
+
+	var err error
+	username := req.Authorization.Username
+	if username == "" {
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+		log.Println("Username:", username)
+	}
+
+	// 检查会话是否已存在
+	var existingSession SessionStore
+	if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&existingSession).Error; err == nil {
+		r.JSON(consts.StatusConflict, map[string]any{
+			"message":  "Error: Session already exists",
+			"username": username,
+			"session": map[string]string{
+				"name":     req.Session.Name,
+				"username": username,
+			},
+		})
+		return
+	}
+
+	// 创建新的会话
+	argsstringarray := StringSlice(req.Session.Args)
+	var argsstring string
+	argsbytes, err := argsstringarray.Value()
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	argsstring = string(argsbytes)
+
+	newSession := SessionStore{
+		Name: req.Session.Name,
+		Cmd:  req.Session.Cmd,
+		Args: argsstring,
+		Dir:  req.Session.Dir,
+	}
+
+	if err := sessiondb.Create(&newSession).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 返回成功响应
+	r.JSON(consts.StatusOK, map[string]any{
+		"message":  "Session created successfully",
+		"username": username,
+		"session": map[string]interface{}{
+			"name":     req.Session.Name,
+			"cmd":      req.Session.Cmd,
+			"args":     req.Session.Args,
+			"dir":      req.Session.Dir,
+			"username": username,
+		},
+	})
 }
 
 func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {

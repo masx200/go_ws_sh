@@ -234,7 +234,7 @@ func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, token
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return true
 	}
-//用户名和密码都不为空
+	//用户名和密码都不为空
 	if req.Username == "" || req.Password == "" {
 		r.AbortWithMsg("Error: Username or password is empty", consts.StatusBadRequest)
 		return true
@@ -279,7 +279,7 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 		return
 	}
 	//检查NewPassword不为空
-	if req.Credential.Password == "" ||req.Credential.Username == "" {
+	if req.Credential.Password == "" || req.Credential.Username == "" {
 
 		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
 	}

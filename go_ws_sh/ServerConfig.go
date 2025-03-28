@@ -1,6 +1,7 @@
 package go_ws_sh
 
 import "time"
+
 type InitialCredentials []struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -11,8 +12,8 @@ type ConfigServer struct {
 	InitialSessions []Session      `json:"initial_sessions"`
 	Servers         []ServerConfig `json:"servers"`
 
-	TokenFile          string `json:"token_file"`
-	InitialCredentials  InitialCredentials `json:"initial_credentials"`
+	TokenFile          string             `json:"token_file"`
+	InitialCredentials InitialCredentials `json:"initial_credentials"`
 	// 添加初始化用户名和初始密码字段
 
 }
