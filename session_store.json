@@ -1,0 +1,12 @@
+[
+    {
+        "args": "[\"-noProfile\"]",
+        "cmd": "pwsh",
+        "created_at": "2025-03-22 15:05:36.3167149+08:00",
+        "deleted_at": null,
+        "dir": "C:\\Users\\Public",
+        "id": 1,
+        "name": "pwsh",
+        "updated_at": "2025-03-22 15:05:36.3167149+08:00"
+    }
+]
