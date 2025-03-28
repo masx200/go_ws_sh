@@ -101,7 +101,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	// 	// handlermap[name](w, r)
 	// })
 
-	routes = GenerateRoutes(credentialdb, tokendb, sessiondb)
+	routes = GenerateRoutesHttp(credentialdb, tokendb, sessiondb)
 	// routes = append(gr, routes...)
 	composedMiddleware := HertzCompose(
 		MatchAndRouteMiddleware([]RouteConfig{

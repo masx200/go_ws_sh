@@ -15,131 +15,6 @@ func FormatTimeWithCarbon(t carbon.Carbon) string {
 	return t.Format("Y年m月d日+H时i分s秒T时区")
 }
 
-// GenerateRoutes 根据 openapi 文件生成路由配置
-func GenerateRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) []RouteConfig {
-	routes := []RouteConfig{
-		// /tokens POST
-		{
-			Headers: map[string]string{"x-HTTP-method-override": "POST"},
-			Path:    "/tokens",
-			Method:  "POST",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理创建令牌的逻辑
-				// 可以在这里添加从数据库查询、插入等操作
-				// 示例：调用处理创建令牌的函数
-				CreateTokenHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /tokens PUT
-		{
-			Path:   "/tokens",
-			Method: "PUT",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理修改令牌的逻辑
-				UpdateTokenHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /tokens DELETE
-		{
-			Path:   "/tokens",
-			Method: "DELETE",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理删除令牌的逻辑
-				DeleteTokenHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /tokens GET
-		{
-			Headers: map[string]string{"x-HTTP-method-override": "GET"},
-			Path:    "/tokens",
-			Method:  "POST",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理显示令牌的逻辑
-				GetTokensHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /credentials PUT
-		{
-			Path:   "/credentials",
-			Method: "PUT",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理修改密码的逻辑
-				UpdateCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /credentials GET
-		{
-			Headers: map[string]string{"x-HTTP-method-override": "GET"},
-			Path:    "/credentials",
-			Method:  "POST",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理显示用户的逻辑
-				GetCredentialsHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /credentials POST
-		{
-			Headers: map[string]string{"x-HTTP-method-override": "POST"},
-			Path:    "/credentials",
-			Method:  "POST",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理创建用户的逻辑
-				CreateCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /credentials DELETE
-		{
-			Path:   "/credentials",
-			Method: "DELETE",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理删除用户的逻辑
-				DeleteCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// 可以根据 openapi 文件添加更多接口的路由配置
-		// /sessions POST
-		{
-			Headers: map[string]string{"x-HTTP-method-override": "POST"},
-			Path:    "/sessions",
-			Method:  "POST",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理创建会话的逻辑
-				CreateSessionHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /sessions PUT
-		{
-			Path:   "/sessions",
-			Method: "PUT",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理修改会话的逻辑
-				UpdateSessionHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /sessions DELETE
-		{
-			Path:   "/sessions",
-			Method: "DELETE",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理删除会话的逻辑
-				DeleteSessionHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-		// /sessions GET
-		{
-			Headers: map[string]string{"x-HTTP-method-override": "GET"},
-			Path:    "/sessions",
-			Method:  "POST",
-			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
-				// 处理显示会话的逻辑
-				GetSessionsHandler(credentialdb, tokendb, sessiondb, c, r)
-			},
-		},
-	}
-
-	return routes
-}
-
 // 新增删除用户处理函数声明
 func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 定义请求体结构体
@@ -573,7 +448,7 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 			"message":  "Error: Session already exists",
 			"username": username,
 			"session": map[string]string{
-				"name":     req.Session.Name,
+				"name": req.Session.Name,
 				// "username": username,
 			},
 		})
@@ -665,7 +540,7 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 			"message":  "Error: Session not found",
 			"username": username,
 			"session": map[string]string{
-				"name":     req.Session.Name,
+				"name": req.Session.Name,
 				// "username": username,
 			},
 		})
@@ -705,73 +580,73 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 }
 
 func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-    // 定义请求体结构体
-    var req struct {
-        Session struct {
-            Name string `json:"name"`
-        } `json:"session"`
-        Authorization CredentialsClient `json:"authorization"`
-    }
+	// 定义请求体结构体
+	var req struct {
+		Session struct {
+			Name string `json:"name"`
+		} `json:"session"`
+		Authorization CredentialsClient `json:"authorization"`
+	}
 
-    // 绑定请求体
-    if err := r.BindJSON(&req); err != nil {
-        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-        return
-    }
+	// 绑定请求体
+	if err := r.BindJSON(&req); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
 
-    // 验证身份
-    shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-    if shouldReturn {
-        return
-    }
+	// 验证身份
+	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
 
-    // 检查 Name 是否为空
-    if req.Session.Name == "" {
-        r.AbortWithMsg("Error: Name is empty", consts.StatusBadRequest)
-        return
-    }
+	// 检查 Name 是否为空
+	if req.Session.Name == "" {
+		r.AbortWithMsg("Error: Name is empty", consts.StatusBadRequest)
+		return
+	}
 
-    var err error
-    username := req.Authorization.Username
-    if username == "" {
-        username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
-        if err != nil {
-            log.Println("Error:", err)
-            r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-            return
-        }
-        log.Println("Username:", username)
-    }
+	var err error
+	username := req.Authorization.Username
+	if username == "" {
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+		log.Println("Username:", username)
+	}
 
-    // 查询要删除的会话
-    var session SessionStore
-    if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&session).Error; err != nil {
-        r.JSON(consts.StatusOK, map[string]any{
-            "message":  "Error: Session not found",
-            "username": username,
-            "session": map[string]string{
-                "name":     req.Session.Name,
-                // "username": username,
-            },
-        })
-        return
-    }
+	// 查询要删除的会话
+	var session SessionStore
+	if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&session).Error; err != nil {
+		r.JSON(consts.StatusOK, map[string]any{
+			"message":  "Error: Session not found",
+			"username": username,
+			"session": map[string]string{
+				"name": req.Session.Name,
+				// "username": username,
+			},
+		})
+		return
+	}
 
-    // 删除会话
-    if err := sessiondb.Delete(&session).Error; err != nil {
-        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-        return
-    }
+	// 删除会话
+	if err := sessiondb.Delete(&session).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
 
-    // 返回成功响应
-    r.JSON(consts.StatusOK, map[string]any{
-        "message":  "Session deleted successfully",
-        "username": username,
-        "session": map[string]string{
-            "name":     req.Session.Name,
-            // "username": username,
-        },
-    })
+	// 返回成功响应
+	r.JSON(consts.StatusOK, map[string]any{
+		"message":  "Session deleted successfully",
+		"username": username,
+		"session": map[string]string{
+			"name": req.Session.Name,
+			// "username": username,
+		},
+	})
 }
 
 func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
