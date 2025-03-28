@@ -313,7 +313,7 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 		Salt:      cred.Salt,
 		Algorithm: cred.Algorithm,
 	}).Error; err != nil {
-		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusNotFound)
 		return
 	}
 
