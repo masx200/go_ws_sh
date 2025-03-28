@@ -227,76 +227,76 @@ func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 }
 
 func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-    // 定义请求体结构体
-    var req struct {
-        Token struct {
-            Identifier string `json:"identifer"`
-            Description string `json:"description"`
-        } `json:"token"`
-        Authorization CredentialsClient `json:"authorization"`
-    }
+	// 定义请求体结构体
+	var req struct {
+		Token struct {
+			Identifier  string `json:"identifer"`
+			Description string `json:"description"`
+		} `json:"token"`
+		Authorization CredentialsClient `json:"authorization"`
+	}
 
-    // 绑定请求体
-    if err := r.BindJSON(&req); err != nil {
-        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-        return
-    }
+	// 绑定请求体
+	if err := r.BindJSON(&req); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
 
-    // 验证身份
-    shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-    if shouldReturn {
-        return
-    }
+	// 验证身份
+	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
 
-    // 检查 Identifier 是否为空
-    if req.Token.Identifier == "" {
-        r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
-        return
-    }
+	// 检查 Identifier 是否为空
+	if req.Token.Identifier == "" {
+		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
+		return
+	}
 
-    var err error
-    username := req.Authorization.Username
-    if username == "" {
-        username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
-        if err != nil {
-            log.Println("Error:", err)
-            r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-            return
-        }
-        log.Println("Username:", username)
-    }
+	var err error
+	username := req.Authorization.Username
+	if username == "" {
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+		log.Println("Username:", username)
+	}
 
-    // 查询要更新的令牌
-    var token TokenStore
-    if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier}).First(&token).Error; err != nil {
-        r.JSON(consts.StatusNotFound, map[string]any{
-            "message":  "Error: Token not found",
-            "username": username,
-            "token": map[string]string{
-                "identifier": req.Token.Identifier,
-                "username":   username,
-            },
-        })
-        return
-    }
+	// 查询要更新的令牌
+	var token TokenStore
+	if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier}).First(&token).Error; err != nil {
+		r.JSON(consts.StatusNotFound, map[string]any{
+			"message":  "Error: Token not found",
+			"username": username,
+			"token": map[string]string{
+				"identifier": req.Token.Identifier,
+				"username":   username,
+			},
+		})
+		return
+	}
 
-    // 更新令牌信息
-    token.Description = req.Token.Description
-    if err := tokendb.Save(&token).Error; err != nil {
-        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-        return
-    }
+	// 更新令牌信息
+	token.Description = req.Token.Description
+	if err := tokendb.Save(&token).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
 
-    // 返回成功响应
-    r.JSON(consts.StatusOK, map[string]any{
-        "message":  "Token updated successfully",
-        "username": username,
-        "token": map[string]string{
-            "identifier": req.Token.Identifier,
-            "description": req.Token.Description,
-            "username":   username,
-        },
-    })
+	// 返回成功响应
+	r.JSON(consts.StatusOK, map[string]any{
+		"message":  "Token updated successfully",
+		"username": username,
+		"token": map[string]string{
+			"identifier":  req.Token.Identifier,
+			"description": req.Token.Description,
+			"username":    username,
+		},
+	})
 }
 
 func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
@@ -529,7 +529,91 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 }
 
 func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现修改会话的具体逻辑
+	// 定义请求体结构体
+	var req struct {
+		Session struct {
+			Name string   `json:"name"`
+			Cmd  string   `json:"cmd"`
+			Args []string `json:"args"`
+			Dir  string   `json:"dir"`
+		} `json:"session"`
+		Authorization CredentialsClient `json:"authorization"`
+	}
+
+	// 绑定请求体
+	if err := r.BindJSON(&req); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 验证身份
+	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if shouldReturn {
+		return
+	}
+
+	// 检查 Name 是否为空
+	if req.Session.Name == "" {
+		r.AbortWithMsg("Error: Name is empty", consts.StatusBadRequest)
+		return
+	}
+
+	var err error
+	username := req.Authorization.Username
+	if username == "" {
+		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+		log.Println("Username:", username)
+	}
+
+	// 查询要更新的会话
+	var session SessionStore
+	if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&session).Error; err != nil {
+		r.JSON(consts.StatusNotFound, map[string]any{
+			"message":  "Error: Session not found",
+			"username": username,
+			"session": map[string]string{
+				"name":     req.Session.Name,
+				"username": username,
+			},
+		})
+		return
+	}
+
+	// 更新会话信息
+	session.Cmd = req.Session.Cmd
+	argsstringarray := StringSlice(req.Session.Args)
+	var argsstring string
+
+	argsbytes, err := argsstringarray.Value()
+	if err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+	argsstring = string(argsbytes)
+	session.Args = argsstring
+	session.Dir = req.Session.Dir
+	if err := sessiondb.Save(&session).Error; err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
+
+	// 返回成功响应
+	r.JSON(consts.StatusOK, map[string]any{
+		"message":  "Session updated successfully",
+		"username": username,
+		"session": map[string]interface{}{
+			"name":     req.Session.Name,
+			"cmd":      req.Session.Cmd,
+			"args":     req.Session.Args,
+			"dir":      req.Session.Dir,
+			"username": username,
+		},
+	})
 }
 
 func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
@@ -563,17 +647,16 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 	log.Println("用户登录成功:")
 
-	
-    username := credential.Authorization.Username
-    if username == "" {
-        username, err = GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
-        if err != nil {
-            log.Println("Error:", err)
-            r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-            return
-        }
-        log.Println("Username:", username)
-    }
+	username := credential.Authorization.Username
+	if username == "" {
+		username, err = GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+		if err != nil {
+			log.Println("Error:", err)
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+		log.Println("Username:", username)
+	}
 	r.JSON(
 		consts.StatusOK,
 		map[string]interface{}{
