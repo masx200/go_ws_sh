@@ -574,7 +574,7 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 			"username": username,
 			"session": map[string]string{
 				"name":     req.Session.Name,
-				"username": username,
+				// "username": username,
 			},
 		})
 		return
@@ -666,7 +666,7 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 			"username": username,
 			"session": map[string]string{
 				"name":     req.Session.Name,
-				"username": username,
+				// "username": username,
 			},
 		})
 		return
@@ -705,7 +705,73 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 }
 
 func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-	// 实现删除会话的具体逻辑
+    // 定义请求体结构体
+    var req struct {
+        Session struct {
+            Name string `json:"name"`
+        } `json:"session"`
+        Authorization CredentialsClient `json:"authorization"`
+    }
+
+    // 绑定请求体
+    if err := r.BindJSON(&req); err != nil {
+        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+        return
+    }
+
+    // 验证身份
+    shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+    if shouldReturn {
+        return
+    }
+
+    // 检查 Name 是否为空
+    if req.Session.Name == "" {
+        r.AbortWithMsg("Error: Name is empty", consts.StatusBadRequest)
+        return
+    }
+
+    var err error
+    username := req.Authorization.Username
+    if username == "" {
+        username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+        if err != nil {
+            log.Println("Error:", err)
+            r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+            return
+        }
+        log.Println("Username:", username)
+    }
+
+    // 查询要删除的会话
+    var session SessionStore
+    if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&session).Error; err != nil {
+        r.JSON(consts.StatusOK, map[string]any{
+            "message":  "Error: Session not found",
+            "username": username,
+            "session": map[string]string{
+                "name":     req.Session.Name,
+                // "username": username,
+            },
+        })
+        return
+    }
+
+    // 删除会话
+    if err := sessiondb.Delete(&session).Error; err != nil {
+        r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+        return
+    }
+
+    // 返回成功响应
+    r.JSON(consts.StatusOK, map[string]any{
+        "message":  "Session deleted successfully",
+        "username": username,
+        "session": map[string]string{
+            "name":     req.Session.Name,
+            // "username": username,
+        },
+    })
 }
 
 func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
