@@ -35,7 +35,7 @@ POST /tokens
 ```json
 {
   "authorization": {
-    "identifer": "59",
+    "identifier": "59",
     "username": "通鹏",
     "token": "dolore Lorem ut",
     "password": "u1H84FL1dygv6H7",
@@ -44,7 +44,7 @@ POST /tokens
   "token": {
     "description": "联太为养复近造只手适。展志斯。子世年存种行成车交。决么林快效不原回团。老度史半在命质。术者照会接。是导响飞产提论我育定。",
     "username": "束艳",
-    "identifer": "59",
+    "identifier": "59",
     "token": "Excepteur commodo enim ullamco ex"
   }
 }
@@ -57,7 +57,7 @@ POST /tokens
 | x-HTTP-method-override | header | string                                | 否   | POST |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -65,7 +65,7 @@ POST /tokens
 | » token                | body   | [token](#schematoken)                 | 是   | none |
 | »» description         | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 
 > 返回示例
@@ -78,7 +78,7 @@ POST /tokens
   "token": {
     "description": "常应儿到统型整就这。本务记子权方。计选增酸单带断。况样南起据报题象门。然法深六认委两量。山事体。交满据至被了。",
     "username": "蒲梓豪",
-    "identifer": "68",
+    "identifier": "68",
     "token": "laborum nulla nostrud"
   },
   "username": "空紫林"
@@ -101,7 +101,7 @@ POST /tokens
 | » token        | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifer   | string                | true | none |        | none |
+| »» identifier   | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 | » username     | string                | true | none |        | none |
 
@@ -114,11 +114,11 @@ PUT /tokens
 ```json
 {
   "token": {
-    "identifer": "37",
+    "identifier": "37",
     "description": "细矿义。合认便情用南别法重同。解思周。把话老权道选带全百。院条实际展。提确备最广具术去包制。果流口布正大。温你任人然算。"
   },
   "authorization": {
-    "identifer": "2",
+    "identifier": "2",
     "username": "表志明",
     "token": "id sit",
     "password": "rizLm0jfLMpJoCE",
@@ -133,10 +133,10 @@ PUT /tokens
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » token         | body | object                                | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» description  | body | string                                | 是   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -153,7 +153,7 @@ PUT /tokens
   "token": {
     "description": "物除支斗保了研况。合和世米。教素华老代石究。",
     "username": "冀梓豪",
-    "identifer": "44"
+    "identifier": "44"
   }
 }
 ```
@@ -175,7 +175,7 @@ PUT /tokens
 | » token        | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifer   | string                | true | none |        | none |
+| »» identifier   | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 
 ## DELETE 删除令牌
@@ -189,11 +189,11 @@ DELETE /tokens
   "token": {
     "description": "也难各况老须山办何线。酸线给名。好东声间候下制备。受你质白东本处次较命。示难这名组合。专市该资。",
     "username": "始国强",
-    "identifer": "59",
+    "identifier": "59",
     "token": "in ipsum"
   },
   "authorization": {
-    "identifer": "98",
+    "identifier": "98",
     "username": "斋国珍",
     "token": "reprehenderit sit id",
     "password": "hkjNbMjFHCBrkbx",
@@ -210,10 +210,10 @@ DELETE /tokens
 | » token         | body | [token](#schematoken)                 | 是   | none |
 | »» description  | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -230,7 +230,7 @@ DELETE /tokens
   "token": {
     "description": "形争多历必去包队。正管铁记样。打必手京华从他者年这。",
     "username": "卞国良",
-    "identifer": "7",
+    "identifier": "7",
     "token": "et amet nostrud"
   }
 }
@@ -253,7 +253,7 @@ DELETE /tokens
 | » token        | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifer   | string                | true | none |        | none |
+| »» identifier   | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 
 ## GET 显示令牌
@@ -265,7 +265,7 @@ GET /tokens
 ```json
 {
   "authorization": {
-    "identifer": "26",
+    "identifier": "26",
     "username": "希颖",
     "token": "cillum ad",
     "password": "dzIi7wxDnv2KLGS",
@@ -281,7 +281,7 @@ GET /tokens
 | x-HTTP-method-override | header | string                                | 是   | GET  |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -299,13 +299,13 @@ GET /tokens
     {
       "description": "支起天器步管同日处。上单两率利元对学。队加议广及我效光标。类看进。门展科不写义县次该她。次斗变。人火车立己进。手机验类重百然。",
       "username": "龙家豪",
-      "identifer": "68",
+      "identifier": "68",
       "token": "officia deserunt in est enim"
     },
     {
       "description": "前全过过式行保。和感查。及年性成把。积五无特你及。华第也省。",
       "username": "步建军",
-      "identifer": "58",
+      "identifier": "58",
       "token": "proident"
     }
   ]
@@ -329,7 +329,7 @@ GET /tokens
 | » tokens       | [[token](#schematoken)] | true | none |        | none |
 | »» description | string                  | true | none |        | none |
 | »» username    | string                  | true | none |        | none |
-| »» identifer   | string                  | true | none |        | none |
+| »» identifier   | string                  | true | none |        | none |
 | »» token       | string                  | true | none |        | none |
 
 ## PUT 修改密码
@@ -341,7 +341,7 @@ PUT /credentials
 ```json
 {
   "authorization": {
-    "identifer": "11",
+    "identifier": "11",
     "username": "京万佳",
     "token": "nisi proident",
     "password": "HQHsYZOyvSkcizB",
@@ -360,7 +360,7 @@ PUT /credentials
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -411,7 +411,7 @@ DELETE /credentials
 ```json
 {
   "authorization": {
-    "identifer": "29",
+    "identifier": "29",
     "username": "阎晨",
     "token": "eu",
     "password": "Ax1RzKvcJA7FQZj",
@@ -430,7 +430,7 @@ DELETE /credentials
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -481,7 +481,7 @@ GET /credentials
 ```json
 {
   "authorization": {
-    "identifer": "55",
+    "identifier": "55",
     "username": "姒静怡",
     "token": "enim pariatur culpa",
     "password": "q2fFVw6c6uY_gwQ",
@@ -497,7 +497,7 @@ GET /credentials
 | x-HTTP-method-override | header | string                                | 是   | GET  |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -555,7 +555,7 @@ POST /credentials
 ```json
 {
   "authorization": {
-    "identifer": "8",
+    "identifier": "8",
     "username": "苌雨桐",
     "token": "dolor incididunt pariatur",
     "password": "SmuJxITZXdNYS__",
@@ -575,7 +575,7 @@ POST /credentials
 | x-HTTP-method-override | header | string                                | 否   | POST |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -626,7 +626,7 @@ PUT /sessions
 ```json
 {
   "authorization": {
-    "identifer": "9",
+    "identifier": "9",
     "username": "郦桂兰",
     "token": "ad nisi fugiat eu nulla",
     "password": "vhkN6hb1ZubYJw5",
@@ -651,7 +651,7 @@ PUT /sessions
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -721,7 +721,7 @@ DELETE /sessions
     "cmd": "amet incididunt do culpa labore"
   },
   "authorization": {
-    "identifer": "31",
+    "identifier": "31",
     "username": "龙秀英",
     "token": "nulla dolore officia",
     "password": "EhQLnzz1kTcnyz6",
@@ -741,7 +741,7 @@ DELETE /sessions
 | »» dir          | body | string                                | 否   | none |
 | »» cmd          | body | string                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer    | body | string                                | 是   | none |
+| »» identifier    | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -797,7 +797,7 @@ GET /sessions
 ```json
 {
   "authorization": {
-    "identifer": "44",
+    "identifier": "44",
     "username": "晋哲新",
     "token": "ut esse",
     "password": "Yj4QEiNgfJyF3cJ",
@@ -813,7 +813,7 @@ GET /sessions
 | x-HTTP-method-override | header | string                                | 是   | GET  |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -879,7 +879,7 @@ POST /sessions
 ```json
 {
   "authorization": {
-    "identifer": "90",
+    "identifier": "90",
     "username": "郁勇",
     "token": "do eiusmod",
     "password": "mXpnuFnILrjhuGJ",
@@ -905,7 +905,7 @@ POST /sessions
 | x-HTTP-method-override | header | string                                | 否   | POST |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifer           | body   | string                                | 是   | none |
+| »» identifier           | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -925,7 +925,7 @@ POST /sessions
   "session": {
     "description": "白住利适广的确压断院。一三就具出管。育程成及她不治都带只。科变利前。被接业把五。形备委都门立理场色资。志立候头消改流需报。条万业前风。",
     "username": "星国平",
-    "identifer": "42",
+    "identifier": "42",
     "token": "Excepteur dolore sit amet"
   },
   "message": "do",
@@ -948,7 +948,7 @@ POST /sessions
 | » session      | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifer   | string                | true | none |        | none |
+| »» identifier   | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 | » message      | string                | true | none |        | none |
 | » username     | string                | true | none |        | none |
@@ -964,7 +964,7 @@ POST /sessions
 
 ```json
 {
-  "identifer": "string",
+  "identifier": "string",
   "username": "string",
   "token": "string",
   "password": "string",
@@ -976,7 +976,7 @@ POST /sessions
 
 | 名称      | 类型   | 必选 | 约束 | 中文名 | 说明 |
 | --------- | ------ | ---- | ---- | ------ | ---- |
-| identifer | string | true | none |        | none |
+| identifier | string | true | none |        | none |
 | username  | string | true | none |        | none |
 | token     | string | true | none |        | none |
 | password  | string | true | none |        | none |
@@ -993,7 +993,7 @@ POST /sessions
 {
   "description": "string",
   "username": "string",
-  "identifer": "string",
+  "identifier": "string",
   "token": "string"
 }
 ```
@@ -1004,7 +1004,7 @@ POST /sessions
 | ----------- | ------ | ---- | ---- | ------ | ---- |
 | description | string | true | none |        | none |
 | username    | string | true | none |        | none |
-| identifer   | string | true | none |        | none |
+| identifier   | string | true | none |        | none |
 | token       | string | true | none |        | none |
 
 <h2 id="tocS_session">session</h2>

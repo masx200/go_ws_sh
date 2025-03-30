@@ -50,7 +50,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "59",
+                  "identifier": "59",
                   "username": "通鹏",
                   "token": "dolore Lorem ut",
                   "password": "u1H84FL1dygv6H7",
@@ -59,7 +59,7 @@
                 "token": {
                   "description": "联太为养复近造只手适。展志斯。子世年存种行成车交。决么林快效不原回团。老度史半在命质。术者照会接。是导响飞产提论我育定。",
                   "username": "束艳",
-                  "identifer": "59",
+                  "identifier": "59",
                   "token": "Excepteur commodo enim ullamco ex"
                 }
               }
@@ -101,7 +101,7 @@
                   "token": {
                     "description": "常应儿到统型整就这。本务记子权方。计选增酸单带断。况样南起据报题象门。然法深六认委两量。山事体。交满据至被了。",
                     "username": "蒲梓豪",
-                    "identifer": "68",
+                    "identifier": "68",
                     "token": "laborum nulla nostrud"
                   },
                   "username": "空紫林"
@@ -132,7 +132,7 @@
                   "token": {
                     "type": "object",
                     "properties": {
-                      "identifer": {
+                      "identifier": {
                         "type": "string",
                         "title": "",
                         "description": ""
@@ -144,11 +144,11 @@
                       }
                     },
                     "required": [
-                      "identifer",
+                      "identifier",
                       "description"
                     ],
                     "x-apifox-orders": [
-                      "identifer",
+                      "identifier",
                       "description"
                     ],
                     "x-apifox-ignore-properties": []
@@ -169,11 +169,11 @@
               },
               "example": {
                 "token": {
-                  "identifer": "37",
+                  "identifier": "37",
                   "description": "细矿义。合认便情用南别法重同。解思周。把话老权道选带全百。院条实际展。提确备最广具术去包制。果流口布正大。温你任人然算。"
                 },
                 "authorization": {
-                  "identifer": "2",
+                  "identifier": "2",
                   "username": "表志明",
                   "token": "id sit",
                   "password": "rizLm0jfLMpJoCE",
@@ -219,7 +219,7 @@
                   "token": {
                     "description": "物除支斗保了研况。合和世米。教素华老代石究。",
                     "username": "冀梓豪",
-                    "identifer": "44"
+                    "identifier": "44"
                   }
                 }
               }
@@ -266,11 +266,11 @@
                 "token": {
                   "description": "也难各况老须山办何线。酸线给名。好东声间候下制备。受你质白东本处次较命。示难这名组合。专市该资。",
                   "username": "始国强",
-                  "identifer": "59",
+                  "identifier": "59",
                   "token": "in ipsum"
                 },
                 "authorization": {
-                  "identifer": "98",
+                  "identifier": "98",
                   "username": "斋国珍",
                   "token": "reprehenderit sit id",
                   "password": "hkjNbMjFHCBrkbx",
@@ -316,7 +316,7 @@
                   "token": {
                     "description": "边太支消二水作写山。参去类。据素队族取只维证除教。清些建石万种单常。有地开斗无点查号。美报行何。有议手已达。",
                     "username": "邶晨阳",
-                    "identifer": "84",
+                    "identifier": "84",
                     "token": "fugiat deserunt non ea",
                     "updated_at": "2025-01-26",
                     "created_at": "2025-01-19 09:31:37"
@@ -370,7 +370,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "26",
+                  "identifier": "26",
                   "username": "希颖",
                   "token": "cillum ad",
                   "password": "dzIi7wxDnv2KLGS",
@@ -422,7 +422,7 @@
                     {
                       "description": "条物先义价级地后。中门队种导力表。只矿处。",
                       "username": "钭苡沫",
-                      "identifer": "14",
+                      "identifier": "14",
                       "token": "sint magna id eiusmod aliqua",
                       "updated_at": "2025-10-04",
                       "created_at": "2026-02-08 12:55:32"
@@ -473,7 +473,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "11",
+                  "identifier": "11",
                   "username": "京万佳",
                   "token": "nisi proident",
                   "password": "HQHsYZOyvSkcizB",
@@ -567,7 +567,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "29",
+                  "identifier": "29",
                   "username": "阎晨",
                   "token": "eu",
                   "password": "Ax1RzKvcJA7FQZj",
@@ -667,7 +667,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "55",
+                  "identifier": "55",
                   "username": "姒静怡",
                   "token": "enim pariatur culpa",
                   "password": "q2fFVw6c6uY_gwQ",
@@ -779,7 +779,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "8",
+                  "identifier": "8",
                   "username": "苌雨桐",
                   "token": "dolor incididunt pariatur",
                   "password": "SmuJxITZXdNYS__",
@@ -879,7 +879,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "9",
+                  "identifier": "9",
                   "username": "郦桂兰",
                   "token": "ad nisi fugiat eu nulla",
                   "password": "vhkN6hb1ZubYJw5",
@@ -994,7 +994,7 @@
                   "cmd": "amet incididunt do culpa labore"
                 },
                 "authorization": {
-                  "identifer": "31",
+                  "identifier": "31",
                   "username": "龙秀英",
                   "token": "nulla dolore officia",
                   "password": "EhQLnzz1kTcnyz6",
@@ -1096,7 +1096,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "44",
+                  "identifier": "44",
                   "username": "晋哲新",
                   "token": "ut esse",
                   "password": "Yj4QEiNgfJyF3cJ",
@@ -1208,7 +1208,7 @@
               },
               "example": {
                 "authorization": {
-                  "identifer": "90",
+                  "identifier": "90",
                   "username": "郁勇",
                   "token": "do eiusmod",
                   "password": "mXpnuFnILrjhuGJ",
@@ -1266,7 +1266,7 @@
                   "session": {
                     "description": "白住利适广的确压断院。一三就具出管。育程成及她不治都带只。科变利前。被接业把五。形备委都门立理场色资。志立候头消改流需报。条万业前风。",
                     "username": "星国平",
-                    "identifer": "42",
+                    "identifier": "42",
                     "token": "Excepteur dolore sit amet"
                   },
                   "message": "do",
@@ -1290,7 +1290,7 @@
       "authorization": {
         "type": "object",
         "properties": {
-          "identifer": {
+          "identifier": {
             "type": "string",
             "title": "",
             "description": ""
@@ -1317,14 +1317,14 @@
           }
         },
         "x-apifox-orders": [
-          "identifer",
+          "identifier",
           "username",
           "token",
           "password",
           "type"
         ],
         "required": [
-          "identifer",
+          "identifier",
           "username",
           "token",
           "password",

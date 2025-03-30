@@ -105,7 +105,7 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	// 定义请求体结构体
 	var req struct {
 		Token struct {
-			Identifier  string `json:"identifer"`
+			Identifier  string `json:"identifier"`
 			Description string `json:"description"`
 		} `json:"token"`
 		Authorization CredentialsClient `json:"authorization"`
