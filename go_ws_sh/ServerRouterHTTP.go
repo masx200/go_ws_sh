@@ -339,8 +339,20 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 	}
 	//检查NewPassword不为空
 	if req.Credential.Password == "" || req.Credential.Username == "" {
+		log.Println("Error: New password is empty or username is empty")
+		r.AbortWithMsg("Error: New password is empty or username is empty", consts.StatusBadRequest)
+		return
+	}
 
-		r.AbortWithMsg("Error: New password is empty", consts.StatusBadRequest)
+	if IsUserExists(credentialdb, req.Credential.Username) {
+		log.Println("Error: User already exists")
+		r.AbortWithMsg("Error: User already exists", consts.StatusBadRequest)
+		return
+	}
+
+	if credentialdb.Unscoped().Where("username = ?", req.Authorization.Username).Delete(&CredentialStore{}).Error != nil {
+		log.Println("Error: Failed to delete user")
+		r.AbortWithMsg("Error: Failed to delete user", consts.StatusInternalServerError)
 		return
 	}
 	var cred CredentialStore
