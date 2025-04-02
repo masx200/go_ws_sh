@@ -350,7 +350,7 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		return
 	}
 
-	if credentialdb.Unscoped().Where("username = ?", req.Authorization.Username).Delete(&CredentialStore{}).Error != nil {
+	if credentialdb.Unscoped().Where("username = ?", req.Credential.Username).Delete(&CredentialStore{}).Error != nil {
 		log.Println("Error: Failed to delete user")
 		r.AbortWithMsg("Error: Failed to delete user", consts.StatusInternalServerError)
 		return

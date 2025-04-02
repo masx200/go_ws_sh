@@ -7,11 +7,13 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	// "github.com/hertz-contrib/websocket"
 )
 
@@ -200,16 +202,26 @@ func Server_start(config string) {
 	if tokenFile == "" {
 		tokenFile = "token_store.db"
 	}
-	credentialdb, err := gorm.Open(sqlite.Open(credentialFile), &gorm.Config{})
+
+	// 创建自定义 Logger
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // 输出到控制台
+		logger.Config{
+			LogLevel:      logger.Info, // 设置日志级别为 Debug [[7]][[9]]
+			SlowThreshold: time.Second,  // 慢查询阈值（可选）
+			Colorful: true,
+		},
+	)
+	credentialdb, err := gorm.Open(sqlite.Open(credentialFile), &gorm.Config{ Logger: newLogger, })
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	tokendb, err := gorm.Open(sqlite.Open(tokenFile), &gorm.Config{})
+	tokendb, err := gorm.Open(sqlite.Open(tokenFile), &gorm.Config{ Logger: newLogger, })
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	sessiondb, err := gorm.Open(sqlite.Open(sessionFile), &gorm.Config{})
+	sessiondb, err := gorm.Open(sqlite.Open(sessionFile), &gorm.Config{ Logger: newLogger, })
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
