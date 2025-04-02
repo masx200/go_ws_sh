@@ -436,8 +436,8 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 检查 Name 是否为空
-	if req.Session.Name == "" {
-		r.AbortWithMsg("Error: Name is empty", consts.StatusBadRequest)
+	if req.Session.Name == "" || req.Session.Cmd == ""||req.Session.Dir == ""{
+		r.AbortWithMsg("Error: Name is empty or  Cmd or Dir is empty ", consts.StatusBadRequest)
 		return
 	}
 
@@ -452,7 +452,11 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 		}
 		log.Println("Username:", username)
 	}
-
+	// if IsSessionExists(sessiondb, req.Session.Name) {
+	// 	log.Println("Error: Session already exists")
+	// 	r.AbortWithMsg("Error: Session already exists", consts.StatusBadRequest)
+	// 	return
+	// }
 	// 检查会话是否已存在
 	var existingSession SessionStore
 	if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&existingSession).Error; err == nil {
@@ -466,7 +470,11 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 		})
 		return
 	}
-
+	if sessiondb.Unscoped().Where("name = ?", req.Session.Name).Delete(&SessionStore{}).Error != nil {
+		log.Println("Error: Failed to delete session")
+		r.AbortWithMsg("Error: Failed to delete session", consts.StatusInternalServerError)
+		return
+	}
 	// 创建新的会话
 	argsstringarray := StringSlice(req.Session.Args)
 	var argsstring string
