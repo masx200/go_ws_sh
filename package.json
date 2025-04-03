@@ -4,7 +4,8 @@
   "description": "go_ws_sh",
   "main": "index.js",
   "scripts": {
-    "format": " npx prettier -w *.html *.md *.json"
+    "format": " npx prettier -w *.html *.md *.json",
+    "server":"go run -v main.go -mode server -config server-config.json"
   },
   "keywords": [],
   "author": "",
