@@ -265,19 +265,22 @@ func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 
 func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 创建一个TokenInfo结构体，用于接收认证信息
-	var credential struct {
+	var body struct {
 		Authorization CredentialsClient `json:"authorization"`
+		Credential    struct {
+			Username string `json:"username"`
+		} `json:"credential"`
 	}
 
 	// 将请求参数绑定到TokenInfo结构体中
-	err := r.BindJSON(&credential)
+	err := r.BindJSON(&body)
 	if err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(credential.Authorization, credentialdb, tokendb, r)
+	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
 	if shouldReturn {
 		log.Println("用户登录失败:")
 		return
@@ -285,9 +288,18 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 
 	// 查询所有用户的认证信息
 	var credentials []CredentialStore
-	if err := credentialdb.Find(&credentials).Error; err != nil {
-		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-		return
+
+	if body.Credential.Username != "" {
+		// 执行查询
+		if err := credentialdb.Where("username =?", body.Credential.Username).Find(&credentials).Error; err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+	} else {
+		if err := credentialdb.Find(&credentials).Error; err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
 	}
 
 	// 构建响应数据
@@ -303,10 +315,10 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 		})
 	}
 
-	username := credential.Authorization.Username
+	username := body.Authorization.Username
 	if username == "" {
 
-		username, err = GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+		username, err = GetUsernameByTokenIdentifier(tokendb, body.Authorization.Identifier)
 		if err != nil {
 			log.Println("Error:", err)
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -436,7 +448,7 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 检查 Name 是否为空
-	if req.Session.Name == "" || req.Session.Cmd == ""||req.Session.Dir == ""{
+	if req.Session.Name == "" || req.Session.Cmd == "" || req.Session.Dir == "" {
 		r.AbortWithMsg("Error: Name is empty or  Cmd or Dir is empty ", consts.StatusBadRequest)
 		return
 	}
