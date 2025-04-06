@@ -21,7 +21,6 @@ func IsUserExists(credentialdb *gorm.DB, username string) bool {
 
 // ... existing code ...
 
-
 // IsUserExists 判断指定 username 的用户是否存在于 credentialdb 中
 func IsSessionExists(sessiondb *gorm.DB, sessionname string) bool {
 	var count int64

@@ -208,20 +208,20 @@ func Server_start(config string) {
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // 输出到控制台
 		logger.Config{
 			LogLevel:      logger.Info, // 设置日志级别为 Debug [[7]][[9]]
-			SlowThreshold: time.Second,  // 慢查询阈值（可选）
-			Colorful: true,
+			SlowThreshold: time.Second, // 慢查询阈值（可选）
+			Colorful:      true,
 		},
 	)
-	credentialdb, err := gorm.Open(sqlite.Open(credentialFile), &gorm.Config{ Logger: newLogger, })
+	credentialdb, err := gorm.Open(sqlite.Open(credentialFile), &gorm.Config{Logger: newLogger})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	tokendb, err := gorm.Open(sqlite.Open(tokenFile), &gorm.Config{ Logger: newLogger, })
+	tokendb, err := gorm.Open(sqlite.Open(tokenFile), &gorm.Config{Logger: newLogger})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	sessiondb, err := gorm.Open(sqlite.Open(sessionFile), &gorm.Config{ Logger: newLogger, })
+	sessiondb, err := gorm.Open(sqlite.Open(sessionFile), &gorm.Config{Logger: newLogger})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}

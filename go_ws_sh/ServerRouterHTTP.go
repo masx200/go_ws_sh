@@ -683,34 +683,33 @@ func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 
 func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 
-	sessions, err := ReadAllSessions(sessiondb)
-	if err != nil {
-		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-		return
-	}
 	// 实现显示会话的具体逻辑
 	// 创建一个TokenInfo结构体
-	var credential struct {
+	var body struct {
 		Authorization CredentialsClient `json:"authorization"`
+		Session       struct {
+			Name string `json:"name"`
+		} `json:"session"`
 	}
 
 	// 将请求参数绑定到TokenInfo结构体中
-	err = r.BindJSON(&credential)
+	err := r.BindJSON(&body)
 	if err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-	log.Println(credential)
-	shouldReturn := Validatepasswordortoken(credential.Authorization, credentialdb, tokendb, r)
+	log.Println(body)
+
+	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
 	if shouldReturn {
 		log.Println("用户登录失败:")
 		return
 	}
 	log.Println("用户登录成功:")
 
-	username := credential.Authorization.Username
+	username := body.Authorization.Username
 	if username == "" {
-		username, err = GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+		username, err = GetUsernameByTokenIdentifier(tokendb, body.Authorization.Identifier)
 		if err != nil {
 			log.Println("Error:", err)
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -718,6 +717,21 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		}
 		log.Println("Username:", username)
 	}
+	var sessions []Session
+	if body.Session.Name != "" {
+		sessions, err = ReadAllSessionsWithName(sessiondb, body.Session.Name)
+		if err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+	} else {
+		sessions, err = ReadAllSessions(sessiondb)
+		if err != nil {
+			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+			return
+		}
+	}
+
 	r.JSON(
 		consts.StatusOK,
 		map[string]interface{}{
