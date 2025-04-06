@@ -230,6 +230,9 @@ func Server_start(config string) {
 	sessiondb.AutoMigrate(&SessionStore{})
 	credentialdb.AutoMigrate(&CredentialStore{})
 	tokendb.AutoMigrate(&TokenStore{})
+	tokendb=tokendb.Debug()
+	credentialdb=credentialdb.Debug()
+	sessiondb=sessiondb.Debug()
 	err = EnsureSessions(configdata, sessiondb)
 	if err != nil {
 		log.Fatal(err)
@@ -240,5 +243,6 @@ func Server_start(config string) {
 		log.Fatal(err)
 		return
 	}
+
 	pipe_std_ws_server(configdata, credentialdb, tokendb, sessiondb)
 }

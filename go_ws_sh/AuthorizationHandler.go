@@ -17,6 +17,7 @@ import (
 // ListTokensHandler 列出所有令牌
 func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
+		tokendb = tokendb.Debug()
 		var body struct {
 			Authorization CredentialsClient `json:"authorization"`
 			Token         struct {
@@ -37,7 +38,7 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 		// 查询所有令牌
 		var tokens []TokenStore
 		if body.Token.Identifier != "" {
-
+			log.Println("body.Token.Identifier:", body.Token.Identifier)
 			if err := tokendb.Where("identifier =?", body.Token.Identifier).First(&tokens).Error; err != nil {
 				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 				return

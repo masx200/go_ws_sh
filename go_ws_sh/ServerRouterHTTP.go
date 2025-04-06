@@ -112,6 +112,7 @@ func UpdateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 }
 
 func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
+	credentialdb=credentialdb.Debug()
 	// 创建一个TokenInfo结构体，用于接收认证信息
 	var body struct {
 		Authorization CredentialsClient `json:"authorization"`
@@ -138,6 +139,7 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 	var credentials []CredentialStore
 
 	if body.Credential.Username != "" {
+		log.Println("查询用户:", body.Credential.Username)
 		// 执行查询
 		if err := credentialdb.Where("username =?", body.Credential.Username).Find(&credentials).Error; err != nil {
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -460,7 +462,7 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 }
 
 func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
-
+	sessiondb=sessiondb.Debug()
 	// 实现显示会话的具体逻辑
 	// 创建一个TokenInfo结构体
 	var body struct {
@@ -497,6 +499,9 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 	var sessions []Session
 	if body.Session.Name != "" {
+
+
+		log.Println("查询Name:", body.Session.Name)
 		sessions, err = ReadAllSessionsWithName(sessiondb, body.Session.Name)
 		if err != nil {
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
