@@ -24,36 +24,37 @@ func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 
 func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 定义请求体结构体
-	var req struct {
+	var body struct {
 		Token struct {
 			Identifier  string `json:"identifier"`
 			Description string `json:"description"`
+			Username    string `json:"username"`
 		} `json:"token"`
 		Authorization CredentialsClient `json:"authorization"`
 	}
 
 	// 绑定请求体
-	if err := r.BindJSON(&req); err != nil {
+	if err := r.BindJSON(&body); err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
 	if shouldReturn {
 		return
 	}
 
 	// 检查 Identifier 是否为空
-	if req.Token.Identifier == "" {
+	if body.Token.Identifier == "" {
 		r.AbortWithMsg("Error: Identifier is empty", consts.StatusBadRequest)
 		return
 	}
 
 	var err error
-	username := req.Authorization.Username
+	username := body.Authorization.Username
 	if username == "" {
-		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		username, err = GetUsernameByTokenIdentifier(tokendb, body.Authorization.Identifier)
 		if err != nil {
 			log.Println("Error:", err)
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -64,12 +65,12 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 
 	// 查询要更新的令牌
 	var token TokenStore
-	if err := tokendb.Where(&TokenStore{Identifier: req.Token.Identifier}).First(&token).Error; err != nil {
+	if err := tokendb.Where(&TokenStore{Identifier: body.Token.Identifier}).First(&token).Error; err != nil {
 		r.JSON(consts.StatusNotFound, map[string]any{
 			"message":  "Error: Token not found",
 			"username": username,
 			"token": map[string]string{
-				"identifier": req.Token.Identifier,
+				"identifier": body.Token.Identifier,
 				"username":   username,
 			},
 		})
@@ -77,7 +78,8 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 
 	// 更新令牌信息
-	token.Description = req.Token.Description
+	token.Description = body.Token.Description
+	token.Username = body.Token.Username
 	if err := tokendb.Save(&token).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
@@ -88,8 +90,8 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		"message":  "Token updated successfully",
 		"username": username,
 		"token": map[string]string{
-			"identifier":  req.Token.Identifier,
-			"description": req.Token.Description,
+			"identifier":  body.Token.Identifier,
+			"description": body.Token.Description,
 			"username":    username,
 		},
 	})
