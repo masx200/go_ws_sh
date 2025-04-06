@@ -17,25 +17,37 @@ import (
 // ListTokensHandler 列出所有令牌
 func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
-		var credential struct {
+		var body struct {
 			Authorization CredentialsClient `json:"authorization"`
+			Token         struct {
+				Identifier string `json:"identifier"`
+			} `json:"token"`
 		}
 
-		if err := r.BindJSON(&credential); err != nil {
+		if err := r.BindJSON(&body); err != nil {
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 			return
 		}
 
-		shouldReturn := Validatepasswordortoken(credential.Authorization, credentialdb, tokendb, r)
+		shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
 		if shouldReturn {
 			return
 		}
 
 		// 查询所有令牌
 		var tokens []TokenStore
-		if err := tokendb.Find(&tokens).Error; err != nil {
-			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
-			return
+		if body.Token.Identifier != "" {
+
+			if err := tokendb.Where("identifier =?", body.Token.Identifier).First(&tokens).Error; err != nil {
+				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+				return
+			}
+		} else {
+			if err := tokendb.Find(&tokens).Error; err != nil {
+				r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+				return
+			}
+
 		}
 
 		// 构建响应数据
@@ -54,8 +66,8 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 			})
 		}
 
-		if credential.Authorization.Username != "" {
-			username := credential.Authorization.Username
+		if body.Authorization.Username != "" {
+			username := body.Authorization.Username
 			r.JSON(consts.StatusOK, map[string]interface{}{
 				"tokens":   tokenList,
 				"username": username,
@@ -63,7 +75,7 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 			})
 			return
 		}
-		username, err := GetUsernameByTokenIdentifier(tokendb, credential.Authorization.Identifier)
+		username, err := GetUsernameByTokenIdentifier(tokendb, body.Authorization.Identifier)
 		if err != nil {
 			log.Println("Error:", err)
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
