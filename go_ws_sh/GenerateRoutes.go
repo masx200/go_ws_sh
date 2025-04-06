@@ -8,7 +8,7 @@ import (
 )
 
 // GenerateRoutesHttp 根据 openapi 文件生成路由配置
-func GenerateRoutesHttp(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) []RouteConfig {
+func GenerateRoutesHttp(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_credentials InitialCredentials, initial_sessions []Session) []RouteConfig {
 	routes := []RouteConfig{
 		// /tokens POST
 		{
@@ -85,7 +85,7 @@ func GenerateRoutesHttp(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 			Method: "DELETE",
 			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理删除用户的逻辑
-				DeleteCredentialHandler(credentialdb, tokendb, sessiondb, c, r)
+				DeleteCredentialHandler(credentialdb, tokendb, sessiondb, c, r, initial_credentials)
 			},
 		},
 		// 可以根据 openapi 文件添加更多接口的路由配置
@@ -114,7 +114,7 @@ func GenerateRoutesHttp(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 			Method: "DELETE",
 			MiddleWare: func(c context.Context, r *app.RequestContext, next HertzNext) {
 				// 处理删除会话的逻辑
-				DeleteSessionHandler(credentialdb, tokendb, sessiondb, c, r)
+				DeleteSessionHandler(credentialdb, tokendb, sessiondb, c, r, initial_sessions)
 			},
 		},
 		// /sessions GET
