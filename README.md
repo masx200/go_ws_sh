@@ -172,6 +172,7 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 
 ```json
 {
+  "session_file": "session_store.db",
   "token_file": "token_store.db",
   "credential_file": "credential_store.db",
   "initial_credentials": [
@@ -212,10 +213,15 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 
 ```json
 {
+  "session_file": "session_store.db",
   "token_file": "token_store.db",
   "credential_file": "credential_store.db",
-  "initial_username": "admin",
-  "initial_password": "pass",
+  "initial_credentials": [
+    {
+      "username": "admin",
+      "password": "pass"
+    }
+  ],
   "sessions": [
     {
       "username": "admin",
@@ -290,7 +296,6 @@ Linux。配置文件使用 JSON 格式，定义了服务启动所需的各种参
     "password": "pass"
   },
   "sessions": {
-    "username": "admin",
     "path": "pwsh"
   },
   "servers": {
