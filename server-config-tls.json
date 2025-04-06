@@ -2,7 +2,7 @@
   "session_file": "session_store.db",
   "token_file": "token_store.db",
   "credential_file": "credential_store.db",
-  "initial_credentails": [
+  "initial_credentials": [
     {
       "username": "admin",
       "password": "pass"

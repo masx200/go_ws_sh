@@ -174,7 +174,7 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
 {
   "token_file": "token_store.db",
   "credential_file": "credential_store.db",
-  "initial_credentails": [
+  "initial_credentials": [
     {
       "username": "admin",
       "password": "pass"
