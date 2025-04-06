@@ -57,7 +57,7 @@ POST /tokens
 | x-HTTP-method-override | header | string                                | 否   | POST |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -65,7 +65,7 @@ POST /tokens
 | » token                | body   | [token](#schematoken)                 | 是   | none |
 | »» description         | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 
 > 返回示例
@@ -101,7 +101,7 @@ POST /tokens
 | » token        | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifier   | string                | true | none |        | none |
+| »» identifier  | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 | » username     | string                | true | none |        | none |
 
@@ -133,10 +133,10 @@ PUT /tokens
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » token         | body | object                                | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» description  | body | string                                | 是   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -175,7 +175,7 @@ PUT /tokens
 | » token        | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifier   | string                | true | none |        | none |
+| »» identifier  | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 
 ## DELETE 删除令牌
@@ -210,10 +210,10 @@ DELETE /tokens
 | » token         | body | [token](#schematoken)                 | 是   | none |
 | »» description  | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -253,7 +253,7 @@ DELETE /tokens
 | » token        | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifier   | string                | true | none |        | none |
+| »» identifier  | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 
 ## GET 显示令牌
@@ -281,7 +281,7 @@ GET /tokens
 | x-HTTP-method-override | header | string                                | 是   | GET  |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -329,7 +329,7 @@ GET /tokens
 | » tokens       | [[token](#schematoken)] | true | none |        | none |
 | »» description | string                  | true | none |        | none |
 | »» username    | string                  | true | none |        | none |
-| »» identifier   | string                  | true | none |        | none |
+| »» identifier  | string                  | true | none |        | none |
 | »» token       | string                  | true | none |        | none |
 
 ## PUT 修改密码
@@ -360,7 +360,7 @@ PUT /credentials
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -430,7 +430,7 @@ DELETE /credentials
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -497,7 +497,7 @@ GET /credentials
 | x-HTTP-method-override | header | string                                | 是   | GET  |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -575,7 +575,7 @@ POST /credentials
 | x-HTTP-method-override | header | string                                | 否   | POST |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -651,7 +651,7 @@ PUT /sessions
 | --------------- | ---- | ------------------------------------- | ---- | ---- |
 | body            | body | object                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -741,7 +741,7 @@ DELETE /sessions
 | »» dir          | body | string                                | 否   | none |
 | »» cmd          | body | string                                | 否   | none |
 | » authorization | body | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier    | body | string                                | 是   | none |
+| »» identifier   | body | string                                | 是   | none |
 | »» username     | body | string                                | 是   | none |
 | »» token        | body | string                                | 是   | none |
 | »» password     | body | string                                | 是   | none |
@@ -813,7 +813,7 @@ GET /sessions
 | x-HTTP-method-override | header | string                                | 是   | GET  |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -905,7 +905,7 @@ POST /sessions
 | x-HTTP-method-override | header | string                                | 否   | POST |
 | body                   | body   | object                                | 否   | none |
 | » authorization        | body   | [authorization](#schemaauthorization) | 是   | none |
-| »» identifier           | body   | string                                | 是   | none |
+| »» identifier          | body   | string                                | 是   | none |
 | »» username            | body   | string                                | 是   | none |
 | »» token               | body   | string                                | 是   | none |
 | »» password            | body   | string                                | 是   | none |
@@ -948,7 +948,7 @@ POST /sessions
 | » session      | [token](#schematoken) | true | none |        | none |
 | »» description | string                | true | none |        | none |
 | »» username    | string                | true | none |        | none |
-| »» identifier   | string                | true | none |        | none |
+| »» identifier  | string                | true | none |        | none |
 | »» token       | string                | true | none |        | none |
 | » message      | string                | true | none |        | none |
 | » username     | string                | true | none |        | none |
@@ -974,13 +974,13 @@ POST /sessions
 
 ### 属性
 
-| 名称      | 类型   | 必选 | 约束 | 中文名 | 说明 |
-| --------- | ------ | ---- | ---- | ------ | ---- |
+| 名称       | 类型   | 必选 | 约束 | 中文名 | 说明 |
+| ---------- | ------ | ---- | ---- | ------ | ---- |
 | identifier | string | true | none |        | none |
-| username  | string | true | none |        | none |
-| token     | string | true | none |        | none |
-| password  | string | true | none |        | none |
-| type      | string | true | none |        | none |
+| username   | string | true | none |        | none |
+| token      | string | true | none |        | none |
+| password   | string | true | none |        | none |
+| type       | string | true | none |        | none |
 
 <h2 id="tocS_token">token</h2>
 
@@ -1004,7 +1004,7 @@ POST /sessions
 | ----------- | ------ | ---- | ---- | ------ | ---- |
 | description | string | true | none |        | none |
 | username    | string | true | none |        | none |
-| identifier   | string | true | none |        | none |
+| identifier  | string | true | none |        | none |
 | token       | string | true | none |        | none |
 
 <h2 id="tocS_session">session</h2>
