@@ -181,7 +181,7 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
       "password": "pass"
     }
   ],
-  "sessions": [
+  "initial_sessions": [
     {
       "username": "admin",
       "path": "pwsh",
@@ -222,7 +222,7 @@ protoc --go_out=./ --go_opt=Mwsmsg.proto=./go_ws_sh wsmsg.proto
       "password": "pass"
     }
   ],
-  "sessions": [
+  "initial_sessions": [
     {
       "username": "admin",
       "path": "bash",
