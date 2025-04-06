@@ -2,6 +2,10 @@
 
 go_ws_sh
 
+基于websocket的支持多个会话管理的web远程终端
+
+[go_ws_sh_fe](https://github.com/masx200/go_ws_sh_fe)
+
 ### 介绍：全 Go 语言 WebSocket 远程 Shell 模拟器
 
 这款远程 Shell 模拟器完全使用 Go 语言开发，客户端和服务端均基于 Go 构建。它利用
