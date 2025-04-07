@@ -18,6 +18,7 @@
       "name": "根目录",
       "id": 48328862,
       "auth": {},
+      "securityScheme": {},
       "parentId": 0,
       "serverId": "",
       "description": "",
@@ -69,6 +70,7 @@
             "auth": {
               "type": "noauth"
             },
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -118,7 +120,7 @@
             "responseExamples": [
               {
                 "name": "示例 1",
-                "data": "{\n    \"session\": {\n        \"description\": \"白住利适广的确压断院。一三就具出管。育程成及她不治都带只。科变利前。被接业把五。形备委都门立理场色资。志立候头消改流需报。条万业前风。\",\n        \"username\": \"星国平\",\n        \"identifier\": \"42\",\n        \"token\": \"Excepteur dolore sit amet\"\n    },\n    \"message\": \"do\",\n    \"username\": \"夔蒙\"\n}",
+                "data": "{\n    \"session\": {\n        \"description\": \"白住利适广的确压断院。一三就具出管。育程成及她不治都带只。科变利前。被接业把五。形备委都门立理场色资。志立候头消改流需报。条万业前风。\",\n        \"username\": \"星国平\",\n        \"identifer\": \"42\",\n        \"token\": \"Excepteur dolore sit amet\"\n    },\n    \"message\": \"do\",\n    \"username\": \"夔蒙\"\n}",
                 "responseId": 639101978,
                 "ordering": 1,
                 "description": "",
@@ -152,7 +154,7 @@
               "examples": [
                 {
                   "name": "示例 1",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"90\",\n        \"username\": \"郁勇\",\n        \"token\": \"do eiusmod\",\n        \"password\": \"mXpnuFnILrjhuGJ\",\n        \"type\": \"dolore nulla Ut ut proident\"\n    },\n    \"session\": {\n        \"name\": \"祈雨欣\",\n        \"args\": [\n            \"proident\",\n            \"cillum esse dolore ut amet\",\n            \"laborum sint culpa\"\n        ],\n        \"dir\": \"fugiat dolore ut reprehenderit sed\",\n        \"cmd\": \"anim\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"90\",\n        \"username\": \"郁勇\",\n        \"token\": \"do eiusmod\",\n        \"password\": \"mXpnuFnILrjhuGJ\",\n        \"type\": \"dolore nulla Ut ut proident\"\n    },\n    \"session\": {\n        \"name\": \"祈雨欣\",\n        \"args\": [\n            \"proident\",\n            \"cillum esse dolore ut amet\",\n            \"laborum sint culpa\"\n        ],\n        \"dir\": \"fugiat dolore ut reprehenderit sed\",\n        \"cmd\": \"anim\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -207,6 +209,7 @@
             "auth": {
               "type": "noauth"
             },
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -290,7 +293,7 @@
               "examples": [
                 {
                   "name": "示例 1",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"8\",\n        \"username\": \"苌雨桐\",\n        \"token\": \"dolor incididunt pariatur\",\n        \"password\": \"SmuJxITZXdNYS__\",\n        \"type\": \"non\"\n    },\n    \"credential\": {\n        \"username\": \"僪语桐\",\n        \"password\": \"zXWuNkm6lQJABvj\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"8\",\n        \"username\": \"苌雨桐\",\n        \"token\": \"dolor incididunt pariatur\",\n        \"password\": \"SmuJxITZXdNYS__\",\n        \"type\": \"non\"\n    },\n    \"credential\": {\n        \"username\": \"僪语桐\",\n        \"password\": \"zXWuNkm6lQJABvj\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -343,6 +346,7 @@
               ]
             },
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -388,7 +392,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"laborum id\",\n    \"token\": {\n        \"description\": \"常应儿到统型整就这。本务记子权方。计选增酸单带断。况样南起据报题象门。然法深六认委两量。山事体。交满据至被了。\",\n        \"username\": \"蒲梓豪\",\n        \"identifier\": \"68\",\n        \"token\": \"laborum nulla nostrud\"\n    },\n    \"username\": \"空紫林\"\n}",
+                "data": "{\n    \"message\": \"laborum id\",\n    \"token\": {\n        \"description\": \"常应儿到统型整就这。本务记子权方。计选增酸单带断。况样南起据报题象门。然法深六认委两量。山事体。交满据至被了。\",\n        \"username\": \"蒲梓豪\",\n        \"identifer\": \"68\",\n        \"token\": \"laborum nulla nostrud\"\n    },\n    \"username\": \"空紫林\"\n}",
                 "responseId": 638122600,
                 "ordering": 3,
                 "description": "",
@@ -422,7 +426,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"59\",\n        \"username\": \"通鹏\",\n        \"token\": \"dolore Lorem ut\",\n        \"password\": \"u1H84FL1dygv6H7\",\n        \"type\": \"do veniam consectetur aliqua amet\"\n    },\n    \"token\": {\n        \"description\": \"联太为养复近造只手适。展志斯。子世年存种行成车交。决么林快效不原回团。老度史半在命质。术者照会接。是导响飞产提论我育定。\",\n        \"username\": \"束艳\",\n        \"identifier\": \"59\",\n        \"token\": \"Excepteur commodo enim ullamco ex\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"59\",\n        \"username\": \"通鹏\",\n        \"token\": \"dolore Lorem ut\",\n        \"password\": \"u1H84FL1dygv6H7\",\n        \"type\": \"do veniam consectetur aliqua amet\"\n    },\n    \"token\": {\n        \"description\": \"联太为养复近造只手适。展志斯。子世年存种行成车交。决么林快效不原回团。老度史半在命质。术者照会接。是导响飞产提论我育定。\",\n        \"username\": \"束艳\",\n        \"identifer\": \"59\",\n        \"token\": \"Excepteur commodo enim ullamco ex\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -475,6 +479,7 @@
               ]
             },
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -520,7 +525,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"cillum laborum deserunt adipisicing\",\n    \"token\": {\n        \"description\": \"容则外。空里些商果。什验每。便入清行住。边规住全实区。\",\n        \"username\": \"邓静怡\",\n        \"identifier\": \"65\",\n        \"token\": \"in elit Excepteur\"\n    },\n    \"username\": \"候颖\"\n}",
+                "data": "{\n    \"message\": \"cillum laborum deserunt adipisicing\",\n    \"token\": {\n        \"description\": \"容则外。空里些商果。什验每。便入清行住。边规住全实区。\",\n        \"username\": \"邓静怡\",\n        \"identifer\": \"65\",\n        \"token\": \"in elit Excepteur\"\n    },\n    \"username\": \"候颖\"\n}",
                 "responseId": 638128033,
                 "ordering": 2,
                 "description": "",
@@ -554,7 +559,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"31\",\n        \"username\": \"绍帅\",\n        \"token\": \"et aliquip adipisicing\",\n        \"password\": \"M_qCkQcG9Sy0C3A\",\n        \"type\": \"aute\"\n    },\n    \"token\": {\n        \"description\": \"精近当便些。面却西克组素特各深。身研响把。\",\n        \"username\": \"拱静怡\",\n        \"identifier\": \"48\",\n        \"token\": \"aute eiusmod\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"31\",\n        \"username\": \"绍帅\",\n        \"token\": \"et aliquip adipisicing\",\n        \"password\": \"M_qCkQcG9Sy0C3A\",\n        \"type\": \"aute\"\n    },\n    \"token\": {\n        \"description\": \"精近当便些。面却西克组素特各深。身研响把。\",\n        \"username\": \"拱静怡\",\n        \"identifer\": \"48\",\n        \"token\": \"aute eiusmod\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -607,6 +612,7 @@
               ]
             },
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -652,7 +658,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"cupidatat anim ut dolore Duis\",\n    \"username\": \"函玉英\",\n    \"token\": {\n        \"description\": \"确复力体办转层机不运。带角传音观见提成精。管九二个活。重直较办表节二导。原放响民取长。周子五质育水还加。山文地能专系。\",\n        \"username\": \"姬熙瑶\",\n        \"identifier\": \"74\",\n        \"token\": \"minim velit\"\n    }\n}",
+                "data": "{\n    \"message\": \"cupidatat anim ut dolore Duis\",\n    \"username\": \"函玉英\",\n    \"token\": {\n        \"description\": \"确复力体办转层机不运。带角传音观见提成精。管九二个活。重直较办表节二导。原放响民取长。周子五质育水还加。山文地能专系。\",\n        \"username\": \"姬熙瑶\",\n        \"identifer\": \"74\",\n        \"token\": \"minim velit\"\n    }\n}",
                 "responseId": 596117687,
                 "ordering": 3,
                 "description": "",
@@ -686,7 +692,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"81\",\n        \"username\": \"郸梓涵\",\n        \"token\": \"proident\",\n        \"password\": \"gP8thJCpuJyxuCK\",\n        \"type\": \"dolor\"\n    },\n    \"token\": {\n        \"description\": \"或心每由团产发。究增许。性布车专。千育动始长再真即响。七极好者道自级。发面查消极传。史般有金外技第发两。每级五走。\",\n        \"username\": \"兰梓诚\",\n        \"identifier\": \"65\",\n        \"token\": \"sunt consectetur anim culpa\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"81\",\n        \"username\": \"郸梓涵\",\n        \"token\": \"proident\",\n        \"password\": \"gP8thJCpuJyxuCK\",\n        \"type\": \"dolor\"\n    },\n    \"token\": {\n        \"description\": \"或心每由团产发。究增许。性布车专。千育动始长再真即响。七极好者道自级。发面查消极传。史般有金外技第发两。每级五走。\",\n        \"username\": \"兰梓诚\",\n        \"identifer\": \"65\",\n        \"token\": \"sunt consectetur anim culpa\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -739,6 +745,7 @@
               ]
             },
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -811,7 +818,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"sessions\": [\n        {\n            \"name\": \"蓬国英\",\n            \"args\": [\n                \"sint reprehenderit exercitation nostrud\"\n            ],\n            \"dir\": \"dolore in\",\n            \"cmd\": \"anim et\"\n        },\n        {\n            \"name\": \"双馥君\",\n            \"args\": [\n                \"irure Duis\",\n                \"labore irure\",\n                \"amet velit fugiat ea\"\n            ],\n            \"dir\": \"ipsum\",\n            \"cmd\": \"veniam deserunt aliqua\"\n        }\n    ],\n    \"message\": \"mollit id Duis magna proident\",\n    \"username\": \"鱼浩晨\"\n}",
+                "data": "{\n    \"sessions\": [\n        {\n            \"name\": \"余桂英\",\n            \"args\": [\n                \"Ut\"\n            ],\n            \"dir\": \"enim voluptate occaecat do ipsum\",\n            \"cmd\": \"Lorem aliquip\",\n            \"created_at\": \"2025-09-08 16:23:31\",\n            \"updated_at\": \"2025-09-17\"\n        }\n    ],\n    \"message\": \"amet ut sunt\",\n    \"username\": \"终玉梅\"\n}",
                 "responseId": 596144738,
                 "ordering": 3,
                 "description": "",
@@ -827,10 +834,22 @@
                 "properties": {
                   "authorization": {
                     "$ref": "#/definitions/154919528"
+                  },
+                  "session": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "name"
+                    ]
                   }
                 },
                 "x-apifox-orders": [
-                  "authorization"
+                  "authorization",
+                  "session"
                 ],
                 "required": [
                   "authorization"
@@ -840,7 +859,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"44\",\n        \"username\": \"晋哲新\",\n        \"token\": \"ut esse\",\n        \"password\": \"Yj4QEiNgfJyF3cJ\",\n        \"type\": \"in sint aliqua qui\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"9\",\n        \"username\": \"恭政君\",\n        \"token\": \"mollit ea Lorem reprehenderit\",\n        \"password\": \"68f9y_RPl7lzH2W\",\n        \"type\": \"est deserunt dolore amet laborum\"\n    },\n    \"session\": {\n        \"name\": \"弥诗雨\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -893,6 +912,7 @@
               ]
             },
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -943,7 +963,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"qui\",\n    \"username\": \"马超栋\",\n    \"tokens\": [\n        {\n            \"description\": \"支起天器步管同日处。上单两率利元对学。队加议广及我效光标。类看进。门展科不写义县次该她。次斗变。人火车立己进。手机验类重百然。\",\n            \"username\": \"龙家豪\",\n            \"identifier\": \"68\",\n            \"token\": \"officia deserunt in est enim\"\n        },\n        {\n            \"description\": \"前全过过式行保。和感查。及年性成把。积五无特你及。华第也省。\",\n            \"username\": \"步建军\",\n            \"identifier\": \"58\",\n            \"token\": \"proident\"\n        }\n    ]\n}",
+                "data": "{\n    \"message\": \"aliquip magna laborum\",\n    \"username\": \"市熙成\",\n    \"tokens\": [\n        {\n            \"description\": \"条物先义价级地后。中门队种导力表。只矿处。\",\n            \"username\": \"钭苡沫\",\n            \"identifer\": \"14\",\n            \"token\": \"sint magna id eiusmod aliqua\",\n            \"updated_at\": \"2025-10-04\",\n            \"created_at\": \"2026-02-08 12:55:32\"\n        }\n    ]\n}",
                 "responseId": 638110606,
                 "ordering": 1,
                 "description": "",
@@ -959,20 +979,34 @@
                 "properties": {
                   "authorization": {
                     "$ref": "#/definitions/154919528"
+                  },
+                  "token": {
+                    "type": "object",
+                    "properties": {
+                      "identifer": {
+                        "type": "string",
+                        "title": "",
+                        "description": ""
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "identifer"
+                    ]
                   }
                 },
                 "required": [
                   "authorization"
                 ],
                 "x-apifox-orders": [
-                  "authorization"
+                  "authorization",
+                  "token"
                 ]
               },
               "mediaType": "",
               "examples": [
                 {
                   "name": "示例 1",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"26\",\n        \"username\": \"希颖\",\n        \"token\": \"cillum ad\",\n        \"password\": \"dzIi7wxDnv2KLGS\",\n        \"type\": \"elit proident non in\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"46\",\n        \"username\": \"柳家明\",\n        \"token\": \"dolor laborum in\",\n        \"password\": \"UxJxy1iIaZYubxt\",\n        \"type\": \"voluptate id\"\n    },\n    \"token\": {\n        \"identifer\": \"9\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1025,6 +1059,7 @@
               ]
             },
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1077,7 +1112,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"credentials\": [\n        {\n            \"username\": \"仵晨\",\n            \"password\": \"sEyDDGTf5uIBI3G\"\n        },\n        {\n            \"username\": \"寻子豪\",\n            \"password\": \"HCOvPlHMWA1vBU_\"\n        },\n        {\n            \"username\": \"丁国华\",\n            \"password\": \"XJ08qHeYUGFOLV5\"\n        }\n    ],\n    \"message\": \"sed adipisicing dolore eiusmod\",\n    \"username\": \"敛鹏\"\n}",
+                "data": "{\n    \"credentials\": [\n        {\n            \"username\": \"老英\",\n            \"password\": \"EAr9I5PnZ6ioOdk\",\n            \"updated_at\": \"2024-08-11\",\n            \"created_at\": \"2025-12-10 13:17:08\"\n        }\n    ],\n    \"message\": \"cillum ea laboris do\",\n    \"username\": \"荣佳琪\"\n}",
                 "responseId": 639066810,
                 "ordering": 3,
                 "description": "",
@@ -1093,20 +1128,34 @@
                 "properties": {
                   "authorization": {
                     "$ref": "#/definitions/154919528"
+                  },
+                  "credential": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string",
+                        "title": "",
+                        "description": ""
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "username"
+                    ]
                   }
                 },
                 "required": [
                   "authorization"
                 ],
                 "x-apifox-orders": [
-                  "authorization"
+                  "authorization",
+                  "credential"
                 ]
               },
               "mediaType": "",
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"55\",\n        \"username\": \"姒静怡\",\n        \"token\": \"enim pariatur culpa\",\n        \"password\": \"q2fFVw6c6uY_gwQ\",\n        \"type\": \"non dolor\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"67\",\n        \"username\": \"涂治涛\",\n        \"token\": \"nostrud laboris\",\n        \"password\": \"IC1C7DGgBSf3sHE\",\n        \"type\": \"ea\"\n    },\n    \"credential\": {\n        \"username\": \"益乙萍\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1147,6 +1196,7 @@
             "path": "http://127.0.0.1:28080/sessions",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1226,7 +1276,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"9\",\n        \"username\": \"郦桂兰\",\n        \"token\": \"ad nisi fugiat eu nulla\",\n        \"password\": \"vhkN6hb1ZubYJw5\",\n        \"type\": \"consectetur enim\"\n    },\n    \"session\": {\n        \"name\": \"盈雯静\",\n        \"args\": [\n            \"dolor Lorem eu aliquip\",\n            \"fugiat dolor\",\n            \"irure aute commodo magna\"\n        ],\n        \"dir\": \"laboris elit\",\n        \"cmd\": \"laboris sunt sint\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"9\",\n        \"username\": \"郦桂兰\",\n        \"token\": \"ad nisi fugiat eu nulla\",\n        \"password\": \"vhkN6hb1ZubYJw5\",\n        \"type\": \"consectetur enim\"\n    },\n    \"session\": {\n        \"name\": \"盈雯静\",\n        \"args\": [\n            \"dolor Lorem eu aliquip\",\n            \"fugiat dolor\",\n            \"irure aute commodo magna\"\n        ],\n        \"dir\": \"laboris elit\",\n        \"cmd\": \"laboris sunt sint\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1267,6 +1317,7 @@
             "path": "http://127.0.0.1:28080/tokens",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1312,7 +1363,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"sed deserunt ut\",\n    \"username\": \"及志国\",\n    \"token\": {\n        \"description\": \"物除支斗保了研况。合和世米。教素华老代石究。\",\n        \"username\": \"冀梓豪\",\n        \"identifier\": \"44\"\n    }\n}",
+                "data": "{\n    \"message\": \"sed deserunt ut\",\n    \"username\": \"及志国\",\n    \"token\": {\n        \"description\": \"物除支斗保了研况。合和世米。教素华老代石究。\",\n        \"username\": \"冀梓豪\",\n        \"identifer\": \"44\"\n    }\n}",
                 "responseId": 639089397,
                 "ordering": 2,
                 "description": "",
@@ -1329,7 +1380,7 @@
                   "token": {
                     "type": "object",
                     "properties": {
-                      "identifier": {
+                      "identifer": {
                         "type": "string",
                         "title": "",
                         "description": ""
@@ -1341,11 +1392,11 @@
                       }
                     },
                     "required": [
-                      "identifier",
+                      "identifer",
                       "description"
                     ],
                     "x-apifox-orders": [
-                      "identifier",
+                      "identifer",
                       "description"
                     ]
                   },
@@ -1366,7 +1417,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"token\": {\n        \"identifier\": \"37\",\n        \"description\": \"细矿义。合认便情用南别法重同。解思周。把话老权道选带全百。院条实际展。提确备最广具术去包制。果流口布正大。温你任人然算。\"\n    },\n    \"authorization\": {\n        \"identifier\": \"2\",\n        \"username\": \"表志明\",\n        \"token\": \"id sit\",\n        \"password\": \"rizLm0jfLMpJoCE\",\n        \"type\": \"velit Lorem voluptate in\"\n    }\n}",
+                  "value": "{\n    \"token\": {\n        \"identifer\": \"37\",\n        \"description\": \"细矿义。合认便情用南别法重同。解思周。把话老权道选带全百。院条实际展。提确备最广具术去包制。果流口布正大。温你任人然算。\"\n    },\n    \"authorization\": {\n        \"identifer\": \"2\",\n        \"username\": \"表志明\",\n        \"token\": \"id sit\",\n        \"password\": \"rizLm0jfLMpJoCE\",\n        \"type\": \"velit Lorem voluptate in\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1407,6 +1458,7 @@
             "path": "http://127.0.0.1:28080/credentials",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1486,7 +1538,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"11\",\n        \"username\": \"京万佳\",\n        \"token\": \"nisi proident\",\n        \"password\": \"HQHsYZOyvSkcizB\",\n        \"type\": \"velit\"\n    },\n    \"credential\": {\n        \"username\": \"明苡沫\",\n        \"password\": \"ZpWWRl4fkBCmcZG\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"11\",\n        \"username\": \"京万佳\",\n        \"token\": \"nisi proident\",\n        \"password\": \"HQHsYZOyvSkcizB\",\n        \"type\": \"velit\"\n    },\n    \"credential\": {\n        \"username\": \"明苡沫\",\n        \"password\": \"ZpWWRl4fkBCmcZG\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1527,6 +1579,7 @@
             "path": "http://127.0.0.1:28080/tokens",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1572,7 +1625,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"in labore aliqua\",\n    \"username\": \"所丽芳\",\n    \"token\": {\n        \"description\": \"形争多历必去包队。正管铁记样。打必手京华从他者年这。\",\n        \"username\": \"卞国良\",\n        \"identifier\": \"7\",\n        \"token\": \"et amet nostrud\"\n    }\n}",
+                "data": "{\n    \"message\": \"tempor\",\n    \"username\": \"公伟\",\n    \"token\": {\n        \"description\": \"边太支消二水作写山。参去类。据素队族取只维证除教。清些建石万种单常。有地开斗无点查号。美报行何。有议手已达。\",\n        \"username\": \"邶晨阳\",\n        \"identifer\": \"84\",\n        \"token\": \"fugiat deserunt non ea\",\n        \"updated_at\": \"2025-01-26\",\n        \"created_at\": \"2025-01-19 09:31:37\"\n    }\n}",
                 "responseId": 638122095,
                 "ordering": 3,
                 "description": "",
@@ -1606,7 +1659,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"token\": {\n        \"description\": \"也难各况老须山办何线。酸线给名。好东声间候下制备。受你质白东本处次较命。示难这名组合。专市该资。\",\n        \"username\": \"始国强\",\n        \"identifier\": \"59\",\n        \"token\": \"in ipsum\"\n    },\n    \"authorization\": {\n        \"identifier\": \"98\",\n        \"username\": \"斋国珍\",\n        \"token\": \"reprehenderit sit id\",\n        \"password\": \"hkjNbMjFHCBrkbx\",\n        \"type\": \"sunt officia nulla ut ut\"\n    }\n}",
+                  "value": "{\n    \"token\": {\n        \"description\": \"也难各况老须山办何线。酸线给名。好东声间候下制备。受你质白东本处次较命。示难这名组合。专市该资。\",\n        \"username\": \"始国强\",\n        \"identifer\": \"59\",\n        \"token\": \"in ipsum\"\n    },\n    \"authorization\": {\n        \"identifer\": \"98\",\n        \"username\": \"斋国珍\",\n        \"token\": \"reprehenderit sit id\",\n        \"password\": \"hkjNbMjFHCBrkbx\",\n        \"type\": \"sunt officia nulla ut ut\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1647,6 +1700,7 @@
             "path": "http://127.0.0.1:28080/tokens",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1692,7 +1746,7 @@
             "responseExamples": [
               {
                 "name": "成功示例",
-                "data": "{\n    \"message\": \"dolor minim reprehenderit in sit\",\n    \"token\": {\n        \"description\": \"机件实都。根划安问节究构明。\",\n        \"username\": \"锐宇泽\",\n        \"identifier\": \"83\",\n        \"token\": \"ipsum dolor commodo\"\n    },\n    \"username\": \"春成\"\n}",
+                "data": "{\n    \"message\": \"dolor minim reprehenderit in sit\",\n    \"token\": {\n        \"description\": \"机件实都。根划安问节究构明。\",\n        \"username\": \"锐宇泽\",\n        \"identifer\": \"83\",\n        \"token\": \"ipsum dolor commodo\"\n    },\n    \"username\": \"春成\"\n}",
                 "responseId": 596141984,
                 "ordering": 3,
                 "description": "",
@@ -1726,7 +1780,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"68\",\n        \"username\": \"束梓妍\",\n        \"token\": \"aute anim laboris reprehenderit esse\",\n        \"password\": \"kzoWCYbDkiFUUKx\",\n        \"type\": \"Lorem irure dolor ullamco\"\n    },\n    \"token\": {\n        \"description\": \"就于先真半存大。都现传之近。响选许还观响等完目观。号商上调实眼没经格由。能口日准南群数能支。\",\n        \"username\": \"锁波\",\n        \"identifier\": \"87\",\n        \"token\": \"consequat minim\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"68\",\n        \"username\": \"束梓妍\",\n        \"token\": \"aute anim laboris reprehenderit esse\",\n        \"password\": \"kzoWCYbDkiFUUKx\",\n        \"type\": \"Lorem irure dolor ullamco\"\n    },\n    \"token\": {\n        \"description\": \"就于先真半存大。都现传之近。响选许还观响等完目观。号商上调实眼没经格由。能口日准南群数能支。\",\n        \"username\": \"锁波\",\n        \"identifer\": \"87\",\n        \"token\": \"consequat minim\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1767,6 +1821,7 @@
             "path": "http://127.0.0.1:28080/credentials",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1846,7 +1901,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"authorization\": {\n        \"identifier\": \"29\",\n        \"username\": \"阎晨\",\n        \"token\": \"eu\",\n        \"password\": \"Ax1RzKvcJA7FQZj\",\n        \"type\": \"minim fugiat\"\n    },\n    \"credential\": {\n        \"username\": \"衡刚\",\n        \"password\": \"xvJw7L2YnmNOjag\"\n    }\n}",
+                  "value": "{\n    \"authorization\": {\n        \"identifer\": \"29\",\n        \"username\": \"阎晨\",\n        \"token\": \"eu\",\n        \"password\": \"Ax1RzKvcJA7FQZj\",\n        \"type\": \"minim fugiat\"\n    },\n    \"credential\": {\n        \"username\": \"衡刚\",\n        \"password\": \"xvJw7L2YnmNOjag\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1887,6 +1942,7 @@
             "path": "http://127.0.0.1:28080/sessions",
             "parameters": {},
             "auth": {},
+            "securityScheme": {},
             "commonParameters": {
               "query": [],
               "body": [],
@@ -1966,7 +2022,7 @@
               "examples": [
                 {
                   "name": "示例 2",
-                  "value": "{\n    \"session\": {\n        \"name\": \"全丽芳\",\n        \"args\": [\n            \"ullamco culpa\",\n            \"amet aliqua est\",\n            \"quis Ut aliqua ex\"\n        ],\n        \"dir\": \"laboris\",\n        \"cmd\": \"amet incididunt do culpa labore\"\n    },\n    \"authorization\": {\n        \"identifier\": \"31\",\n        \"username\": \"龙秀英\",\n        \"token\": \"nulla dolore officia\",\n        \"password\": \"EhQLnzz1kTcnyz6\",\n        \"type\": \"pariatur aute labore enim\"\n    }\n}",
+                  "value": "{\n    \"session\": {\n        \"name\": \"全丽芳\",\n        \"args\": [\n            \"ullamco culpa\",\n            \"amet aliqua est\",\n            \"quis Ut aliqua ex\"\n        ],\n        \"dir\": \"laboris\",\n        \"cmd\": \"amet incididunt do culpa labore\"\n    },\n    \"authorization\": {\n        \"identifer\": \"31\",\n        \"username\": \"龙秀英\",\n        \"token\": \"nulla dolore officia\",\n        \"password\": \"EhQLnzz1kTcnyz6\",\n        \"type\": \"pariatur aute labore enim\"\n    }\n}",
                   "mediaType": "application/json"
                 }
               ],
@@ -1990,6 +2046,305 @@
             "commonResponseStatus": {},
             "responseChildren": [
               "BLANK.639092565"
+            ],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "复制会话",
+          "api": {
+            "id": "280558903",
+            "method": "copy",
+            "path": "http://127.0.0.1:28080/sessions",
+            "parameters": {
+              "header": [
+                {
+                  "required": true,
+                  "description": "COPY",
+                  "type": "string",
+                  "id": "co2rCe76pz",
+                  "example": "COPY",
+                  "enable": true,
+                  "name": "x-HTTP-method-override"
+                }
+              ]
+            },
+            "auth": {},
+            "securityScheme": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "649006856",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "session": {
+                      "$ref": "#/definitions/154920447"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "username",
+                    "session"
+                  ],
+                  "x-apifox-orders": [
+                    "message",
+                    "username",
+                    "session"
+                  ]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\n    \"message\": \"in\",\n    \"username\": \"容诗雨\",\n    \"session\": {\n        \"name\": \"繁国英\",\n        \"args\": [\n            \"eiusmod anim sit\",\n            \"nulla exercitation aliqua culpa\",\n            \"in ad velit cupidatat\"\n        ],\n        \"dir\": \"dolor\",\n        \"cmd\": \"exercitation\"\n    }\n}",
+                "responseId": 649006856,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "authorization": {
+                    "$ref": "#/definitions/154919528"
+                  },
+                  "session": {
+                    "$ref": "#/definitions/154920447"
+                  },
+                  "destination": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "名称"
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "name"
+                    ],
+                    "required": [
+                      "name"
+                    ]
+                  }
+                },
+                "required": [
+                  "session",
+                  "authorization",
+                  "destination"
+                ],
+                "x-apifox-orders": [
+                  "session",
+                  "authorization",
+                  "destination"
+                ]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"session\": {\n        \"name\": \"霜国栋\",\n        \"args\": [\n            \"esse eu\",\n            \"fugiat sit Lorem est\"\n        ],\n        \"dir\": \"nostrud amet consequat\",\n        \"cmd\": \"esse dolore Duis do sunt\",\n        \"created_at\": \"2024-10-19 06:27:58\",\n        \"updated_at\": \"2024-04-10\"\n    },\n    \"authorization\": {\n        \"identifier\": \"9\",\n        \"username\": \"睢勇\",\n        \"token\": \"enim nostrud ad deserunt anim\",\n        \"password\": \"g2AwDm9_yC_Zd35\",\n        \"type\": \"nulla officia sed\"\n    },\n    \"destination\": {\n        \"name\": \"越语桐\"\n    }\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 37,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": [
+              "BLANK.649006856"
+            ],
+            "visibility": "INHERITED",
+            "oasExtensions": null,
+            "preProcessors": [],
+            "postProcessors": [],
+            "inheritPostProcessors": {},
+            "inheritPreProcessors": {}
+          }
+        },
+        {
+          "name": "移动会话",
+          "api": {
+            "id": "280558985",
+            "method": "move",
+            "path": "http://127.0.0.1:28080/sessions",
+            "parameters": {
+              "header": [
+                {
+                  "required": true,
+                  "description": "MOVE",
+                  "type": "string",
+                  "id": "3i2CIOQozw",
+                  "example": "MOVE",
+                  "enable": true,
+                  "name": "x-HTTP-method-override"
+                }
+              ]
+            },
+            "auth": {},
+            "securityScheme": {},
+            "commonParameters": {
+              "query": [],
+              "body": [],
+              "cookie": [],
+              "header": []
+            },
+            "responses": [
+              {
+                "id": "649016896",
+                "code": 200,
+                "name": "成功",
+                "headers": [],
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "session": {
+                      "$ref": "#/definitions/154920447"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "username",
+                    "session"
+                  ],
+                  "x-apifox-orders": [
+                    "message",
+                    "username",
+                    "session"
+                  ]
+                },
+                "description": "",
+                "contentType": "json",
+                "mediaType": "",
+                "oasExtensions": ""
+              }
+            ],
+            "responseExamples": [
+              {
+                "name": "成功示例",
+                "data": "{\n    \"message\": \"in\",\n    \"username\": \"容诗雨\",\n    \"session\": {\n        \"name\": \"繁国英\",\n        \"args\": [\n            \"eiusmod anim sit\",\n            \"nulla exercitation aliqua culpa\",\n            \"in ad velit cupidatat\"\n        ],\n        \"dir\": \"dolor\",\n        \"cmd\": \"exercitation\"\n    }\n}",
+                "responseId": 649016896,
+                "ordering": 3,
+                "description": "",
+                "oasKey": "",
+                "oasExtensions": ""
+              }
+            ],
+            "requestBody": {
+              "type": "application/json",
+              "parameters": [],
+              "jsonSchema": {
+                "type": "object",
+                "properties": {
+                  "authorization": {
+                    "$ref": "#/definitions/154919528"
+                  },
+                  "session": {
+                    "$ref": "#/definitions/154920447"
+                  },
+                  "destination": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "x-apifox-orders": [
+                      "name"
+                    ],
+                    "required": [
+                      "name"
+                    ]
+                  }
+                },
+                "required": [
+                  "session",
+                  "authorization",
+                  "destination"
+                ],
+                "x-apifox-orders": [
+                  "session",
+                  "authorization",
+                  "destination"
+                ]
+              },
+              "mediaType": "",
+              "examples": [
+                {
+                  "name": "示例 2",
+                  "value": "{\n    \"session\": {\n        \"name\": \"仲孙雅鑫\",\n        \"args\": [\n            \"eiusmod Duis ad laboris\",\n            \"officia\"\n        ],\n        \"dir\": \"nostrud irure ad laboris velit\",\n        \"cmd\": \"culpa ex elit\",\n        \"created_at\": \"2025-08-27 15:09:03\",\n        \"updated_at\": \"2026-02-01\"\n    },\n    \"authorization\": {\n        \"identifier\": \"80\",\n        \"username\": \"麻国琴\",\n        \"token\": \"aute eu\",\n        \"password\": \"Fsi41VK0DrQ4W_H\",\n        \"type\": \"culpa\"\n    },\n    \"destination\": {\n        \"name\": \"改国英\"\n    }\n}",
+                  "mediaType": "application/json"
+                }
+              ],
+              "oasExtensions": ""
+            },
+            "description": "",
+            "tags": [],
+            "status": "developing",
+            "serverId": "",
+            "operationId": "",
+            "sourceUrl": "",
+            "ordering": 38,
+            "cases": [],
+            "mocks": [],
+            "customApiFields": "{}",
+            "advancedSettings": {
+              "disabledSystemHeaders": {}
+            },
+            "mockScript": {},
+            "codeSamples": [],
+            "commonResponseStatus": {},
+            "responseChildren": [
+              "BLANK.649016896"
             ],
             "visibility": "INHERITED",
             "oasExtensions": null,
@@ -2034,11 +2389,6 @@
             "jsonSchema": {
               "type": "object",
               "properties": {
-                "identifier": {
-                  "type": "string",
-                  "title": "",
-                  "description": ""
-                },
                 "username": {
                   "type": "string",
                   "title": "",
@@ -2055,6 +2405,11 @@
                   "description": ""
                 },
                 "type": {
+                  "type": "string",
+                  "title": "",
+                  "description": ""
+                },
+                "identifier": {
                   "type": "string",
                   "title": "",
                   "description": ""
@@ -2097,26 +2452,40 @@
                   "title": "",
                   "description": ""
                 },
-                "identifier": {
+                "token": {
+                  "type": "string"
+                },
+                "updated_at": {
                   "type": "string",
                   "title": "",
                   "description": ""
                 },
-                "token": {
-                  "type": "string"
+                "created_at": {
+                  "type": "string",
+                  "title": "",
+                  "description": ""
+                },
+                "identifier": {
+                  "type": "string",
+                  "title": "",
+                  "description": ""
                 }
               },
               "x-apifox-orders": [
                 "description",
                 "username",
                 "identifier",
-                "token"
+                "token",
+                "updated_at",
+                "created_at"
               ],
               "required": [
                 "description",
                 "username",
                 "identifier",
-                "token"
+                "token",
+                "updated_at",
+                "created_at"
               ]
             }
           },
@@ -2145,13 +2514,27 @@
                 },
                 "cmd": {
                   "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "title": "",
+                  "description": ""
                 }
               },
               "x-apifox-orders": [
                 "name",
                 "args",
                 "dir",
-                "cmd"
+                "cmd",
+                "created_at",
+                "updated_at"
+              ],
+              "required": [
+                "created_at",
+                "updated_at"
               ]
             }
           },
@@ -2173,15 +2556,25 @@
                   "type": "string",
                   "title": "",
                   "description": ""
+                },
+                "updated_at": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
                 }
               },
               "x-apifox-orders": [
                 "username",
-                "password"
+                "password",
+                "updated_at",
+                "created_at"
               ],
               "required": [
                 "username",
-                "password"
+                "password",
+                "updated_at",
+                "created_at"
               ]
             }
           },
@@ -2190,6 +2583,7 @@
       ]
     }
   ],
+  "securitySchemeCollection": [],
   "requestCollection": [
     {
       "name": "根目录",
@@ -2216,6 +2610,7 @@
   "projectSetting": {
     "id": "5732344",
     "auth": {},
+    "securityScheme": {},
     "servers": [
       {
         "id": "default",
