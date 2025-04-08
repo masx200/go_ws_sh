@@ -71,7 +71,7 @@ func InitHertzApp(hertzapp *server.Hertz) {
 	// 	ctx.Next(c)
 	// })
 }
-func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext)) func() (interface{}, error) {
+func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext),middlewares ...app.HandlerFunc) func() (interface{}, error) {
 	if serverconfig.Alpn == "h2" {
 
 		return func() (interface{}, error) {
@@ -115,6 +115,10 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// 	Addr:    ":" + serverconfig.Port,
 			// 	Handler: h2c.NewHandler(http.HandlerFunc(handler), h2s),
 			// }
+
+			for _, middleware := range middlewares {
+				hertzapp.Use(middleware)
+			}
 			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
@@ -171,6 +175,10 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			// 	Addr:    ":" + serverconfig.Port,
 			// 	Handler: h2c.NewHandler(http.HandlerFunc(handler), h2s),
 			// }
+			
+			for _, middleware := range middlewares {
+				hertzapp.Use(middleware)
+			}
 			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})
@@ -189,6 +197,10 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			InitHertzApp(hertzapp)
 			// hertzapp.Use(accesslog.New())
 			log.Println("TLS disabled and " + "WebSocket server started at :" + serverconfig.Port)
+			
+			for _, middleware := range middlewares {
+				hertzapp.Use(middleware)
+			}
 			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
 				handler(c, ctx)
 			})

@@ -44,30 +44,6 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	// authHandler := AuthorizationHandler(credentialdb, tokendb)
 	var routes []RouteConfig //{
 
-	// {
-	// 	Path:    "/tokens",
-	// 	Method:  "POST",
-	// 	Handler: authHandler,
-	// },
-
-	// {
-	// 	Path:    "/tokens",
-	// 	Method:  "POST",
-	// 	Headers: map[string]string{"x-HTTP-method-override": "GET"},
-	// 	Handler: listtokensHandler,
-	// },
-	// {
-	// 	Path:    "/tokens",
-	// 	Method:  "PUT",
-	// 	Handler: authHandler,
-	// },
-	// {
-	// 	Path:    "/tokens",
-	// 	Method:  "DELETE",
-	// 	Handler: authHandler,
-	// },
-	//	}
-
 	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
 		sessions, err := ReadAllSessions(sessiondb)
@@ -152,10 +128,38 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		// }
 
 	}
+
+	middlewares := []app.HandlerFunc{
+
+		func(c context.Context, ctx *app.RequestContext) {
+			routesmiddle := MatchAndRouteMiddleware([]RouteConfig{
+
+				{
+					Path:   "/sessions",
+					Method: "COPY",
+					MiddleWare:  HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
+						r.String(consts.StatusOK, "OK COPY")
+
+					}),
+				},
+				{
+					Path:   "/sessions",
+					Method: "MOVE",
+					MiddleWare: HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
+						r.String(consts.StatusOK, "OK MOVE")
+
+					}),
+				},
+			})
+			routesmiddle(c, ctx, func(c context.Context, r *app.RequestContext) {
+				r.Next(c)
+			})
+		},
+	}
 	for _, serverconfig := range config.Servers {
 
 		tasks = append(tasks, createTaskServer(serverconfig,
-			handler))
+			handler, middlewares...))
 	}
 	// 启动服务器
 	result, ok := PromiseAll(tasks).Receive()
@@ -230,9 +234,9 @@ func Server_start(config string) {
 	sessiondb.AutoMigrate(&SessionStore{})
 	credentialdb.AutoMigrate(&CredentialStore{})
 	tokendb.AutoMigrate(&TokenStore{})
-	tokendb=tokendb.Debug()
-	credentialdb=credentialdb.Debug()
-	sessiondb=sessiondb.Debug()
+	tokendb = tokendb.Debug()
+	credentialdb = credentialdb.Debug()
+	sessiondb = sessiondb.Debug()
 	err = EnsureSessions(configdata, sessiondb)
 	if err != nil {
 		log.Fatal(err)
