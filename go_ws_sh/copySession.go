@@ -3,7 +3,7 @@ package go_ws_sh
 import "gorm.io/gorm"
 
 // MoveSession 移动会话的具体逻辑
-func MoveSession(sessiondb *gorm.DB, sessionName, destinationName string) (*SessionStore, error) {
+func CopySession(sessiondb *gorm.DB, sessionName, destinationName string) (*SessionStore, error) {
 	// 这里可以添加具体的数据库操作，例如更新会话的位置
 	// 示例：查询会话记录
 	var session SessionStore
@@ -19,9 +19,9 @@ func MoveSession(sessiondb *gorm.DB, sessionName, destinationName string) (*Sess
 		return nil, err
 	}
 
-	if err := sessiondb.Where("name=?", sessionName).Delete(&SessionStore{}).Error; err != nil {
-		return nil, err
-	}
+	// if err := sessiondb.Where("name=?", sessionName).Delete(&SessionStore{}).Error; err != nil {
+	// 	return nil, err
+	// }
 	newSession := SessionStore{
 		Name: destinationName,
 		Cmd:  session.Cmd,
