@@ -3,6 +3,7 @@ package go_ws_sh
 import (
 	"context"
 	"errors"
+	//"log"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -22,6 +23,21 @@ type HertzMiddleWare func(c context.Context, r *app.RequestContext, next HertzNe
 // Compose 将多个中间件组合成一个中间件
 func HertzCompose(middlewares ...HertzMiddleWare) HertzMiddleWare {
 	return func(c context.Context, ctx *app.RequestContext, finalNext HertzNext) {
+		// defer func() {
+		// 	if r := recover(); r != nil {
+		// 		log.Println(r)
+		// 		ctx.AbortWithMsg("Internal Server Error", consts.StatusInternalServerError)
+		// 	}
+		// }()
+		if len(middlewares) == 1 {
+			middlewares[0](c, ctx, finalNext)
+			return
+		}
+
+		if len(middlewares) == 0 {
+			finalNext(c, ctx)
+			return
+		}
 		index := -1
 		var dispatch func(i int) HertzNext
 		dispatch = func(i int) HertzNext {
