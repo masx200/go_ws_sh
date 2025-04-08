@@ -137,7 +137,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 				{
 					Path:   "/sessions",
 					Method: "COPY",
-					MiddleWare:  HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
+					MiddleWare: HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
 						r.String(consts.StatusOK, "OK COPY")
 
 					}),
@@ -146,6 +146,25 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 					Path:   "/sessions",
 					Method: "MOVE",
 					MiddleWare: HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
+						// 定义请求体结构体
+						var body struct {
+							Session struct {
+								Name string `json:"name"`
+							} `json:"session"`
+							Authorization CredentialsClient `json:"authorization"`
+						}
+
+						// 绑定请求体
+						if err := r.BindJSON(&body); err != nil {
+							r.AbortWithMsg("Error: "+err.Error(), consts.StatusBadRequest)
+							return
+						}
+						for _, session := range initial_sessions {
+							if session.Name == body.Session.Name {
+								r.AbortWithMsg("Error: Session is initial session,不允许删除", consts.StatusBadRequest)
+								return
+							}
+						}
 						r.String(consts.StatusOK, "OK MOVE")
 
 					}),
