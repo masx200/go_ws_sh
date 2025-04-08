@@ -34,7 +34,8 @@ func InitHertzApp(hertzapp *server.Hertz) {
 		//准许使用的请求方式
 		AllowMethods: []string{
 
-			"PUT", "PATCH", "POST", "GET", "DELETE"},
+			"PUT", "PATCH", "POST", "GET", "DELETE", "MOVE", "COPY", "HEAD", "OPTIONS", "PROPFIND", "PROPPATCH", "MKCOL", "LOCK", "UNLOCK", "TRACE", "CONNECT",
+		},
 		//准许使用的请求表头
 		AllowHeaders: []string{
 
