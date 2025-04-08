@@ -2,6 +2,7 @@ package go_ws_sh
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -275,7 +276,7 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 
 func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 定义请求体结构体
-	var req struct {
+	var body struct {
 		Session struct {
 			Name string   `json:"name"`
 			Cmd  string   `json:"cmd"`
@@ -286,27 +287,27 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 绑定请求体
-	if err := r.BindJSON(&req); err != nil {
+	if err := r.BindJSON(&body); err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
 	if shouldReturn {
 		return
 	}
 
 	// 检查 Name 是否为空
-	if req.Session.Name == "" || req.Session.Cmd == "" || req.Session.Dir == "" {
+	if body.Session.Name == "" || body.Session.Cmd == "" || body.Session.Dir == "" {
 		r.AbortWithMsg("Error: Name is empty or  Cmd or Dir is empty ", consts.StatusBadRequest)
 		return
 	}
 
 	var err error
-	username := req.Authorization.Username
+	username := body.Authorization.Username
 	if username == "" {
-		username, err = GetUsernameByTokenIdentifier(tokendb, req.Authorization.Identifier)
+		username, err = GetUsernameByTokenIdentifier(tokendb, body.Authorization.Identifier)
 		if err != nil {
 			log.Println("Error:", err)
 			r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
@@ -321,24 +322,24 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	// }
 	// 检查会话是否已存在
 	var existingSession SessionStore
-	if err := sessiondb.Where(&SessionStore{Name: req.Session.Name}).First(&existingSession).Error; err == nil {
+	if err := sessiondb.Where(&SessionStore{Name: body.Session.Name}).First(&existingSession).Error; err == nil {
 		r.JSON(consts.StatusConflict, map[string]any{
 			"message":  "Error: Session already exists",
 			"username": username,
 			"session": map[string]string{
-				"name": req.Session.Name,
+				"name": body.Session.Name,
 				// "username": username,
 			},
 		})
 		return
 	}
-	if sessiondb.Unscoped().Where("name = ?", req.Session.Name).Delete(&SessionStore{}).Error != nil {
+	if sessiondb.Unscoped().Where("name = ?", body.Session.Name).Delete(&SessionStore{}).Error != nil {
 		log.Println("Error: Failed to delete session")
 		r.AbortWithMsg("Error: Failed to delete session", consts.StatusInternalServerError)
 		return
 	}
 	// 创建新的会话
-	argsstringarray := StringSlice(req.Session.Args)
+	argsstringarray := StringSlice(body.Session.Args)
 	var argsstring string
 	argsbytes, err := argsstringarray.Value()
 	if err != nil {
@@ -348,26 +349,31 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	argsstring = string(argsbytes)
 
 	newSession := SessionStore{
-		Name: req.Session.Name,
-		Cmd:  req.Session.Cmd,
+		Name: body.Session.Name,
+		Cmd:  body.Session.Cmd,
 		Args: argsstring,
-		Dir:  req.Session.Dir,
+		Dir:  body.Session.Dir,
 	}
 
 	if err := sessiondb.Create(&newSession).Error; err != nil {
 		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
 		return
 	}
-
+	var args []string
+	// 将 Args 字段（字符串形式）反序列化为字符串切片
+	if err := json.Unmarshal([]byte(newSession.Args), &args); err != nil {
+		r.AbortWithMsg("Error: "+err.Error(), consts.StatusInternalServerError)
+		return
+	}
 	// 返回成功响应
 	r.JSON(consts.StatusOK, map[string]any{
 		"message":  "Session created successfully",
 		"username": username,
 		"session": map[string]interface{}{
-			"name":     req.Session.Name,
-			"cmd":      req.Session.Cmd,
-			"args":     req.Session.Args,
-			"dir":      req.Session.Dir,
+			"name":     body.Session.Name,
+			"cmd":      body.Session.Cmd,
+			"args":     args,
+			"dir":      body.Session.Dir,
 			"username": username,
 		},
 	})
