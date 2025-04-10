@@ -107,7 +107,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
 		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
 
-		if string(r.Method()) == consts.MethodGet && Connection == "upgrade" && Upgrade == "websocket" {
+		if string(r.Method()) == consts.MethodGet && strings.Contains(Connection, "upgrade") && Upgrade == "websocket" {
 			handlerGet(w, r)
 			return
 		}
