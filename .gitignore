@@ -27,3 +27,4 @@ go.work
 /main
 *.db
 pnpm-lock.yaml
+dist/linux-amd64/main
