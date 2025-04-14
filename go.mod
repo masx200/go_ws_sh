@@ -3,7 +3,7 @@ module github.com/masx200/go_ws_sh
 go 1.23.2
 
 require (
-	github.com/cloudwego/hertz v0.9.6
+	github.com/cloudwego/hertz v0.9.7
 	github.com/golang-module/carbon/v2 v2.4.1
 	//github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
@@ -18,9 +18,9 @@ require (
 
 require (
 	github.com/bytedance/gopkg v0.1.1 // indirect
-	github.com/bytedance/sonic v1.12.7 // indirect
-	github.com/bytedance/sonic/loader v0.2.2 // indirect
-	github.com/cloudwego/base64x v0.1.4 // indirect
+	github.com/bytedance/sonic v1.13.2 // indirect
+	github.com/bytedance/sonic/loader v0.2.4 // indirect
+	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/cloudwego/netpoll v0.6.5 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
