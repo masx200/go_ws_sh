@@ -8,7 +8,7 @@ require (
 	//github.com/gammazero/deque v1.0.0
 	github.com/hertz-contrib/websocket v0.2.0
 	github.com/linkedin/goavro/v2 v2.13.1
-	github.com/quic-go/quic-go v0.50.0
+	github.com/quic-go/quic-go v0.51.0
 )
 
 require (
@@ -37,7 +37,6 @@ require (
 	go.uber.org/mock v0.5.0 // indirect
 	golang.org/x/arch v0.12.0 // indirect
 	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/mod v0.22.0 // indirect
 	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
