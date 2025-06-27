@@ -2,10 +2,11 @@ package go_ws_sh
 
 import (
 	"context"
+	"log"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
-	"log"
 )
 
 // 新增删除用户处理函数声明
@@ -27,9 +28,10 @@ func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 	//检查是否是初始用户
 
 	for _, ic := range initial_credentials {
-
-		if req.Authorization.Username == ic.Username {
+		//修复不能删除用户的bug
+		if req.Credential.Username == ic.Username {
 			r.AbortWithMsg("Error: 初始用户不允许删除", consts.StatusBadRequest)
+			log.Println("Error: 初始用户不允许删除")
 			return
 		}
 	}
