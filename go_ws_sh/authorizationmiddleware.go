@@ -12,14 +12,10 @@ import (
 func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) HertzMiddleWare {
 	return func(c context.Context, r *app.RequestContext, next HertzNext) {
 
+		bearertoken := r.Request.Header.Get("authorization")
 
+		if bearertoken != "" {
 
-		bearertoken:=r.Request.Header.Get("authorization")
-
-
-
-		if bearertoken!=""{
-			
 		}
 		var req struct {
 			Authorization CredentialsClient `json:"authorization"`

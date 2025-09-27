@@ -42,9 +42,9 @@ func RequestLoggerMiddleware() app.HandlerFunc {
 func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) {
 	// var listtokensHandler = ListTokensHandler(credentialdb, tokendb)
 	// authHandler := AuthorizationHandler(credentialdb, tokendb)
-	var routes []RouteConfig //{
+	//{
 
-	handlerGetWebsocket := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
+	handlerGetWebsocket := createhandlerauthorization_websocket(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
 		sessions, err := ReadAllSessions(sessiondb)
 		if err != nil {
@@ -55,7 +55,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		for _, session := range sessions {
 			handlermap[session.Name] = createhandleWebSocket(session)
 		}
-		var name = r.Param("name")
+		var name = strings.TrimPrefix(string(r.Path()), "/") //r.Param("name")
 		if handler2, ok := handlermap[name]; ok {
 
 			handler2(w, r)
@@ -80,7 +80,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	// })
 	var initial_credentials = config.InitialCredentials
 	var initial_sessions = config.InitialSessions
-	routes = GenerateRoutesHttp(credentialdb, tokendb, sessiondb, initial_credentials, initial_sessions)
+	var routeshttp []RouteConfig = GenerateRoutesHttp(credentialdb, tokendb, sessiondb, initial_credentials, initial_sessions)
 	// routes = append(gr, routes...)
 	composedMiddleware := HertzCompose(
 		MatchAndRouteMiddleware([]RouteConfig{
@@ -101,7 +101,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 			},
 		}),
 
-		MatchAndRouteMiddleware(routes))
+		MatchAndRouteMiddleware(routeshttp))
 	handler := func(w context.Context, r *app.RequestContext) {
 
 		Upgrade := strings.ToLower(r.Request.Header.Get("Upgrade"))
@@ -142,7 +142,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	for _, serverconfig := range config.Servers {
 
 		tasks = append(tasks, createTaskServer(serverconfig,
-			handler, middlewares...))
+			append(middlewares, handler)...))
 	}
 	// 启动服务器
 	result, ok := PromiseAll(tasks).Receive()

@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
+func createhandlerauthorization_websocket(credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
 	return func(w context.Context, r *app.RequestContext) {
 

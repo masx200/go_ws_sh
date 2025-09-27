@@ -1,7 +1,7 @@
 package go_ws_sh
 
 import (
-	"context"
+	// "context"
 	"crypto/tls"
 	"log"
 	"time"
@@ -16,6 +16,7 @@ import (
 	"github.com/hertz-contrib/http2/config"
 	factoryh2 "github.com/hertz-contrib/http2/factory"
 	"github.com/hertz-contrib/logger/accesslog"
+
 	quic "github.com/masx200/go_ws_sh/network/quic-go"
 	http3 "github.com/masx200/go_ws_sh/server/quic-go"
 	factoryh3 "github.com/masx200/go_ws_sh/server/quic-go/factory"
@@ -72,7 +73,7 @@ func InitHertzApp(hertzapp *server.Hertz) {
 	// 	ctx.Next(c)
 	// })
 }
-func createTaskServer(serverconfig ServerConfig, handler func(w context.Context, r *app.RequestContext), middlewares ...app.HandlerFunc) func() (interface{}, error) {
+func createTaskServer(serverconfig ServerConfig /* handler func(w context.Context, r *app.RequestContext), */, middlewares ...app.HandlerFunc) func() (any, error) {
 	if serverconfig.Alpn == "h2" {
 
 		return func() (interface{}, error) {
@@ -120,9 +121,9 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			for _, middleware := range middlewares {
 				hertzapp.Use(middleware)
 			}
-			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
-				handler(c, ctx)
-			})
+			// hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
+			// 	handler(c, ctx)
+			// })
 			x := hertzapp.Run()
 			if x != nil {
 				log.Fatal(x)
@@ -180,9 +181,9 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			for _, middleware := range middlewares {
 				hertzapp.Use(middleware)
 			}
-			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
-				handler(c, ctx)
-			})
+			// hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
+			// 	handler(c, ctx)
+			// })
 			x := hertzapp.Run()
 			if x != nil {
 				log.Fatal(x)
@@ -202,9 +203,9 @@ func createTaskServer(serverconfig ServerConfig, handler func(w context.Context,
 			for _, middleware := range middlewares {
 				hertzapp.Use(middleware)
 			}
-			hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
-				handler(c, ctx)
-			})
+			// hertzapp.Any("/*name", func(c context.Context, ctx *app.RequestContext) {
+			// 	handler(c, ctx)
+			// })
 			x := hertzapp.Run()
 			if x != nil {
 				log.Fatal(x)
