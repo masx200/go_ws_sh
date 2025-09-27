@@ -15,8 +15,7 @@ import (
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
 
-	"github.com/masx200/go_ws_sh/go_ws_sh"
-	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
+		password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 )
 
 type TokenStore struct {
@@ -33,23 +32,7 @@ type TokenStore struct {
 	Description string `json:"description" gorm:"index;not null"`
 }
 
-type CredentialsClient struct {
-	Username   string `json:"username"`
-	Password   string `json:"password"`
-	Token      string `json:"token"`
-	Type       string `json:"type"`
-	Identifier string `json:"identifier"`
-}
 
-type RouteConfig struct {
-	Path       string
-	Method     string
-	MiddleWare HertzMiddleWare
-	Headers    map[string]string
-}
-
-type HertzNext = go_ws_sh.HertzNext
-type HertzMiddleWare = go_ws_sh.HertzMiddleWare
 
 func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) func(c context.Context, r *app.RequestContext, next HertzNext) {
 	return func(c context.Context, r *app.RequestContext, next HertzNext) {

@@ -13,14 +13,16 @@ import (
 	"gorm.io/gorm"
 
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
+	"github.com/masx200/go_ws_sh/types"
 )
+
 
 // ListTokensHandler 列出所有令牌
 func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
 		tokendb = tokendb.Debug()
 		var body struct {
-			Authorization CredentialsClient `json:"authorization"`
+			Authorization types.CredentialsClient `json:"authorization"`
 			Token         struct {
 				Identifier string `json:"identifier"`
 			} `json:"token"`
@@ -122,7 +124,7 @@ func AuthorizationHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w contex
 		}
 	}
 }
-func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, error) {
+func ValidateToken(reqcredential types.CredentialsClient, tokendb *gorm.DB) (bool, error) {
 	var token TokenStore
 	if err := tokendb.Where(&TokenStore{Identifier: reqcredential.Identifier}). // Username: reqcredential.Username,
 											First(&token).Error; err != nil {
@@ -149,7 +151,7 @@ func ValidateToken(reqcredential CredentialsClient, tokendb *gorm.DB) (bool, err
 // CreateToken 处理 POST 请求，支持用户名密码认证和创建新的 Token
 func CreateToken(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 		Token         struct {
 			Username    string `json:"username"`
 			Description string `json:"description"`
@@ -245,7 +247,7 @@ func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
 // ModifyPassword 处理 PUT 请求，修改用户名密码
 func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB) {
 	var req struct {
-		Authorization CredentialsClient
+		Authorization types.CredentialsClient
 		Credential    struct {
 			Username string `json:"username"`
 			Password string `json:"password"`

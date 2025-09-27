@@ -8,15 +8,18 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
+
+	"github.com/masx200/go_ws_sh/types"
 )
 
-func MoveMiddleware(initial_sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, next HertzNext) {
+
+func MoveMiddleware(initial_sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, next types.HertzNext) {
 	// 定义请求体结构体
 	var body struct {
 		Session struct {
 			Name string `json:"name"`
 		} `json:"session"`
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 		Destination   struct {
 			Name string `json:"name"`
 		} `json:"destination"`

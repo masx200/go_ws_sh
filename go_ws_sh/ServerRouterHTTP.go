@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
-	"github.com/masx200/go_ws_sh/routes"
+	"github.com/masx200/go_ws_sh/types"
 )
 
 func FormatTimeWithCarbon(t carbon.Carbon) string {
@@ -33,7 +33,7 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 			Description string `json:"description"`
 			Username    string `json:"username"`
 		} `json:"token"`
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 	}
 
 	// 绑定请求体
@@ -118,7 +118,7 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 	credentialdb = credentialdb.Debug()
 	// 创建一个TokenInfo结构体，用于接收认证信息
 	var body struct {
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 		Credential    struct {
 			Username string `json:"username"`
 		} `json:"credential"`
@@ -191,7 +191,7 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 实现创建用户的具体逻辑
 	var req struct {
-		Authorization CredentialsClient
+		Authorization types.CredentialsClient
 		Credential    struct {
 			Username string `json:"username"`
 			Password string `json:"password"`
@@ -285,7 +285,7 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 			Args []string `json:"args"`
 			Dir  string   `json:"dir"`
 		} `json:"session"`
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 	}
 
 	// 绑定请求体
@@ -390,7 +390,7 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 			Args []string `json:"args"`
 			Dir  string   `json:"dir"`
 		} `json:"session"`
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 	}
 
 	// 绑定请求体
@@ -474,7 +474,7 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	// 实现显示会话的具体逻辑
 	// 创建一个TokenInfo结构体
 	var body struct {
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 		Session       struct {
 			Name string `json:"name"`
 		} `json:"session"`
@@ -534,11 +534,3 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 
 }
 
-// RouteConfig 定义了路由的配置信息，包含路径、方法、中间件和头部信息。
-//
-// 字段说明：
-// - Path: 表示路由的路径，例如 "/api/v1/resource"。
-// - Method: 表示 HTTP 请求方法，例如 "GET"、"POST" 等。
-// - MiddleWare: 表示与该路由关联的中间件，类型为 HertzMiddleWare。
-// - Headers: 表示与该路由关联的 HTTP 头部信息，以键值对的形式存储。
-type RouteConfig =routes.RouteConfig

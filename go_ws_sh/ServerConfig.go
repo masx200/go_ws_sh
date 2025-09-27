@@ -1,19 +1,19 @@
 package go_ws_sh
 
-import "time"
+import (
+	"time"
 
-type InitialCredentials []struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
+	"github.com/masx200/go_ws_sh/types"
+)
+
 type ConfigServer struct {
 	SessionFile     string         `json:"session_file"`
 	CredentialFile  string         `json:"credential_file"`
 	InitialSessions []Session      `json:"initial_sessions"`
 	Servers         []ServerConfig `json:"servers"`
 
-	TokenFile          string             `json:"token_file"`
-	InitialCredentials InitialCredentials `json:"initial_credentials"`
+	TokenFile          string               `json:"token_file"`
+	InitialCredentials types.InitialCredentials `json:"initial_credentials"`
 	// 添加初始化用户名和初始密码字段
 
 }

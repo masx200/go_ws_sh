@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -11,9 +10,12 @@ import (
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
 
-	"github.com/masx200/go_ws_sh/go_ws_sh"
-	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
+	"github.com/masx200/go_ws_sh/password-hashed"
+	"github.com/masx200/go_ws_sh/types"
 )
+
+type InitialCredentials = types.InitialCredentials
+
 
 func (CredentialStore) TableName() string {
 	return strings.ToLower("CredentialStore")
@@ -300,4 +302,3 @@ func IsUserExists(credentialdb *gorm.DB, username string) bool {
 	return true
 }
 
-type InitialCredentials  =go_ws_sh.InitialCredentials

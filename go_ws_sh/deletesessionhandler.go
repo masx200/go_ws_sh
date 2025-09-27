@@ -7,7 +7,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
+	"github.com/masx200/go_ws_sh/types"
 )
+
 
 func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, initial_sessions []Session) {
 	// 定义请求体结构体
@@ -15,7 +17,7 @@ func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 		Session struct {
 			Name string `json:"name"`
 		} `json:"session"`
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 	}
 
 	// 绑定请求体

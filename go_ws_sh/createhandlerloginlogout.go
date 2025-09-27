@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 	"fmt"
 	// "github.com/philippgille/gokv/file"
+	"github.com/masx200/go_ws_sh/types"
 )
 
-type TokenInfo = CredentialsClient
+type TokenInfo = types.CredentialsClient
 
 // 创建一个登录登出处理函数
 // func createhandlerloginlogout(Sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {

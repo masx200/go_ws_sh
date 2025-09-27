@@ -3,6 +3,7 @@ package go_ws_sh
 import (
 	"os"
 
+	"github.com/masx200/go_ws_sh/types"
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 	"gorm.io/gorm"
 )
@@ -23,7 +24,7 @@ func EnsureCredentials(config ConfigServer, credentialdb *gorm.DB) error {
 			// 生成初始化认证信息
 			username := "admin"
 			password := "pass"
-			config.InitialCredentials = InitialCredentials{
+			config.InitialCredentials = types.InitialCredentials{
 				{
 					Username: username,
 					Password: password,

@@ -7,13 +7,15 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
+	"github.com/masx200/go_ws_sh/types"
 )
 
+
 // 新增删除用户处理函数声明
-func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, initial_credentials InitialCredentials) {
+func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, initial_credentials types.InitialCredentials) {
 	// 定义请求体结构体
 	var req struct {
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 		Credential    struct {
 			Username string `json:"username"`
 			Password string `json:"password"`

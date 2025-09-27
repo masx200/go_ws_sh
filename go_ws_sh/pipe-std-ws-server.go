@@ -14,8 +14,11 @@ import (
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
+	"github.com/masx200/go_ws_sh/types"
 	// "github.com/hertz-contrib/websocket"
 )
+
 
 // RequestLoggerMiddleware 是一个 Hertz 中间件，用于记录请求的完整 URI、方法和头信息
 func RequestLoggerMiddleware() app.HandlerFunc {
@@ -80,10 +83,10 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	// })
 	var initial_credentials = config.InitialCredentials
 	var initial_sessions = config.InitialSessions
-	var routeshttp []RouteConfig = GenerateRoutesHttp(credentialdb, tokendb, sessiondb, initial_credentials, initial_sessions)
-	// routes = append(gr, routes...)
+	var routeshttp []types.RouteConfig = GenerateRoutesHttp(credentialdb, tokendb, sessiondb, initial_credentials, initial_sessions)
+	// routes = append(gr, types...)
 	composedMiddleware := HertzCompose(
-		MatchAndRouteMiddleware([]RouteConfig{
+		MatchAndRouteMiddleware([]types.RouteConfig{
 			{
 				Path: "/tokens",
 

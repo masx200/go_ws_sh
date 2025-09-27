@@ -12,7 +12,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
-)
+
+	)
 
 type Session struct {
 	Name string `json:"name"`
@@ -48,6 +49,7 @@ func (s *StringSlice) Scan(value []byte) error {
 	var bytes []byte = value
 	return json.Unmarshal(bytes, s)
 }
+
 
 func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) func(c context.Context, r *app.RequestContext, next HertzNext) {
 	return func(c context.Context, r *app.RequestContext, next HertzNext) {

@@ -8,11 +8,14 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
+
+	"github.com/masx200/go_ws_sh/types"
 )
 
+
 // AuthorizationMiddleware 定义身份验证中间件
-func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) HertzMiddleWare {
-	return func(c context.Context, r *app.RequestContext, next HertzNext) {
+func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) types.HertzMiddleWare {
+	return func(c context.Context, r *app.RequestContext, next types.HertzNext) {
 
 		bearertoken := r.Request.Header.Get("authorization")
 
@@ -24,7 +27,7 @@ func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 				})
 				return
 			}
-			var cc CredentialsClient
+			var cc types.CredentialsClient
 			if err := json.Unmarshal(decoded, &cc); err != nil {
 				r.AbortWithStatusJSON(consts.StatusUnauthorized, map[string]string{
 					"message": "Error: Invalid token",
@@ -41,7 +44,7 @@ func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 			return
 		}
 		var req struct {
-			Authorization CredentialsClient `json:"authorization"`
+			Authorization types.CredentialsClient `json:"authorization"`
 		}
 
 		// 解析请求体中的 JSON 数据

@@ -10,7 +10,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
+	"github.com/masx200/go_ws_sh/types"
 )
+
 
 func createhandlerauthorization_websocket(credentialdb *gorm.DB, tokendb *gorm.DB, next func(w context.Context, r *app.RequestContext)) func(w context.Context, r *app.RequestContext) {
 
@@ -57,7 +59,7 @@ func createhandlerauthorization_websocket(credentialdb *gorm.DB, tokendb *gorm.D
 					return
 				}
 				log.Println(postData)
-				var req CredentialsClient
+				var req types.CredentialsClient
 				req.Token = postData.Get("token")
 				req.Type = postData.Get("type")
 				req.Username = postData.Get("username")

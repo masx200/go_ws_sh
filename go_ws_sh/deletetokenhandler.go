@@ -7,7 +7,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
+	"github.com/masx200/go_ws_sh/types"
 )
+
 
 func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
 	// 定义请求体结构体
@@ -16,7 +18,7 @@ func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 			Identifier string `json:"identifier"`
 			Username   string `json:"username"`
 		} `json:"token"`
-		Authorization CredentialsClient `json:"authorization"`
+		Authorization types.CredentialsClient `json:"authorization"`
 	}
 
 	// 绑定请求体

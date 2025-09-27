@@ -5,9 +5,11 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
 	"log"
+	"github.com/masx200/go_ws_sh/types"
 )
 
-func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, tokendb *gorm.DB, r *app.RequestContext) bool {
+
+func Validatepasswordortoken(req types.CredentialsClient, credentialdb *gorm.DB, tokendb *gorm.DB, r *app.RequestContext) bool {
 	if req.Type == "token" && req.Token != "" && req.Identifier != "" {
 		log.Println("开始Token 认证")
 		// Token 认证
