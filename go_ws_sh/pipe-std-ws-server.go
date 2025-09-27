@@ -44,7 +44,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	// authHandler := AuthorizationHandler(credentialdb, tokendb)
 	var routes []RouteConfig //{
 
-	handlerGet := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
+	handlerGetWebsocket := createhandlerauthorization(credentialdb, tokendb, func(w context.Context, r *app.RequestContext) {
 
 		sessions, err := ReadAllSessions(sessiondb)
 		if err != nil {
@@ -108,7 +108,7 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 		Connection := strings.ToLower(r.Request.Header.Get("Connection"))
 
 		if string(r.Method()) == consts.MethodGet && strings.Contains(Connection, "upgrade") && Upgrade == "websocket" {
-			handlerGet(w, r)
+			handlerGetWebsocket(w, r)
 			return
 		}
 
@@ -132,25 +132,8 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 	middlewares := []app.HandlerFunc{
 
 		func(c context.Context, ctx *app.RequestContext) {
-			routesmiddle := MatchAndRouteMiddleware([]RouteConfig{
-
-				{
-					Path:   "/sessions",
-					Method: "COPY",
-					MiddleWare: HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
-						CopyMiddleware(credentialdb, tokendb, sessiondb, c, r, next)
-
-					}),
-				},
-				{
-					Path:   "/sessions",
-					Method: "MOVE",
-					MiddleWare: HertzCompose(AuthorizationMiddleware(credentialdb, tokendb, sessiondb), func(c context.Context, r *app.RequestContext, next HertzNext) {
-						MoveMiddleware(initial_sessions, credentialdb, tokendb, sessiondb, c, r, next)
-
-					}),
-				},
-			})
+			routes_copy_and_move := GenerateRoutesHttpsessions(credentialdb, tokendb, sessiondb, initial_sessions)
+			routesmiddle := MatchAndRouteMiddleware(routes_copy_and_move)
 			routesmiddle(c, ctx, func(c context.Context, r *app.RequestContext) {
 				r.Next(c)
 			})
