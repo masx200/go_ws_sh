@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm"
 
 	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
+	"github.com/masx200/go_ws_sh/routes"
 )
 
 func FormatTimeWithCarbon(t carbon.Carbon) string {
@@ -540,9 +541,4 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 // - Method: 表示 HTTP 请求方法，例如 "GET"、"POST" 等。
 // - MiddleWare: 表示与该路由关联的中间件，类型为 HertzMiddleWare。
 // - Headers: 表示与该路由关联的 HTTP 头部信息，以键值对的形式存储。
-type RouteConfig struct {
-	Path       string
-	Method     string
-	MiddleWare HertzMiddleWare
-	Headers    map[string]string
-}
+type RouteConfig =routes.RouteConfig
