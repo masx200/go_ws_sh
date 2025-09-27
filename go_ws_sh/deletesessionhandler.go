@@ -31,10 +31,10 @@ func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 		}
 	}
 	// 验证身份
-	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 
 	// 检查 Name 是否为空
 	if body.Session.Name == "" {

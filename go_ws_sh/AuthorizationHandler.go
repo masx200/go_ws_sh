@@ -31,10 +31,10 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 			return
 		}
 
-		validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-		if validateFailure {
-			return
-		}
+		// validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+		// if validateFailure {
+		// 	return
+		// }
 
 		// 查询所有令牌
 		var tokens []TokenStore
@@ -161,10 +161,10 @@ func CreateToken(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB)
 		return
 	}
 
-	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 	numBytes := 120
 	hexString, err := generateHexKey(numBytes)
 	if err != nil {
@@ -228,42 +228,6 @@ func CreateToken(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB)
 	})
 }
 
-func Validatepasswordortoken(req CredentialsClient, credentialdb *gorm.DB, tokendb *gorm.DB, r *app.RequestContext) bool {
-	if req.Type == "token" && req.Token != "" && req.Identifier != "" {
-		log.Println("开始Token 认证")
-		// Token 认证
-		if ok, err := ValidateToken(req, tokendb); !ok {
-			log.Println(err)
-			r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
-			log.Println("Error: Invalid credentials")
-			return true
-		}
-		log.Println("success: success credentials")
-		return false
-	}
-	log.Println("开始password 认证")
-	// 用户名密码认证
-	var cred CredentialStore
-	if err := credentialdb.Where("username = ?", req.Username).First(&cred).Error; err != nil {
-		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
-		return true
-	}
-	//用户名和密码都不为空
-	if req.Username == "" || req.Password == "" {
-		r.AbortWithMsg("Error: Username or password is empty", consts.StatusBadRequest)
-		return true
-	}
-	// 验证密码
-	// 这里需要实现具体的密码验证逻辑
-	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	if ok, err := ValidatePassword(req.Password, cred.Hash, cred.Salt, cred.Algorithm); !ok {
-		log.Println(err)
-		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
-		return true
-	}
-	return false
-}
-
 func ValidatePassword(Password, Hash, Salt, Algorithm string) (bool, error) {
 	var hashresult, err = password_hashed.HashPasswordWithSalt(Password, password_hashed.Options{Algorithm: Algorithm,
 		SaltHex: Salt,
@@ -302,13 +266,13 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 		r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 		return
 	}
-	var reqcre CredentialsClient = req.Authorization
+	// var reqcre CredentialsClient = req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	validateFailure := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 	// 更新密码
 	newHashresult, err := password_hashed.HashPasswordWithSalt(req.Credential.Password, password_hashed.Options{Algorithm: "SHA-512"})
 

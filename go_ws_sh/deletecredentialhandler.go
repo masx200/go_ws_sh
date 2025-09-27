@@ -36,10 +36,10 @@ func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		}
 	}
 	// 验证身份
-	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 	var err error
 	username := req.Authorization.Username
 	if username == "" {

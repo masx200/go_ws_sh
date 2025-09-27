@@ -26,10 +26,10 @@ func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 
 	// 验证身份
-	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 	// log.Println(req)
 	// 检查 Identifier 是否为空
 	if req.Token.Identifier == "" {

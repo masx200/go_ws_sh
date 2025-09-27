@@ -8,8 +8,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/golang-module/carbon/v2"
-	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 	"gorm.io/gorm"
+
+	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 )
 
 func FormatTimeWithCarbon(t carbon.Carbon) string {
@@ -41,10 +42,10 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 
 	// 验证身份
-	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 
 	// 检查 Identifier 是否为空
 	if body.Token.Identifier == "" {
@@ -130,11 +131,11 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 	}
 
 	// 验证身份
-	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		log.Println("用户登录失败:")
-		return
-	}
+	// validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	log.Println("用户登录失败:")
+	// 	return
+	// }
 
 	// 查询所有用户的认证信息
 	var credentials []CredentialStore
@@ -223,13 +224,13 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 	// 	r.AbortWithMsg("Error: Invalid credentials", consts.StatusUnauthorized)
 	// 	return
 	// }
-	var reqcre CredentialsClient = req.Authorization
+	// var reqcre CredentialsClient = req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	validateFailure := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 	// 更新密码
 	newHashresult, err := password_hashed.HashPasswordWithSalt(req.Credential.Password, password_hashed.Options{Algorithm: "SHA-512"})
 
@@ -293,10 +294,10 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 验证身份
-	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 
 	// 检查 Name 是否为空
 	if body.Session.Name == "" || body.Session.Cmd == "" || body.Session.Dir == "" {
@@ -398,10 +399,10 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 验证身份
-	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		return
-	}
+	// validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	return
+	// }
 
 	// 检查 Name 是否为空
 	if req.Session.Name == "" {
@@ -486,12 +487,12 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 	log.Println(body)
 
-	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if validateFailure {
-		log.Println("用户登录失败:")
-		return
-	}
-	log.Println("用户登录成功:")
+	// validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	// if validateFailure {
+	// 	log.Println("用户登录失败:")
+	// 	return
+	// }
+	// log.Println("用户登录成功:")
 
 	username := body.Authorization.Username
 	if username == "" {
