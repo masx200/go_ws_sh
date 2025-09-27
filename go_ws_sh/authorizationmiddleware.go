@@ -2,6 +2,7 @@ package go_ws_sh
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
@@ -23,8 +24,8 @@ func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		}
 
 		// 调用 Validatepasswordortoken 函数进行身份验证
-		shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-		if shouldReturn {
+		validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+		if validateFailure {
 			return
 		}
 

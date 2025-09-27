@@ -30,8 +30,8 @@ type TokenInfo = CredentialsClient
 // 				return
 // 			}
 // 			log.Println(credential)
-// 			shouldReturn := Validatepasswordortoken(credential, credentialdb, tokendb, r)
-// 			if shouldReturn {
+// 			validateFailure := Validatepasswordortoken(credential, credentialdb, tokendb, r)
+// 			if validateFailure {
 // 				log.Println("用户登录失败:")
 // 				return
 // 			}

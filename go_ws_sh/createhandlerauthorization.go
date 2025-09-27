@@ -63,12 +63,12 @@ func createhandlerauthorization(credentialdb *gorm.DB, tokendb *gorm.DB, next fu
 				req.Username = postData.Get("username")
 				req.Identifier = postData.Get("identifier")
 				req.Password = postData.Get("password")
-				shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
-				if shouldReturn {
+				validateFailure := Validatepasswordortoken(req, credentialdb, tokendb, r)
+				if validateFailure {
 					log.Println("用户登录失败:")
 					return
 				}
-				var ok = !shouldReturn
+				var ok = !validateFailure
 				if ok {
 					log.Println("用户登录成功:")
 					next(w, r)

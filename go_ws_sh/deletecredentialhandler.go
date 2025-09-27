@@ -36,8 +36,8 @@ func DeleteCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		}
 	}
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 	var err error

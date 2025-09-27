@@ -2,10 +2,11 @@ package go_ws_sh
 
 import (
 	"context"
+	"log"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gorm"
-	"log"
 )
 
 func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext) {
@@ -25,8 +26,8 @@ func DeleteTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 	// log.Println(req)

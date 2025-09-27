@@ -118,8 +118,8 @@ func pipe_std_ws_server(config ConfigServer, credentialdb *gorm.DB, tokendb *gor
 
 				consts.StatusMethodNotAllowed)
 		})
-		// shouldReturn := MatchAndHandleRoute(w, routes, r)
-		// if shouldReturn {
+		// validateFailure := MatchAndHandleRoute(w, routes, r)
+		// if validateFailure {
 		// 	return
 		// }
 		// if string(r.Method()) == consts.MethodPost {

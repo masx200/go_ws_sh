@@ -10,8 +10,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/golang-module/carbon/v2"
-	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 	"gorm.io/gorm"
+
+	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 )
 
 // ListTokensHandler 列出所有令牌
@@ -30,8 +31,8 @@ func ListTokensHandler(credentialdb *gorm.DB, tokendb *gorm.DB) func(w context.C
 			return
 		}
 
-		shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-		if shouldReturn {
+		validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+		if validateFailure {
 			return
 		}
 
@@ -160,8 +161,8 @@ func CreateToken(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.DB)
 		return
 	}
 
-	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 	numBytes := 120
@@ -304,8 +305,8 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 	var reqcre CredentialsClient = req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	shouldReturn := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 	// 更新密码
@@ -361,8 +362,8 @@ func ModifyPassword(r *app.RequestContext, credentialdb *gorm.DB, tokendb *gorm.
 // 		return
 // 	}
 
-// 	shouldReturn := Validatepasswordortoken(req, credentialdb, tokendb, r)
-// 	if shouldReturn {
+// 	validateFailure := Validatepasswordortoken(req, credentialdb, tokendb, r)
+// 	if validateFailure {
 // 		return
 // 	}
 // 	var data map[string]interface{}

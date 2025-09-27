@@ -31,8 +31,8 @@ func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 		}
 	}
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 

@@ -41,8 +41,8 @@ func UpdateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 
@@ -130,8 +130,8 @@ func GetCredentialsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		log.Println("用户登录失败:")
 		return
 	}
@@ -226,8 +226,8 @@ func CreateCredentialHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 	var reqcre CredentialsClient = req.Authorization
 	// 验证旧密码
 	// 假设已经有一个函数 ValidatePassword 用于验证密码
-	shouldReturn := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(reqcre, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 	// 更新密码
@@ -293,8 +293,8 @@ func CreateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 
@@ -398,8 +398,8 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 
 	// 验证身份
-	shouldReturn := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(req.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		return
 	}
 
@@ -486,8 +486,8 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 	log.Println(body)
 
-	shouldReturn := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
-	if shouldReturn {
+	validateFailure := Validatepasswordortoken(body.Authorization, credentialdb, tokendb, r)
+	if validateFailure {
 		log.Println("用户登录失败:")
 		return
 	}
