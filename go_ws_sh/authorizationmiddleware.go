@@ -2,6 +2,8 @@ package go_ws_sh
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -15,7 +17,28 @@ func AuthorizationMiddleware(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb 
 		bearertoken := r.Request.Header.Get("authorization")
 
 		if bearertoken != "" {
+			decoded, err := base64.StdEncoding.DecodeString(bearertoken)
+			if err != nil {
+				r.AbortWithStatusJSON(consts.StatusUnauthorized, map[string]string{
+					"message": "Error: Invalid token",
+				})
+				return
+			}
+			var cc CredentialsClient
+			if err := json.Unmarshal(decoded, &cc); err != nil {
+				r.AbortWithStatusJSON(consts.StatusUnauthorized, map[string]string{
+					"message": "Error: Invalid token",
+				})
+				return
+			}
+			validateFailure := Validatepasswordortoken(cc, credentialdb, tokendb, r)
+			if validateFailure {
+				return
+			}
 
+			// 验证成功，调用下一个处理函数
+			next(c, r)
+			return
 		}
 		var req struct {
 			Authorization CredentialsClient `json:"authorization"`
