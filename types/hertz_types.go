@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -33,4 +34,15 @@ type RouteConfig struct {
 type InitialCredentials []struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+// Session 定义了会话的结构
+type Session struct {
+	Name string `json:"name"`
+
+	Cmd       string    `json:"cmd"`
+	Args      []string  `json:"args"`
+	Dir       string    `json:"dir"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

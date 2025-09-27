@@ -8,6 +8,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/websocket"
+
+	"github.com/masx200/go_ws_sh/types"
 )
 
 // createHandleWebSocket 创建处理WebSocket连接的函数
@@ -18,7 +20,7 @@ import (
 // 返回值:
 //
 //	一个函数，用于处理WebSocket连接请求
-func createhandleWebSocket(session Session) func(w context.Context, r *app.RequestContext) {
+func createhandleWebSocket(session types.Session) func(w context.Context, r *app.RequestContext) {
 	return func(w context.Context, r *app.RequestContext) {
 		codec, err := create_msg_codec()
 		if err != nil {

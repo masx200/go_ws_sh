@@ -505,7 +505,7 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 		}
 		log.Println("Username:", username)
 	}
-	var sessions []Session
+	var sessions []types.Session
 	if body.Session.Name != "" {
 
 		log.Println("查询Name:", body.Session.Name)

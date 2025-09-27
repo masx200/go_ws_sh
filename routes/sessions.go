@@ -6,24 +6,16 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
 
-	)
+	"github.com/masx200/go_ws_sh/types"
+)
 
-type Session struct {
-	Name string `json:"name"`
-
-	Cmd       string    `json:"cmd"`
-	Args      []string  `json:"args"`
-	Dir       string    `json:"dir"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
+type Session = types.Session
 
 type SessionStore struct {
 	gorm.Model
@@ -221,7 +213,7 @@ func UpdateSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *go
 	}
 }
 
-func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_sessions []Session) func(c context.Context, r *app.RequestContext, next HertzNext) {
+func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_sessions []types.Session) func(c context.Context, r *app.RequestContext, next HertzNext) {
 	return func(c context.Context, r *app.RequestContext, next HertzNext) {
 		var body struct {
 			Session struct {
@@ -318,7 +310,7 @@ func GetSessionsHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm
 	}
 }
 
-func GenerateSessionRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_sessions []Session) []RouteConfig {
+func GenerateSessionRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_sessions []types.Session) []RouteConfig {
 	return []RouteConfig{
 		{
 			Headers: map[string]string{"x-HTTP-method-override": "POST"},
@@ -345,19 +337,19 @@ func GenerateSessionRoutes(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *g
 	}
 }
 
-func ReadAllSessions(sessiondb *gorm.DB) ([]Session, error) {
+func ReadAllSessions(sessiondb *gorm.DB) ([]types.Session, error) {
 	var sessionStores []SessionStore
 	if err := sessiondb.Find(&sessionStores).Error; err != nil {
 		return nil, err
 	}
 
-	sessions := make([]Session, 0, len(sessionStores))
+	sessions := make([]types.Session, 0, len(sessionStores))
 	for _, store := range sessionStores {
 		var args []string
 		if err := json.Unmarshal([]byte(store.Args), &args); err != nil {
 			return nil, err
 		}
-		session := Session{
+		session := types.Session{
 			Name:      store.Name,
 			Cmd:       store.Cmd,
 			Args:      args,
@@ -370,7 +362,7 @@ func ReadAllSessions(sessiondb *gorm.DB) ([]Session, error) {
 	return sessions, nil
 }
 
-func ReadAllSessionsWithName(sessiondb *gorm.DB, name string) ([]Session, error) {
+func ReadAllSessionsWithName(sessiondb *gorm.DB, name string) ([]types.Session, error) {
 	var sessionStores []SessionStore
 	if err := sessiondb.Where(
 		"name = ?",
@@ -378,13 +370,13 @@ func ReadAllSessionsWithName(sessiondb *gorm.DB, name string) ([]Session, error)
 		return nil, err
 	}
 
-	sessions := make([]Session, 0, len(sessionStores))
+	sessions := make([]types.Session, 0, len(sessionStores))
 	for _, store := range sessionStores {
 		var args []string
 		if err := json.Unmarshal([]byte(store.Args), &args); err != nil {
 			return nil, err
 		}
-		session := Session{
+		session := types.Session{
 			Name:      store.Name,
 			Cmd:       store.Cmd,
 			Args:      args,
@@ -397,7 +389,7 @@ func ReadAllSessionsWithName(sessiondb *gorm.DB, name string) ([]Session, error)
 	return sessions, nil
 }
 
-func SessionsToMapSlice(sessions []Session) []map[string]any {
+func SessionsToMapSlice(sessions []types.Session) []map[string]any {
 	result := make([]map[string]any, len(sessions))
 	for i, session := range sessions {
 		result[i] = map[string]any{

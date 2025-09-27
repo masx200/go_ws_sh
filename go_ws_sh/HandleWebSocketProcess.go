@@ -8,6 +8,8 @@ import (
 
 	"github.com/hertz-contrib/websocket"
 	"github.com/linkedin/goavro/v2"
+
+	"github.com/masx200/go_ws_sh/types"
 )
 
 func SendTextMessage(conn *websocket.Conn, typestring string, body string, binaryandtextchannel *SafeChannel[WebsocketMessage]) error {
@@ -33,7 +35,7 @@ type WebsocketMessage struct {
 	Type int
 }
 
-func HandleWebSocketProcess(session Session, codec *goavro.Codec, conn *websocket.Conn) error {
+func HandleWebSocketProcess(session types.Session, codec *goavro.Codec, conn *websocket.Conn) error {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("Recovered in panic", r)

@@ -10,7 +10,7 @@ import (
 )
 
 
-func GenerateRoutesHttpsessions(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_sessions []Session) []types.RouteConfig {
+func GenerateRoutesHttpsessions(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, initial_sessions []types.Session) []types.RouteConfig {
 	routes_copy_and_move := []types.RouteConfig{
 
 		{

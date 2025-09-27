@@ -11,7 +11,7 @@ import (
 )
 
 
-func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, initial_sessions []Session) {
+func DeleteSessionHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, initial_sessions []types.Session) {
 	// 定义请求体结构体
 	var body struct {
 		Session struct {

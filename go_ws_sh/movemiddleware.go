@@ -13,7 +13,7 @@ import (
 )
 
 
-func MoveMiddleware(initial_sessions []Session, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, next types.HertzNext) {
+func MoveMiddleware(initial_sessions []types.Session, credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB, c context.Context, r *app.RequestContext, next types.HertzNext) {
 	// 定义请求体结构体
 	var body struct {
 		Session struct {
