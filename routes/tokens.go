@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	randv2 "math/rand/v2"
+	"strings"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
@@ -15,7 +16,7 @@ import (
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"
 
-		password_hashed "github.com/masx200/go_ws_sh/password-hashed"
+	password_hashed "github.com/masx200/go_ws_sh/password-hashed"
 )
 
 type TokenStore struct {
@@ -32,7 +33,9 @@ type TokenStore struct {
 	Description string `json:"description" gorm:"index;not null"`
 }
 
-
+func (TokenStore) TableName() string {
+	return strings.ToLower("TokenStore")
+}
 
 func CreateTokenHandler(credentialdb *gorm.DB, tokendb *gorm.DB, sessiondb *gorm.DB) func(c context.Context, r *app.RequestContext, next HertzNext) {
 	return func(c context.Context, r *app.RequestContext, next HertzNext) {
