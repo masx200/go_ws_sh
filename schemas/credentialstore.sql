@@ -2,14 +2,14 @@ BEGIN TRANSACTION;
 
 CREATE TABLE
     IF NOT EXISTS `credentialstore` (
-        `id` integer PRIMARY KEY AUTOINCREMENT,
-        `created_at` datetime,
-        `updated_at` datetime,
-        `deleted_at` datetime,
-        `username` text NOT NULL,
-        `hash` text NOT NULL,
-        `salt` text NOT NULL,
-        `algorithm` text NOT NULL,
+        `id` integer PRIMARY KEY AUTOINCREMENT, -- 自增主键ID
+        `created_at` datetime,                -- 创建时间
+        `updated_at` datetime,                -- 更新时间
+        `deleted_at` datetime,                -- 删除时间（软删除标记）
+        `username` text NOT NULL,             -- 用户名（唯一）
+        `hash` text NOT NULL,                 -- 密码哈希值
+        `salt` text NOT NULL,                 -- 加密盐值
+        `algorithm` text NOT NULL,            -- 哈希算法（如 SHA-512）
         CONSTRAINT `uni_credentialstore_username` UNIQUE (`username`)
     );
 

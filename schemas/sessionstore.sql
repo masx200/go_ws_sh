@@ -12,14 +12,14 @@ DROP TABLE IF EXISTS sessionstore;
 
 CREATE TABLE
     IF NOT EXISTS sessionstore (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        created_at DATETIME,
-        updated_at DATETIME,
-        deleted_at DATETIME,
-        name TEXT NOT NULL,
-        cmd TEXT NOT NULL,
-        args TEXT NOT NULL,
-        dir TEXT NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT, -- 自增主键ID
+        created_at DATETIME,                 -- 创建时间
+        updated_at DATETIME,                 -- 更新时间
+        deleted_at DATETIME,                 -- 删除时间（软删除标记）
+        name TEXT NOT NULL,                  -- 会话名称（唯一）
+        cmd TEXT NOT NULL,                   -- 执行的命令
+        args TEXT NOT NULL,                  -- 命令参数（JSON格式）
+        dir TEXT NOT NULL,                   -- 工作目录
         CONSTRAINT uni_sessionstore_name UNIQUE (name)
     );
 

@@ -2,15 +2,15 @@ BEGIN TRANSACTION;
 
 CREATE TABLE
     IF NOT EXISTS "tokenstore" (
-        `identifier` text NOT NULL,
-        `created_at` datetime,
-        `updated_at` datetime,
-        `deleted_at` datetime,
-        `hash` text NOT NULL,
-        `salt` text NOT NULL,
-        `algorithm` text NOT NULL,
-        `username` text NOT NULL,
-        `description` text NOT NULL,
+        `identifier` text NOT NULL, -- 令牌唯一标识符
+        `created_at` datetime,      -- 创建时间
+        `updated_at` datetime,      -- 更新时间
+        `deleted_at` datetime,      -- 删除时间（软删除标记）
+        `hash` text NOT NULL,       -- 令牌哈希值
+        `salt` text NOT NULL,       -- 加密盐值
+        `algorithm` text NOT NULL,  -- 哈希算法（如 SHA-512）
+        `username` text NOT NULL,   -- 关联用户名
+        `description` text NOT NULL, -- 令牌描述信息
         PRIMARY KEY (`identifier`),
         CONSTRAINT `uni_tokenstore_identifier` UNIQUE (`identifier`)
     );
